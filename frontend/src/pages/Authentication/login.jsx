@@ -3,28 +3,51 @@ import { useState } from 'react';
 import axios from 'axios';
 import { CgLock } from "react-icons/cg";
 import { TiUserOutline } from "react-icons/ti";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const LoginForm = () => {
+const LoginForm = ({ setToken }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState('');
+
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
+        setLoading(true);
         e.preventDefault();
     
-        try {
           // Send a request to your server for authentication
-          const response = await axios.post('/api/login', {
-            username,
-            password,
+          await axios.post('http://localhost:5000/api/login', {
+            username: username,
+            password: password
+          })
+          .then(response => {
+            setToken(response.data.access_token, response.data.role)
+            const role = response.data.role
+            if (role === 'CLIENT') {
+                navigate("/");
+            }
+            else if (role === 'MOD') {
+                navigate("/mod");
+            }
+            else if (role === 'ADMIN'){ 
+                navigate("/admin");
+            }
+            else {
+                console.log("impossi");
+            }
+        })
+          .catch(error => {
+            // Handle login error
+            if (error.response && error.response.data) {
+              setErr(error.response.data.error);
+            } else {
+              setErr('Une erreur est survenue');
+            }
+          }).finally(() => {
+            setLoading(false);
           });
-    
-          // Handle successful login (e.g., store token in local storage)
-          console.log('Login successful:', response.data);
-        } catch (error) {
-          // Handle login error
-          console.error('Login failed:', error.response.data);
-        }
     };
 
     return (
@@ -66,7 +89,10 @@ const LoginForm = () => {
                                 placeholder="Entrer votre nom d'utilisateur"
                                 className="outline-none px-3 flex-1"
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={(e) => {
+                                    setUsername(e.target.value)
+                                    setErr('')
+                                }}
                                 />
                             </div>
                         </div>
@@ -83,16 +109,22 @@ const LoginForm = () => {
                                 placeholder="Entrer votre mot de passe"
                                 className="outline-none px-4 flex-1"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                    setErr('')
+                                }}
                                 />
                             </div>
                         </div>
-                        <div className='flex flex-col px-[15%] mt-[7%]'>
-                            <button type="submit" className='p-2 bg-[#21A0A0] text-white rounded-md hover:bg-[#21a0a0a4]'>Se connecter</button>
+                        <div className='text-red-600 mt-2 h-3'>
+                            {err}
+                        </div>
+                        <div className='flex flex-col px-[15%] mt-[5%]'>
+                            <button type="submit" className={`p-2  ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? "Connexion en cours..." : "Se connecter"}</button>
                         </div>
                         <div className='flex justify-center mt-[2%]'>
                             <h3 className='mr-2 font-semibold'>Vous n'avez pas de compte?</h3>
-                            <Link to="/signup" className='font-semibold text-[#0891B2] hover:text-[#0890b2b4]'>Inscrivez-vous</Link>
+                            <Link to="/signup" className='font-semibold text-[#0891B2] hover:text-[#0890b2b4] transition duration-300 ease-in-out transform'>Inscrivez-vous</Link>
                         </div>
                     </form>
                 </div>

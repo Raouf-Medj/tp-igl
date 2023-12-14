@@ -1,5 +1,5 @@
     flask==3.0.0
     flask-sqlalchemy
     flask-bcrypt
-    flask-session
-    # mysql-connector-python==8.2.0
+    flask-cors
+    flask-jwt-extended
