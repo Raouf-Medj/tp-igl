@@ -26,7 +26,7 @@ function App() {
     : (
       <div>
         <NavBar removeToken={removeToken} />
-        <div className=' min-h-screen'>
+        <div className='min-h-screen bg-[#FCFFF7]'>
           <Routes>
             <Route path="/" exact element={<ClientHome/>} />
             <Route path="/favorites" exact element={<Favoris/>} />
