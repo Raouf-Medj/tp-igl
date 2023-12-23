@@ -16,7 +16,7 @@ const Footer = () => {
   };
 
   return (
-    <div className='p-10 bg-[#FCFFF7] rounded-b-3xl shadow-md hover:shadow-xl rotate-180 transition duration-300 ease-in-out transform'>
+    <div className='py-12 px-16 bg-[#FCFFF7] rounded-b-3xl shadow-md hover:shadow-xl rotate-180 transition duration-300 ease-in-out transform'>
       <div className='rotate-180'>
         <div className='flex justify-between items-center'>
           <Link to="/" className='w-[12%] h-auto'>
@@ -26,7 +26,7 @@ const Footer = () => {
             />
           </Link>
 
-          <Link to="#" onClick={scrollToTop} className='flex items-center bg-[#046865] hover:bg-[#046865d4] text-white font-semibold rounded-full py-3 px-5'>
+          <Link to="#" onClick={scrollToTop} className='flex items-center bg-[#046865] hover:bg-[#046865d4] hover:shadow-lg text-white font-semibold rounded-full py-3 px-5 transition duration-300 ease-in-out transform'>
             <h1 className='mr-1'>Haut de page</h1>
             <IoArrowUp className='text-lg'/>
           </Link>
