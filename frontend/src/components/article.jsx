@@ -24,7 +24,7 @@ const Article = ({ title, url, abstract }) => {
                 <p>{shortenAbstract(abstract)} <Link className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
             </div>
             <div className='bg-[#EDEFF5] rounded w-0.5 h-16 mx-6'/>
-            <Link to={url}>
+            <Link to={url} target="_blank" rel="noopener noreferrer">
                 <FaFilePdf className='text-[40px] text-[#FE5B5B] hover:text-[#fe5b5bd3] transition duration-300 ease-in-out transform' />
             </Link>
         </div>
