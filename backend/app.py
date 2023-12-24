@@ -5,6 +5,10 @@ from models import db, User, RoleEnum, UserArticle
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
+from elasticsearch import Elasticsearch
+
+
+es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 
 # Flask instance
@@ -122,13 +126,27 @@ def refresh_expiring_jwts(response):
  
 
 
-
-
-
-
-
-
-
+@app.route("/api/favoris/<id>", methods = ['GET'])
+def get_favoris_user(id):
+    user = User.query.get(id)
+    articles = []
+    if not user:
+        return jsonify({"Error":"User not found"}), 404
+    else:
+        user_favoris = UserArticle.query.filter_by(user_id = id)
+        for favoris in user_favoris:
+            article_exists = es.exists(index = "articles", id = favoris.article_id)
+            if article_exists:
+                article = es.get(index = "articles", id = favoris.article_id)
+                retrieved_article = article['_source']
+                articles.append({
+                    "id": favoris.article_id,
+                    "title": retrieved_article.get('title',''),
+                    "abstract": retrieved_article.get('abstract',''),
+                    "url": retrieved_article.get('url',''),
+                    "validated": retrieved_article.get('validated','')
+                })
+        return jsonify({"articles":articles}), 200
 
 
 if __name__ == '__main__':
