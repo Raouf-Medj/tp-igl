@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import json, re
 from datetime import datetime, timedelta, timezone
-from models import db, User, RoleEnum
+from models import db, User, RoleEnum, UserArticle
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
