@@ -176,10 +176,14 @@ def modify_mod():
     if not user:
         return jsonify({"Error": "User not found"}), 404
     else:
-        user.username = username
-        user.password = bcrypt.generate_password_hash(password).decode("utf-8")
-        db.session.commit()
-        return jsonify({"id":user.id,"username":user.username}), 200
+        user_exists = User.query.filter_by(username = username).first()
+        if user_exists:
+            return jsonify({"Error":"Username already taken"}), 409
+        else:  
+            user.username = username
+            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+            db.session.commit()
+            return jsonify({"id":user.id,"username":user.username}), 200
 
 
 
