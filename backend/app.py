@@ -121,12 +121,65 @@ def refresh_expiring_jwts(response):
         return response
  
 
+@app.route('/api/mods', methods=['POST'])
+def add_mod():
+    username = request.json["username"]
+    password = request.json["password"]
+    role = RoleEnum.MOD
+    user_exists = User.query.filter_by(username=username).first()
+    if user_exists:
+        return jsonify({"Error": "User already exists"}), 409
+    else:
+        hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+        new_user = User(username=username, password=hashed_password, role=role)
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"id": new_user.id, "username": new_user.username}), 200
+    
 
+@app.route('/api/mods/<id>', methods=['DELETE'])
+def delete_mod(id):
+    user = User.query.get(id)
+    if not user:
+        return jsonify({"Error": "User not found"}), 404
+    else:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"id":user.id,"username":user.username}), 200
 
+@app.route('/api/mods', methods = ['GET'])
+def get_mods():
+    users = User.query.all()
+    usersToReturn = []
+    for user in users:
+        usersToReturn.append({
+            "id": user.id,
+            "username": user.username
+        })
+    return jsonify({"mods":usersToReturn}), 200
 
+@app.route('/api/mods/<id>', methods = ['GET'])
+def get_mod(id):
+    user = User.query.get(id)
+    if not user:
+        return jsonify({"Error": "User not found"}), 404
+    else:
+        return jsonify({"id":user.id,"username":user.username}), 200
+    
 
-
-
+@app.route('/api/mods',methods = ['PUT'])
+def modify_mod():
+    id = request.json["id"]
+    username = request.json["username"]
+    password = request.json["password"]
+    user = User.query.get(id)
+    if not user:
+        return jsonify({"Error": "User not found"}), 404
+    else:
+        user.username = username
+        user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        db.session.commit()
+        return jsonify({"id":user.id,"username":user.username}), 200
 
 
 
