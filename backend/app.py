@@ -143,13 +143,16 @@ def delete_mod(id):
     if not user:
         return jsonify({"Error": "User not found"}), 404
     else:
-        db.session.delete(user)
-        db.session.commit()
-        return jsonify({"id":user.id,"username":user.username}), 200
+        if user.role == RoleEnum.MOD:
+            db.session.delete(user)
+            db.session.commit()
+            return jsonify({"id":user.id,"username":user.username}), 200
+        else:
+            return jsonify({"Error": "User not found"}), 404
 
 @app.route('/api/mods', methods = ['GET'])
 def get_mods():
-    users = User.query.all()
+    users = User.query.filter_by(role = RoleEnum.MOD)
     usersToReturn = []
     for user in users:
         usersToReturn.append({
@@ -164,7 +167,10 @@ def get_mod(id):
     if not user:
         return jsonify({"Error": "User not found"}), 404
     else:
-        return jsonify({"id":user.id,"username":user.username}), 200
+        if user.role == RoleEnum.MOD:
+            return jsonify({"id":user.id,"username":user.username}), 200
+        else:
+            return jsonify({"Error": "User not found"}), 404
     
 
 @app.route('/api/mods',methods = ['PUT'])
@@ -179,11 +185,14 @@ def modify_mod():
         user_exists = User.query.filter_by(username = username).first()
         if user_exists:
             return jsonify({"Error":"Username already taken"}), 409
-        else:  
-            user.username = username
-            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
-            db.session.commit()
-            return jsonify({"id":user.id,"username":user.username}), 200
+        else:
+            if user.role == RoleEnum.MOD:  
+                user.username = username
+                user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+                db.session.commit()
+                return jsonify({"id":user.id,"username":user.username}), 200
+            else:
+                return jsonify({"Error": "User not found"}), 404
 
 
 
