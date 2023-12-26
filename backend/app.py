@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import NotFoundError
 
 
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
@@ -147,6 +148,60 @@ def get_favoris_user(id):
                     "validated": retrieved_article.get('validated','')
                 })
         return jsonify({"articles":articles}), 200
+
+
+
+@app.route('/api/favoris', methods=['POST'])
+def like_article():
+    # Get the article's id and the user's id from a json file
+    req_json = request.json
+    user_id = req_json["user_id"]
+    article_id = req_json["article_id"]
+
+    article_favori = UserArticle(user_id=user_id, article_id=article_id)
+    db.session.add(article_favori)
+    db.session.commit()
+
+    return jsonify({'user_id': user_id, 'article_id': article_id})
+
+
+
+
+@app.route('/api/favoris/<user_id>/<article_id>', methods=['DELETE'])
+def unlike_article(user_id, article_id):
+    article_favori = UserArticle.query.filter_by(user_id=user_id, article_id=article_id).first()
+    
+    # Check if article exists in the user's list of favorites
+    if article_favori:
+        db.session.delete(article_favori)
+        db.session.commit()
+
+        return jsonify({'user_id': user_id, 'article_id': article_id})
+    else:
+        return jsonify({'Erreur': 'Article not found in user favorites list'}),404
+
+
+@app.route('/api/articles/<id>', methods=['DELETE'])
+def delete_article(id):
+    try:
+        # Check if the article exists in someone's list of favorites
+        article_favori = UserArticle.query.filter_by(article_id=id).first()
+
+        if article_favori:
+            # Delete the article from the UserArticle
+            db.session.delete(article_favori)
+            db.session.commit()
+
+        # Get the article from Elasticsearch
+        article = es.get(index='articles', id=id)
+        title = article['_source']['title']
+
+        # Delete the article from Elasticsearch
+        es.delete(index='articles', id=id, ignore=[400, 404])
+
+        return jsonify({'id': id, 'title': title})
+    except NotFoundError:
+        return jsonify({'error': 'Article not found in Elasticsearch'}), 404
 
 
 if __name__ == '__main__':
