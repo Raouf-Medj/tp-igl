@@ -113,6 +113,7 @@ def logout():
 def getArticleByID(article_id):
     try:
         index_name = 'articles'  # Replace with your index name
+        # REMEMBER TO GET THIS VARIABLE -index_name- OUT "REFACTORED" EXTERNAL TO ALL METHODS
         result = es.get(index=index_name, id=article_id)
         # Extract the source document from the result
         if(result["found"]):
