@@ -1,19 +1,17 @@
 from flask import Flask, request, jsonify
-from elasticsearch import Elasticsearch
 import json, re
 from datetime import datetime, timedelta, timezone
 from models import db, User, RoleEnum
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
-
+from backend.articleController import articleController
 
 
 
 # Flask instance
 app = Flask(__name__)
-es = Elasticsearch(['http://localhost:9200']) 
-
+app.register_blueprint(articleController,url_prefix="")
 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:scifetch.23@db.bglmxtkawutiaiyihpij.supabase.co:5432/postgres"
@@ -32,6 +30,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
 
 
 # Handling requests
@@ -109,20 +108,10 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
-@app.route('/api/article/<string:article_id>', methods=['GET'])
-def getArticleByID(article_id):
-    try:
-        index_name = 'articles'  # Replace with your index name
-        # REMEMBER TO GET THIS VARIABLE -index_name- OUT "REFACTORED" EXTERNAL TO ALL METHODS
-        result = es.get(index=index_name, id=article_id)
-        # Extract the source document from the result
-        if(result["found"]):
-            article = result['_source']
-            return jsonify(article)
-        else:
-            return jsonify({'error':"auccun article avec id corespondant trouvé"}),404
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+
+
+
+
 
 @app.after_request
 def refresh_expiring_jwts(response):
@@ -142,16 +131,17 @@ def refresh_expiring_jwts(response):
         return response
  
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
+
+
+
+
+
+
+
+
+
+
 
