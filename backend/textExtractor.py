@@ -70,7 +70,7 @@ def fixJsonObject(json_object,text,url):
     return finalObject
 
 fileName="Article_14"
-urlToPdf = "./static/"+fileName+".pdf"
+urlToPdf = "../frontend/public/Docs/"+fileName+".pdf"
 urlToJson = "./json_results/"+fileName+".json"
 
 pureText = extractTextFromPDF(urlToPdf)
