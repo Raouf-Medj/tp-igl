@@ -128,7 +128,7 @@ def add_mod():
     role = RoleEnum.MOD
     user_exists = User.query.filter_by(username=username).first()
     if user_exists:
-        return jsonify({"Error": "User already exists"}), 409
+        return jsonify({"error": "Nom d'utilisateur déjà existant"}), 409
     else:
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
         new_user = User(username=username, password=hashed_password, role=role)
@@ -141,14 +141,14 @@ def add_mod():
 def delete_mod(id):
     user = User.query.get(id)
     if not user:
-        return jsonify({"Error": "User not found"}), 404
+        return jsonify({"error": "Utilisateur non trouvé"}), 404
     else:
         if user.role == RoleEnum.MOD:
             db.session.delete(user)
             db.session.commit()
             return jsonify({"id":user.id,"username":user.username}), 200
         else:
-            return jsonify({"Error": "User not found"}), 404
+            return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 @app.route('/api/mods', methods = ['GET'])
 def get_mods():
@@ -165,12 +165,12 @@ def get_mods():
 def get_mod(id):
     user = User.query.get(id)
     if not user:
-        return jsonify({"Error": "User not found"}), 404
+        return jsonify({"error": "Utilisateur non trouvé"}), 404
     else:
         if user.role == RoleEnum.MOD:
             return jsonify({"id":user.id,"username":user.username}), 200
         else:
-            return jsonify({"Error": "User not found"}), 404
+            return jsonify({"error": "Utilisateur non trouvé"}), 404
     
 
 @app.route('/api/mods',methods = ['PUT'])
@@ -180,11 +180,11 @@ def modify_mod():
     password = request.json["password"]
     user = User.query.get(id)
     if not user:
-        return jsonify({"Error": "User not found"}), 404
+        return jsonify({"error": "Utilisateur non trouvé"}), 404
     else:
         user_exists = User.query.filter_by(username = username).first()
         if user_exists:
-            return jsonify({"Error":"Username already taken"}), 409
+            return jsonify({"error": "Nom d'utilisateur déjà existant"}), 409
         else:
             if user.role == RoleEnum.MOD:  
                 user.username = username
@@ -192,7 +192,7 @@ def modify_mod():
                 db.session.commit()
                 return jsonify({"id":user.id,"username":user.username}), 200
             else:
-                return jsonify({"Error": "User not found"}), 404
+                return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 
 
