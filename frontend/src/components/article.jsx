@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Article = ({ title, url, abstract }) => {
     const shortenAbstract = (abstract) => {
         var words, shortened = "";
-        if (abstract != undefined) {
+        if (abstract !== undefined) {
             words = abstract.split(' ');
             shortened = words.slice(0, 25).join(' ');
             shortened = shortened + "..."

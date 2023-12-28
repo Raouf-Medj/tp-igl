@@ -2,7 +2,7 @@ import React from 'react'
 import Article from './article';
 
 
-const ArticleList = ({  }) => {
+const ArticleList = () => {
 
     return (
         <div className=' max-h-[650px] overflow-y-auto'>

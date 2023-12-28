@@ -3,7 +3,6 @@ import { FaUser, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import SearchBarMod from '../../components/searchMod';
 import AjouterMod from '../../components/popupajout';
 import EditMod from '../../components/popupEdit';
-// import ProtectedComponent from '../../components/protected';
 
 const AdminHome = () => {
     const [nbMod, setNbMod] = useState(5);

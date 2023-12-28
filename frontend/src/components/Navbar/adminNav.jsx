@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom'
 
 const AdminNav = () => {
 
-    const handleFileSelect = () => {
-        document.getElementById('fileInput').click();
-    };
-
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {

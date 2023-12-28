@@ -2,21 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { CgLock } from "react-icons/cg";
 import { TiUserOutline } from "react-icons/ti";
-import { Link, useNavigate } from 'react-router-dom';
 
 const AjouterMod = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState('');
-    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         setLoading(true);
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:5000/api/login', {
+            await axios.post('http://localhost:5000/api/login', {
                 username: username,
                 password: password,
                 role: 'MOD' // Définir le rôle comme MOD lors de la création
