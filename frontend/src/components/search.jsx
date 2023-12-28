@@ -5,8 +5,8 @@ import { RiSearchFill } from "react-icons/ri";
 const SearchBar = ({ query, setQuery, placeholder, searchHandler, hideButton }) => {
 
     return (
-        <div className="bg-white py-1 px-4 rounded-md border border-[#E5E5E5] flex items-center w-full focus-within:border-[#21A0A0]">
-            <RiSearchFill className='text-[#21A0A0] text-xl' />
+        <div className="bg-white py-1 sm:px-4 px-2 rounded-md border border-[#E5E5E5] flex items-center w-full focus-within:border-[#21A0A0]">
+            <RiSearchFill className='text-[#21A0A0] text-xl sm:block hidden' />
             <input
                 type="text"
                 name="search"
@@ -18,9 +18,10 @@ const SearchBar = ({ query, setQuery, placeholder, searchHandler, hideButton }) 
                     setQuery(e.target.value);
                 }}
             />
-            <div className='bg-[#EDEFF5] rounded w-0.5 h-14 mx-4'/>
-            <button onClick={searchHandler} className='px-6 py-2 bg-[#21A0A0] text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform'>
-                Trouver Article
+            <div className='bg-[#EDEFF5] rounded w-0.5 h-14 sm:mx-4 sm:block hidden'/>
+            <button onClick={searchHandler} className='sm:px-6 sm:py-2 p-3 bg-[#21A0A0] text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform'>
+                <h1 className='sm:block hidden'>Trouver Article</h1>
+                <RiSearchFill className='sm:hidden text-white text-xl' />
             </button>
         </div>
     )

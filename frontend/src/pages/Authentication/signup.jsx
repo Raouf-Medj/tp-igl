@@ -62,14 +62,19 @@ const SignupForm = ({ setToken }) => {
     return (
         <div className='flex h-screen'>
             <div className='flex-1 bg-[#046865]'>
-                <div className='flex flex-col w-full h-full bg-[#FCFFF7] rounded-br-[8%] justify-center items-center'>
+                <div className='flex flex-col w-full h-full bg-[#FCFFF7] lg:rounded-br-[8%] justify-center items-center'>
                     <img
                         src="/images/img_auth_2.png"
                         alt="img_auth_2"
-                        className="w-[20%] h-auto"
+                        className="lg:block hidden w-[20%] h-auto"
                     />
-                    <h2 className='font-bold text-[170%] mt-[3%] mb-[5%]'>Inscrivez-vous</h2>
-                    <form onSubmit={handleSignup} className='w-full px-[18%] flex flex-col'>
+                    <img
+                        src="/images/img_logo.png"
+                        alt="logo_img"
+                        className='lg:hidden block w-[60%] md:w-[40%] h-auto'
+                    />
+                    <h2 className='font-bold text-[120%] sm:text-[170%] mt-[3%] sm:mb-[5%] mb-[10%]'>Inscrivez-vous</h2>
+                    <form onSubmit={handleSignup} className='w-full px-8 sm:px-[18%] flex flex-col'>
                         
                         <div className="">
                             <label htmlFor="username" className="block pb-1">
@@ -134,17 +139,17 @@ const SignupForm = ({ setToken }) => {
                         <div className='text-red-600 mt-2 h-3'>
                             {err}
                         </div>
-                        <div className='flex flex-col px-[15%] mt-[5%]'>
+                        <div className='flex flex-col px-[15%] mt-[10%] sm:mt-[5%]'>
                             <button type="submit" className={`p-2  ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? "Inscription en cours..." : "S'inscrire"}</button>
                         </div>
                         <div className='flex justify-center mt-[2%]'>
-                            <h3 className='mr-2 font-semibold'>Vous avez déjà un compte?</h3>
-                            <Link to="/login" className='font-semibold text-[#0891B2] hover:text-[#0890b2b4] transition duration-300 ease-in-out transform'>Connectez-vous</Link>
+                            <h3 className='mr-2 font-semibold text-xs md:text-sm xl:text-base'>Vous avez déjà un compte?</h3>
+                            <Link to="/login" className='font-semibold text-xs md:text-sm xl:text-base text-[#0891B2] hover:text-[#0890b2b4] transition duration-300 ease-in-out transform'>Connectez-vous</Link>
                         </div>
                     </form>
                 </div>
             </div>
-            <div className='flex-1 bg-[#FCFFF7]'>
+            <div className='flex-1 bg-[#FCFFF7] lg:block hidden'>
                 <div className='flex flex-col w-full h-full bg-[#046865] rounded-tl-[8%] justify-center items-center'>
                     <img
                         src="/images/img_auth_3.png"

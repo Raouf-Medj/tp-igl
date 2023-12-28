@@ -23,12 +23,12 @@ const ClientHome = () => {
 
     return (
         <ProtectedComponent role="CLIENT">
-            <div className='px-72 pt-16 pb-10'>
+            <div className='xl:px-[10%] lg:px-[5%] px-10 pt-16 pb-10'>
                 <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher un article" searchHandler={searchHandler}/>
                 <div className='mt-10'>
                     <h1 className='font-bold text-xl mb-3'>Articles trouvés ({nbArticles})</h1>
-                    <div className='flex'>
-                        <div className='mr-10'>
+                    <div className='flex lg:flex-row flex-col'>
+                        <div className='lg:mr-10 lg:mb-0 mb-5'>
                             <Filters keywords={keywords} authors={authors} institutions={institutions} dateDeb={dateDeb} dateFin={dateFin} setKeywords={setKeywords} setAuthors={setAuthors} setInstitutions={setInstitutions} setDateDeb={setDateDeb} setDateFin={setDateFin}/>
                         </div>
                         <ArticleList/>
