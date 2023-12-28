@@ -1,6 +1,0 @@
-    flask==3.0.0
-    flask-sqlalchemy
-    flask-bcrypt
-    flask-cors
-    flask-jwt-extended
-    psycopg2
