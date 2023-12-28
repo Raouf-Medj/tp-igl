@@ -69,21 +69,26 @@ def fixJsonObject(json_object,text,url):
     finalObject["validated"]=False
     return finalObject
 
-fileName="Article_14"
-urlToPdf = "../frontend/public/Docs/"+fileName+".pdf"
-urlToJson = "./json_results/"+fileName+".json"
 
-pureText = extractTextFromPDF(urlToPdf)
-gptText = gptTextAnalyser(pureText)
-gptJson = json.loads(gptText)
 
-# Write the JSON data to the file
-with open("gpt.json", "w") as json_file:
-    json_file.write(json.dumps(gptJson,indent=2))
+def pdfToJson(fileName):
+    urlToPdf = "../frontend/public/Docs/"+fileName+".pdf"
+    #urlToJson = "./json_results/"+fileName+".json"
 
-verified_dict = fixJsonObject(gptJson,pureText,urlToPdf)
+    pureText = extractTextFromPDF(urlToPdf)
+    gptText = gptTextAnalyser(pureText)
+    gptJson = json.loads(gptText)
 
-with open(urlToJson,"w") as json_file:
-    json_file.write(json.dumps(verified_dict,indent=2))
+    with open("gpt.json", "w") as json_file:
+        json_file.write(json.dumps(gptJson,indent=2))
+
+    verified_dict = fixJsonObject(gptJson,pureText,urlToPdf)
+
+    '''
+    with open(urlToJson,"w") as json_file:
+        json_file.write(json.dumps(verified_dict,indent=2))
+    '''
+    return verified_dict
+
 
 
