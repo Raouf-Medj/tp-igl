@@ -140,7 +140,7 @@ const SignupForm = ({ setToken }) => {
                             {err}
                         </div>
                         <div className='flex flex-col px-[15%] mt-[10%] sm:mt-[5%]'>
-                            <button type="submit" className={`p-2  ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? "Inscription en cours..." : "S'inscrire"}</button>
+                            <button type="submit" className={`p-2  ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? <div className='flex justify-center items-center'>Inscription en cours...<img src="/spinner1.gif" alt="img_auth_2" className="ml-2 lg:block hidden w-[5%] h-auto"/></div> : "S'inscrire"}</button>
                         </div>
                         <div className='flex justify-center mt-[2%]'>
                             <h3 className='mr-2 font-semibold text-xs md:text-sm xl:text-base'>Vous avez déjà un compte?</h3>
