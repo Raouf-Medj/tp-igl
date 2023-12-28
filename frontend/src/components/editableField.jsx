@@ -27,11 +27,10 @@ const EditableField = ({ label, value, onChange, isDateField }) => {
             onChange={(e) => onChange(e.target.value.split('\n'))}
           />
         ) : (
-            <textarea
+          <textarea
             id={label.toLowerCase()}
-            className="w-full border p-2 pr-8 text-base sm:text-lg min-h-[2em] h-auto resize-none"
+            className="w-full border p-2 pr-8 text-base sm:text-lg min-h-[2em] h-auto resize-none overflow-y-auto"
             value={value}
-            rows="40"
             onChange={(e) => onChange(e.target.value)}
           />
         )}
