@@ -4,6 +4,7 @@ import LoginForm from './pages/Authentication/login';
 import NotFound from './pages/Error/404';
 import SignupForm from './pages/Authentication/signup';
 import ModHome from './pages/Mod';
+import ModifierArticle from './pages/Mod/modifierArticle';
 import ClientHome from './pages/User';
 import Favoris from './pages/User/favoris';
 import AdminHome from './pages/Admin';
