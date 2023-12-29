@@ -6,16 +6,16 @@ import EditMod from '../../components/popupEdit';
 import ProtectedComponent from '../../components/protected';
 import axios from 'axios';
 
-const AdminHome = () => {
+const AdminHome = ({ loading, setLoading }) => {
     const [query, setQuery] = useState('');
     const [allMods, setAllMods] = useState([]);
     const [moderators, setModerators] = useState([]);
     const [err, setErr] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading2, setLoading2] = useState(false);
 
     useEffect(() => {
         const fetchMods = async () => {
-            setLoading(true);
+            setLoading2(true);
             await axios.get('http://localhost:5000/api/mods')
             .then(response => {
                 setAllMods(response.data.mods);
@@ -29,7 +29,7 @@ const AdminHome = () => {
                 }
             })
             .finally(() => {
-                setLoading(false);
+                setLoading2(false);
             })
         }
 
@@ -75,12 +75,13 @@ const AdminHome = () => {
 
     return (
         <ProtectedComponent role="ADMIN">
+            <LoadingOverlay isLoading={loading} waitMessage="Upload en cours, veuillez patienter..."/>
             <div className='px-4 sm:px-8 md:px-12 lg:px-[5%] xl:px-[10%] pt-8 sm:pt-12 lg:pt-16 pb-6 sm:pb-10 lg:pb-16'>
                 <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher par pseudo..." searchHandler={searchHandler} isForMod />
                 <div className='mt-6 sm:mt-10 lg:mt-16'>
                     <h1 className='font-bold text-xl md:text-2xl lg:text-3xl xl:text-4xl mb-3 sm:mb-5'>Modérateurs ({moderators.length})</h1>
-                    {loading ? (
-                        <div className='flex justify-center items-center'><img src="/spinner1.gif" alt="img_auth_2" className="ml-2 lg:block hidden w-[5%] h-auto"/></div>
+                    {loading2 ? (
+                        <div className='flex justify-center items-center'><img src="/spinner2.gif" alt="img_auth_2" className="ml-2 lg:block hidden w-[5%] h-auto"/></div>
                     ) : (
                         <div className="flex flex-wrap">
                             {moderators.map((moderator) => (
@@ -115,7 +116,7 @@ const AdminHome = () => {
                                 </div>
                             </div>
                             {selectedModerator && (
-                                <div className="fixed top-0 left-0 w-full h-full backdrop-blur-md bg-gray-700 bg-opacity-50 flex items-center justify-center">
+                                <div className="fixed top-0 left-0 w-full h-full backdrop-blur-md bg-gray-800 bg-opacity-50 flex items-center justify-center">
                                     <div className="bg-[#FCFFF7] w-[90%] sm:w-[60%] lg:w-[40%] p-3 lg:px-10 rounded-xl border border-gray-400">
                                         <EditMod id={selectedModerator} mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} />
                                     </div>
@@ -123,7 +124,7 @@ const AdminHome = () => {
                             )}
 
                             {showAddPopup && (
-                                <div className="fixed top-0 left-0 w-full h-full backdrop-blur-md bg-gray-700 bg-opacity-50 flex items-center justify-center">
+                                <div className="fixed top-0 left-0 w-full h-full backdrop-blur-md bg-gray-800 bg-opacity-50 flex items-center justify-center">
                                     <div className="bg-[#FCFFF7] w-[90%] sm:w-[60%] lg:w-[40%] p-3 lg:px-10 rounded-xl border border-gray-400"> 
                                         <AjouterMod mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} />
                                     </div>
@@ -134,6 +135,21 @@ const AdminHome = () => {
                 </div>
             </div>
         </ProtectedComponent>
+    );
+};
+
+const LoadingOverlay = ({ isLoading, waitMessage }) => {
+    return (
+      <div
+        className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-md bg-gray-800 bg-opacity-50 transition-opacity ${
+          isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className='bg-[#FCFFF7] px-3 py-8 flex items-center justify-center text-[#137575] font-bold text-xl rounded-xl'>
+            {waitMessage}
+            <img src="/spinner2.gif" alt="spinner" className="ml-2 lg:block hidden w-[10%] h-auto"/>
+        </div>
+      </div>
     );
 };
 

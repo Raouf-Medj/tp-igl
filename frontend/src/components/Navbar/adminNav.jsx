@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 
-const AdminNav = () => {
+const AdminNav = ({ loading, setLoading }) => {
 
     const handleFileChange = (e) => {
         const fichier = e.target.files[0];
@@ -17,6 +17,9 @@ const AdminNav = () => {
     };
 
     const handleFileUpload = async (fichier) => {
+        
+        setLoading(true);
+
         const formData = new FormData();
         formData.append('file', fichier);
 
@@ -30,6 +33,8 @@ const AdminNav = () => {
             console.log("done");
         } catch (error) {
             console.error('Error uploading file:', error);
+        } finally {
+            setLoading(false);
         }
     };
 

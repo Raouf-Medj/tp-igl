@@ -8,7 +8,7 @@ import ModNav from './modNav';
 import AdminNav from './adminNav';
 import NotFound from '../../pages/Error/404';
 
-const NavBar = ({ removeToken }) => {
+const NavBar = ({ removeToken, loading, setLoading }) => {
 
     const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ const NavBar = ({ removeToken }) => {
 
         switch (userrole) {
             case 'ADMIN':
-              return <AdminNav/>;
+              return <AdminNav loading={loading} setLoading={setLoading}/>;
             case 'MOD':
               return <ModNav/>;
             case 'CLIENT':
