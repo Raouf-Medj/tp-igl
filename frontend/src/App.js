@@ -7,33 +7,39 @@ import ModHome from './pages/Mod';
 import ClientHome from './pages/User';
 import Favoris from './pages/User/favoris';
 import AdminHome from './pages/Admin';
-import AdminUpload from './pages/Admin/upload';
 import NavBar from './components/Navbar/NavBar';
 import Footer from './components/Footer';
-import ModifierArticle from './pages/Mod/modifierArticle';
+
+
 
 function App() {
-  const authorsArray = ['Author 1', 'Author 2', 'Author 2', 'Author 2', 'Author 2'];
-  const currentDate = new Date();
-  const texte = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  
+
+  const { token, removeToken, setToken } = useToken();
 
   return (
-    <div>
-      <NavBar/>
-      <ModifierArticle
-        articleTitleParam="Your Article Title"
-        authorsParam={authorsArray}
-        institutionsParam="Your Institutions"
-        keywordsParam="Your Keywords"
-        publicationDateParam={currentDate}
-        referencesParam="Your References"
-        summaryParam={texte}
-        fullTextParam="Your Full Text"
-       />
-      <Footer/>
-    </div>
-);
+    !token && token!=="" && token!==undefined ? 
+      <Routes>
+        <Route path="/" exact element={<LoginForm setToken={setToken}/>} />
+        <Route path="/login" exact element={<LoginForm setToken={setToken}/>} />
+        <Route path="/signup" exact element={<SignupForm setToken={setToken}/>} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    : (
+      <div>
+        <NavBar removeToken={removeToken} />
+        <div className='min-h-screen bg-[#FCFFF7]'>
+          <Routes>
+            <Route path="/" exact element={<ClientHome/>} />
+            <Route path="/favorites" exact element={<Favoris/>} />
+            <Route path="/mod" exact element={<ModHome/>} />
+            <Route path="/admin" exact element={<AdminHome/>} />
+            <Route path="*" element={<NotFound/>} />
+          </Routes>
+        </div>
+        <Footer/>
+      </div>
+    )
+  );
 }
 
 export default App;
