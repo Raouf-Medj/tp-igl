@@ -13,7 +13,7 @@ const Favoris = () => {
 
     return (
         <ProtectedComponent role="CLIENT">
-            <div className='xl:px-[10%] lg:px-[5%] px-10 pt-16 pb-10'>
+            <div className='xl:px-[15%] lg:px-[10%] px-10 pt-16 pb-10'>
                 <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher un article" searchHandler={searchHandler}/>
                 <div className='mt-10'>
                     <h1 className='font-bold text-xl mb-3'>Articles trouvés ({nbArticles})</h1>
