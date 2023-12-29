@@ -20,7 +20,7 @@ const SearchBar = ({ query, setQuery, placeholder, searchHandler, hideButton }) 
             />
             <div className='bg-[#EDEFF5] rounded w-0.5 h-14 mx-4'/>
             <button onClick={searchHandler} className='px-6 py-2 bg-[#21A0A0] text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform'>
-                Trouver Article
+                Trouver article
             </button>
         </div>
     )

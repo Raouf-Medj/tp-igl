@@ -96,12 +96,14 @@ const CenteredArticleDetails = () => {
       {!isAddedToFavorites ? (
         <button
           onClick={handleAddToFavorites}
-          className="mb-8 ml-8 px-4 py-2 bg-white text-black rounded-full border border-gray hover:bg-gray-200 flex items-center"
+          className="mb-8 px-4 py-2 mx-auto bg-white text-black rounded-full border border-gray hover:bg-gray-200 flex items-center"
         >
           <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouter aux favoris
         </button>
       ) : (
-        <p className="mb-8 ml-8 text-red-500">Ajouté aux favoris !</p>
+        <div className='mb-8 px-4 py-2 mx-auto text-red-500 bg-white rounded-full border border-gray hover:bg-gray-200 flex items-center'>
+          <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouté aux favoris !
+        </div>
       )}
 
       <div className="w-11/12 md:w-2000px h-screen md:h-2000px mx-auto bg-white border border-gray p-8 rounded-md overflow-auto">
