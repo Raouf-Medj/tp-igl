@@ -5,4 +5,4 @@
     flask-jwt-extended
     psycopg2
     openai
-    fitz
+    pymupdf
