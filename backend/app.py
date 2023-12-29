@@ -140,6 +140,21 @@ def refresh_expiring_jwts(response):
 def add_mod():
     username = request.json["username"]
     password = request.json["password"]
+    
+    if not 6 <= len(username) <= 72:
+        return jsonify({"error": "La longueur du nom d'utilisateur doit être supérieure à 6"}), 400
+
+    pattern = re.compile("^[a-zA-Z0-9_.]+$")
+    if not bool(re.match(pattern, username)):
+        return jsonify({"error": "Nom d'utilisateur invalide"}), 400
+
+    if not 8 <= len(password) <= 72:
+        return jsonify({"error": "La longueur du mot passe doit être supérieure à 8"}), 400
+
+    pattern = re.compile("^[a-zA-Z0-9_.@]+$")
+    if not bool(re.match(pattern, password)):
+        return jsonify({"error": "Mot de passe invalide"}), 400
+    
     role = RoleEnum.MOD
     user_exists = User.query.filter_by(username=username).first()
     if user_exists:
@@ -154,20 +169,20 @@ def add_mod():
 
 @app.route('/api/mods/<id>', methods=['DELETE'])
 def delete_mod(id):
-    user = User.query.get(id)
+    user = User.query.filter_by(id = id).first()
     if not user:
-        return jsonify({"error": "Utilisateur non trouvé"}), 404
+        return jsonify({"error": "Utilisateur introuvable"}), 404
     else:
         if user.role == RoleEnum.MOD:
             db.session.delete(user)
             db.session.commit()
             return jsonify({"id":user.id,"username":user.username}), 200
         else:
-            return jsonify({"error": "Utilisateur non trouvé"}), 404
+            return jsonify({"error": "Utilisateur introuvable"}), 404
 
 @app.route('/api/mods', methods = ['GET'])
 def get_mods():
-    users = User.query.filter_by(role = RoleEnum.MOD)
+    users = User.query.filter_by(role = RoleEnum.MOD).all()
     usersToReturn = []
     for user in users:
         usersToReturn.append({
@@ -178,14 +193,14 @@ def get_mods():
 
 @app.route('/api/mods/<id>', methods = ['GET'])
 def get_mod(id):
-    user = User.query.get(id)
+    user = User.query.filter_by(id = id).first()
     if not user:
-        return jsonify({"error": "Utilisateur non trouvé"}), 404
+        return jsonify({"error": "Utilisateur introuvable"}), 404
     else:
         if user.role == RoleEnum.MOD:
             return jsonify({"id":user.id,"username":user.username}), 200
         else:
-            return jsonify({"error": "Utilisateur non trouvé"}), 404
+            return jsonify({"error": "Utilisateur introuvable"}), 404
     
 
 @app.route('/api/mods',methods = ['PUT'])
@@ -193,21 +208,33 @@ def modify_mod():
     id = request.json["id"]
     username = request.json["username"]
     password = request.json["password"]
-    user = User.query.get(id)
+    user = User.query.filter_by(id = id).first()
     if not user:
-        return jsonify({"error": "Utilisateur non trouvé"}), 404
+        return jsonify({"error": "Utilisateur introuvable"}), 404
     else:
         user_exists = User.query.filter_by(username = username).first()
-        if user_exists:
+        if user_exists and user_exists.id != user.id:
             return jsonify({"error": "Nom d'utilisateur déjà existant"}), 409
         else:
-            if user.role == RoleEnum.MOD:  
-                user.username = username
-                user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+            if user.role == RoleEnum.MOD:
+                if username.strip(): #it contains caracters and its not empty and it doesnt contain only spaces
+                    if not 6 <= len(username) <= 72:
+                        return jsonify({"error": "La longueur du nom d'utilisateur doit être supérieure à 6"}), 400
+                    pattern = re.compile("^[a-zA-Z0-9_.]+$")
+                    if not bool(re.match(pattern, username)):
+                        return jsonify({"error": "Nom d'utilisateur invalide"}), 400
+                    user.username = username
+                if password.strip(): #the field is not empty and it doesnt contain only spaces
+                    if not 8 <= len(password) <= 72:
+                        return jsonify({"error": "La longueur du mot passe doit être supérieure à 8"}), 400
+                    pattern = re.compile("^[a-zA-Z0-9_.@]+$")
+                    if not bool(re.match(pattern, password)):
+                        return jsonify({"error": "Mot de passe invalide"}), 400
+                    user.password = bcrypt.generate_password_hash(password).decode("utf-8")
                 db.session.commit()
                 return jsonify({"id":user.id,"username":user.username}), 200
             else:
-                return jsonify({"error": "Utilisateur non trouvé"}), 404
+                return jsonify({"error": "Utilisateur introuvable"}), 404
 
 
 
