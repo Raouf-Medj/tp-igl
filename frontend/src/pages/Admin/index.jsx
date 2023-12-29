@@ -41,7 +41,7 @@ const AdminHome = () => {
 
     return (
         <ProtectedComponent role="ADMIN">
-            <div className='px-4 sm:px-8 md:px-12 lg:px-20 xl:px-[15%] pt-8 sm:pt-12 lg:pt-16 pb-6 sm:pb-10 lg:pb-16'>
+            <div className='px-4 sm:px-8 md:px-12 lg:px-[5%] xl:px-[10%] pt-8 sm:pt-12 lg:pt-16 pb-6 sm:pb-10 lg:pb-16'>
                 <SearchBarMod query={query} setQuery={setQuery} placeholder="Rechercher un modérateur" searchHandler={searchHandler} />
                 <div className='mt-6 sm:mt-10 lg:mt-16'>
                     <h1 className='font-bold text-xl md:text-2xl lg:text-3xl xl:text-4xl mb-3 sm:mb-5'>Modérateurs ({moderators.length})</h1>

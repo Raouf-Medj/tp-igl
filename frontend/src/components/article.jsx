@@ -18,10 +18,10 @@ const Article = ({ title, url, abstract }) => {
     return (
         <div className='flex items-center bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5'>
             <div>
-                <Link>
+                <Link to="/affichage">
                     <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-2xl transition duration-300 ease-in-out transform'>{title}</h1>
                 </Link>
-                <p className='lg:block hidden'>{shortenAbstract(abstract, 25)} <Link className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
+                <p className='lg:block hidden'>{shortenAbstract(abstract, 25)} <Link to="/affichage" className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
                 <p className='lg:hidden'>{shortenAbstract(abstract, 15)} <Link className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
 
             </div>
