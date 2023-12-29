@@ -136,9 +136,6 @@ def refresh_expiring_jwts(response):
         return response
  
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
-
 @app.route('/api/mods', methods=['POST'])
 def add_mod():
     username = request.json["username"]
@@ -292,5 +289,8 @@ def delete_article(id):
     else:
         return jsonify({"error":"Article introuvable"}), 404    
 
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
 
 
