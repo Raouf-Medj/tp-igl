@@ -19,7 +19,7 @@ const Footer = () => {
     <div className='md:py-12 py-8 md:px-16 px-8 bg-[#FCFFF7] rounded-b-3xl shadow-md hover:shadow-xl rotate-180 transition duration-300 ease-in-out transform'>
       <div className='rotate-180'>
         <div className='flex sm:flex-row flex-col justify-between items-center'>
-          <Link to="/" className='w-[150px] sm:w-[215px] mb-5 sm:mb-0 h-auto'>
+          <Link to="/" onClick={scrollToTop} className='w-[150px] sm:w-[215px] mb-5 sm:mb-0 h-auto'>
             <img
               src="/images/img_logo.png"
               alt="logo_img"

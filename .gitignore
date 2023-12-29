@@ -22,7 +22,7 @@
 /frontendyarn-debug.log*
 /frontendyarn-error.log*
 
-
+/backend/__pycache__
 
 /elasticsearch
 /db

@@ -47,7 +47,7 @@ const ArticleDetails = ({ articleData }) => {
           </div>
           <div className="ml-8 md:ml-20">
             <p style={customStyle}>Date de publication:</p>
-            <p>{articleData.publicationDate}</p>
+            <p>{articleData.publication_date}</p>
           </div>
         </div>
   
@@ -59,7 +59,7 @@ const ArticleDetails = ({ articleData }) => {
         <div className="my-4" />
   
         <p style={customStyle}>Texte intégral:</p>
-        <p>{articleData.fullText}</p>
+        <p>{articleData.text}</p>
   
         <div className="my-4" />
   

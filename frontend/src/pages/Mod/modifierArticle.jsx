@@ -35,7 +35,7 @@ const ModModification = ({
   };
 
   return (
-  //  <ProtectedComponent role="MOD">
+  <ProtectedComponent role="MOD">
     <div className="container mx-auto mt-8 px-4 overflow-y-auto min-h-screen">
       <div className="w-full max-w-7xl mx-auto">
 
@@ -75,7 +75,7 @@ const ModModification = ({
 
       </div>
     </div>
-  //  </ProtectedComponent>
+  </ProtectedComponent>
   );
 }
 

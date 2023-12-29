@@ -31,7 +31,7 @@ function App() {
           <Routes>
             <Route path="/" exact element={<ClientHome/>} />
             <Route path="/favorites" exact element={<Favoris/>} />
-            <Route path="/affichage" exact element={<Affichage/>} />
+            <Route path="/article/:id" exact element={<Affichage/>} />
             <Route path="/mod" exact element={<ModHome/>} />
             <Route path="/admin" exact element={<AdminHome/>} />
            {/* <Route path="/upload" exact element={<AdminUpload/>} /> */}
