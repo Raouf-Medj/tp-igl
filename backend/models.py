@@ -18,3 +18,9 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     role = db.Column(db.Enum(RoleEnum), nullable=False)
+
+
+class UserArticle(db.Model):
+    __tablename__ = "db_users_favoris"
+    user_id = db.Column(db.String(32), db.ForeignKey('db_users.id'), primary_key=True)
+    article_id = db.Column(db.String(30), primary_key=True)
