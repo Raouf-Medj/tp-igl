@@ -5,7 +5,7 @@ from models import db, User, RoleEnum
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
-from backend.articleController import articleController
+from articleController import articleController
 
 
 

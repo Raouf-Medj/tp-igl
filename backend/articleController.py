@@ -9,7 +9,7 @@ es = Elasticsearch(['http://localhost:9200'])
 
 
 #Get an article by ID
-@articleController.route('/api/article/<string:article_id>', methods=['GET'])
+@articleController.route('/api/articles/<string:article_id>', methods=['GET'])
 def getArticleByID(article_id):
     try:
         index_name = 'articles'  # Replace with your index name
@@ -24,21 +24,88 @@ def getArticleByID(article_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@articleController.route('/api/article',methods=['GET','POST','PUT'],defaults={'timeout': 120})
+@articleController.route('/api/articles',methods=['GET','POST','PUT'])
 def manageArticles():
+    index_name = "articles"
     if request.method == 'GET':
-        #do stuff here
-        print("yes")
-    elif request.method == 'POST':
-        jsonRequestObject = request.json
-        if "pdf_name" in jsonRequestObject:
-            #we suppose that the pdf exists in the docs folder in frontend/public/
-            extractedJson = pdfToJson(jsonRequestObject["pdf_name"])
+        try:
+            listOfFieldsToMatch = []
+            jsonRequestObject=request.get_json()
+            if jsonRequestObject["query"]!="":
+                listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
+            if jsonRequestObject["authors"]!=[]:
+                listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
+            if jsonRequestObject["institutions"]!=[]:
+                listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
+            if jsonRequestObject["keywords"]!=[]:
+                listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
+            if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
+                listOfFieldsToMatch.append({ "range": { "publication_date": { "gte": jsonRequestObject["date_debut"],"lte":jsonRequestObject["date_fin"] }}})
             
-        else:
-            print()
+            if listOfFieldsToMatch!=[]:
+                search_query = {
+                    "query":{
+                        "bool":{
+                            "must" : listOfFieldsToMatch
+                        }
+                    },
+                    "_source":["title","abstract","url","validated"],
+                    "size":100
+                }
+            else:
+                search_query ={
+                    "query":{
+                        "match_all": {}
+                    },
+                    "_source":["title","abstract","url","validated"],
+                    "size":100
+                }
+            print(search_query)
+            response = es.search(index=index_name, body=search_query)
+            listOfResults = response['hits']['hits']
+            finalListOfResults = []
+            for result in listOfResults:
+                tmp = {}
+                tmp["id"]= result["_id"]
+                tmp["title"]= result["_source"]["title"]
+                tmp["abstract"]= result["_source"]["abstract"]
+                tmp["url"]= result["_source"]["url"]
+                tmp["validated"]= result["_source"]["validated"]
+                finalListOfResults.append(tmp)
+            return jsonify({"articles":finalListOfResults})
+        except Exception as e:
+            print(str(e))
+            return jsonify({"erreur":"echec dans la recherche"}),500
+    elif request.method == 'POST':
+        try:
+            jsonRequestObject = request.get_json()
+            
+            if "pdf_name" in jsonRequestObject:
+                #we suppose that the pdf exists in the docs folder in frontend/public/
+                extractedJson = pdfToJson(jsonRequestObject["pdf_name"])
+                response = es.index(index=index_name, body=extractedJson)
+                
+                return jsonify({"id":response['_id'],"title":extractedJson["title"]})
+            else:
+                return jsonify({'erreur': "nom de fichier incoherent"})
+
+        except:
+            return jsonify({'erreur': "echec d'ajout d'un article"}), 500  # Internal Server Error
     elif request.method == 'PUT':
-        #yesyes
-        print("yesss")
+        try:
+            jsonRequestObject = request.get_json()
+            if "id" in jsonRequestObject:
+                id = jsonRequestObject["id"]
+                jsonRequestObject.pop("id")
+            else:
+                return jsonify({'error': 'champ "id" abscent'}), 500  
+            es.update(index=index_name, id=id, body={'doc':jsonRequestObject })
+
+            return jsonify({"id": id,"title":jsonRequestObject["title"]})
+
+        except Exception as e:
+            print(e)
+            return jsonify({'erreur': 'mise a jour echouee'}), 500  
     else:
         return jsonify({'error': 'methode de requete non supportee'}), 405  
+    
