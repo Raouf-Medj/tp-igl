@@ -23,6 +23,7 @@
 /frontendyarn-error.log*
 
 /backend/__pycache__
+/backend/uploads
 
 /elasticsearch
 /db

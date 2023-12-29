@@ -93,7 +93,7 @@ def fixJsonObject(json_object,text,url):
 
 def pdfToJson(fileName):
     #final method which uses all previously defined method, and this is the exported function that the article controller will actually use
-    urlToPdf = "../frontend/public/docs/"+fileName
+    urlToPdf = "./uploads/"+fileName
     #urlToJson = "./json_results/"+fileName+".json"
 
     pureText = extractTextFromPDF(urlToPdf)

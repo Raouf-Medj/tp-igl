@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import json, re
 from datetime import datetime, timedelta, timezone
 from models import db, User, RoleEnum, UserArticle
@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
 from articleController import articleController
+import os
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
@@ -32,10 +33,8 @@ bcrypt = Bcrypt(app)
 
 db.init_app(app)
 
-
 with app.app_context():
     db.create_all()
-
 
 
 # Handling requests
@@ -84,7 +83,6 @@ def register():
     })
 
 
-
 @app.route('/api/login', methods=['POST'])
 def login():
     username = request.json["username"]
@@ -107,6 +105,7 @@ def login():
         "role": user.role.name
     })
 
+
 @app.route("/api/logout", methods=["POST"])
 def logout():
     response = jsonify({"msg": "Logout successful"})
@@ -114,9 +113,23 @@ def logout():
     return response
 
 
+@app.route('/api/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'Pas de fichier'}), 404
 
+    file = request.files['file']
 
+    if file.filename == '':
+        return jsonify({'error': 'Pas de fichier selectionné'}), 404
 
+    if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() == "pdf":
+        filename = os.path.join("uploads/", file.filename)
+        file.save(filename)
+
+        return jsonify({'message': 'Succes'}), 200
+    else:
+        return jsonify({'error': 'Type de fichier invalide'}), 200
 
 @app.after_request
 def refresh_expiring_jwts(response):
