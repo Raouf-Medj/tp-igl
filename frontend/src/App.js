@@ -7,9 +7,10 @@ import ModHome from './pages/Mod';
 import ClientHome from './pages/User';
 import Favoris from './pages/User/favoris';
 import AdminHome from './pages/Admin';
-import AdminUpload from './pages/Admin/upload';
 import NavBar from './components/Navbar/NavBar';
 import Footer from './components/Footer';
+
+
 
 function App() {
 
@@ -32,7 +33,6 @@ function App() {
             <Route path="/favorites" exact element={<Favoris/>} />
             <Route path="/mod" exact element={<ModHome/>} />
             <Route path="/admin" exact element={<AdminHome/>} />
-            <Route path="/upload" exact element={<AdminUpload/>} />
             <Route path="*" element={<NotFound/>} />
           </Routes>
         </div>
