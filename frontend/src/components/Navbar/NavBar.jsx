@@ -44,18 +44,20 @@ const NavBar = ({ removeToken }) => {
     } 
 
     return (
-        <div className='bg-[#FCFFF7] py-[1.25%] px-[3%] flex justify-between shadow-md hover:shadow-xl transition duration-300 ease-in-out transform'>
-            <div className='w-[45%] flex items-center'>
-                <Link to="/" className='w-[20%] h-auto mr-[10%]'>
+        <div className='bg-[#FCFFF7] py-[5%] sm:py-[1.25%] px-[3%] flex justify-between shadow-md hover:shadow-xl transition duration-300 ease-in-out transform'>
+            <div className='md:w-[70%] flex items-center'>
+                <Link to="/" className='w-[40%] sm:w-[25%] h-auto sm:mr-[10%]'>
                     <img
                         src="/images/img_logo.png"
                         alt="logo_img"
                     />
                 </Link>
-                {renderLinks()}
+                <div className='w-full'>
+                    {renderLinks()}
+                </div>
                 
             </div>
-            <button type="submit" onClick={logoutHandler} className={`p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}><HiOutlineLogout className='text-xl mr-2'/> Se déconnecter</button>
+            <button type="submit" onClick={logoutHandler} className={`p-1 sm:p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}><HiOutlineLogout className='text-xl md:mr-2'/><h1 className='hidden md:block'>Se déconnecter</h1></button>
         </div>
     );
 };

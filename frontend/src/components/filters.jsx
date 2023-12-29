@@ -63,15 +63,17 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
                         }}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
-                                const updatedKeywords = [...keywords, event.target.value];
-                                setKeywords(updatedKeywords);
+                                if (!keywords.includes(event.target.value)) {
+                                    const updatedKeywords = [...keywords, event.target.value];
+                                    setKeywords(updatedKeywords);
+                                }
                                 setKeyword("");
                             }
                         }}
                     />
                 </div>
                 { keywords && (
-                    <div className='flex flex-wrap max-w-[250px]'>
+                    <div className='flex flex-wrap lg:max-w-[250px]'>
                         {keywords.map((keyword, index) => (
                             <FilterElement key={index} content={keyword} onClick={() => {handleDeleteKeyword(keyword)}} />
                         ))}
@@ -93,15 +95,17 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
                     }}
                     onKeyDown={(event) => {
                         if (event.key === 'Enter') {
-                            const updatedAuthors = [...authors, event.target.value];
-                            setAuthors(updatedAuthors);
+                            if (!authors.includes(event.target.value)) {
+                                const updatedAuthors = [...authors, event.target.value];
+                                setAuthors(updatedAuthors);
+                            }
                             setAuthor("");
                         }
                     }}
                 />
             </div>
             { authors && (
-                <div className='flex flex-wrap max-w-[250px]'>
+                <div className='flex flex-wrap lg:max-w-[250px]'>
                     {authors.map((author, index) => (
                         <FilterElement key={index} content={author} onClick={() => {handleDeleteAuthor(author)}} />
                     ))}
@@ -122,15 +126,17 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
                         }}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
-                                const updatedInstitutions = [...institutions, event.target.value];
-                                setInstitutions(updatedInstitutions);
+                                if (!institutions.includes(event.target.value)) {
+                                    const updatedInstitutions = [...institutions, event.target.value];
+                                    setInstitutions(updatedInstitutions);
+                                }
                                 setInstitution("");
                             }
                         }}
                     />
                 </div>
                 { institutions && (
-                    <div className='flex flex-wrap max-w-[250px]'>
+                    <div className='flex flex-wrap lg:max-w-[250px]'>
                         {institutions.map((institution, index) => (
                             <FilterElement key={index} content={institution} onClick={() => {handleDeleteInstitution(institution)}} />
                         ))}
