@@ -216,12 +216,12 @@ def modify_mod():
 
 @app.route("/api/favoris/<id>", methods = ['GET'])
 def get_favoris_user(id):
-    user = User.query.get(id)
+    user = User.query.filter_by(id = id).first()
     articles = []
     if not user:
-        return jsonify({"Error":"User not found"}), 404
+        return jsonify({"error":"Utilisateur introuvable"}), 404
     else:
-        user_favoris = UserArticle.query.filter_by(user_id = id)
+        user_favoris = UserArticle.query.filter_by(user_id = id).all()
         for favoris in user_favoris:
             article_exists = es.exists(index = "articles", id = favoris.article_id)
             if article_exists:
@@ -234,22 +234,33 @@ def get_favoris_user(id):
                     "url": retrieved_article.get('url',''),
                     "validated": retrieved_article.get('validated','')
                 })
+            else:
+                db.session.delete(favoris)
+                db.session.commit()
         return jsonify({"articles":articles}), 200
 
 
 
 @app.route('/api/favoris', methods=['POST'])
 def like_article():
-    # Get the article's id and the user's id from a json file
     req_json = request.json
     user_id = req_json["user_id"]
     article_id = req_json["article_id"]
-
-    article_favori = UserArticle(user_id=user_id, article_id=article_id)
-    db.session.add(article_favori)
-    db.session.commit()
-
-    return jsonify({'user_id': user_id, 'article_id': article_id})
+    user_exists = User.query.filter_by(id = user_id).first()
+    article_exists = es.exists(index = "articles", id = article_id)
+    if article_exists and user_exists and user_exists.role == RoleEnum.CLIENT:
+        article_favori_existant = UserArticle.query.filter_by(user_id = user_id, article_id = article_id).first()
+        if not article_favori_existant:
+            article_favori = UserArticle(user_id=user_id, article_id=article_id)
+            db.session.add(article_favori)
+            db.session.commit()
+            return jsonify({'user_id': user_id, 'article_id': article_id}), 200
+        else:
+            return jsonify({"error":"Article existant dans la liste des favoris de l'utilisateur"}), 409
+    elif not user_exists or not user_exists.role == RoleEnum.CLIENT:
+        return jsonify({"error":"Utilisateur introuvable"}), 404
+    else:
+        return jsonify({"error":"Article introuvable"}), 404
 
 
 
@@ -257,38 +268,29 @@ def like_article():
 @app.route('/api/favoris/<user_id>/<article_id>', methods=['DELETE'])
 def unlike_article(user_id, article_id):
     article_favori = UserArticle.query.filter_by(user_id=user_id, article_id=article_id).first()
-    
-    # Check if article exists in the user's list of favorites
     if article_favori:
         db.session.delete(article_favori)
         db.session.commit()
-
-        return jsonify({'user_id': user_id, 'article_id': article_id})
+        return jsonify({'user_id': user_id, 'article_id': article_id}), 200
     else:
-        return jsonify({'Erreur': 'Article not found in user favorites list'}),404
+        return jsonify({"error": "Article introuvable dans la liste des favoris de l'utilisateur"}), 404
 
 
 @app.route('/api/articles/<id>', methods=['DELETE'])
 def delete_article(id):
-    try:
-        # Check if the article exists in someone's list of favorites
-        article_favori = UserArticle.query.filter_by(article_id=id).first()
-
-        if article_favori:
-            # Delete the article from the UserArticle
-            db.session.delete(article_favori)
-            db.session.commit()
-
-        # Get the article from Elasticsearch
-        article = es.get(index='articles', id=id)
-        title = article['_source']['title']
-
-        # Delete the article from Elasticsearch
-        es.delete(index='articles', id=id, ignore=[400, 404])
-
-        return jsonify({'id': id, 'title': title})
-    except NotFoundError:
-        return jsonify({'error': 'Article not found in Elasticsearch'}), 404
+    article_exists = es.exists(index = "articles", id = id)
+    if article_exists:
+        article = es.get(index = "articles", id = id)
+        article_title  = article['_source']['title']
+        es.delete(index="articles", id = id)
+        article_favoris = UserArticle.query.filter_by(article_id=id).all()
+        if len(article_favoris) > 0:
+            for favoris in article_favoris:
+                db.session.delete(favoris)
+                db.session.commit()
+        return jsonify({"id":id, "title":article_title}), 200
+    else:
+        return jsonify({"error":"Article introuvable"}), 404    
 
 
 
