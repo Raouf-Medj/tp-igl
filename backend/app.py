@@ -5,6 +5,8 @@ from models import db, User, RoleEnum, UserArticle
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
+from articleController import articleController
+
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 
@@ -14,6 +16,8 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 # Flask instance
 app = Flask(__name__)
+app.register_blueprint(articleController,url_prefix="")
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:scifetch.23@db.bglmxtkawutiaiyihpij.supabase.co:5432/postgres"
 app.config["SECRET_KEY"] = "zYpEicDyBgF704lYByrQVVDqDd3eRX0b"
@@ -31,6 +35,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
 
 
 # Handling requests
@@ -108,6 +113,11 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
+
+
+
+
+
 @app.after_request
 def refresh_expiring_jwts(response):
     try:
@@ -125,6 +135,9 @@ def refresh_expiring_jwts(response):
         # Case where there is not a valid JWT. Just return the original respone
         return response
  
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
 
 @app.route('/api/mods', methods=['POST'])
 def add_mod():
@@ -278,6 +291,4 @@ def delete_article(id):
         return jsonify({'error': 'Article not found in Elasticsearch'}), 404
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
 
