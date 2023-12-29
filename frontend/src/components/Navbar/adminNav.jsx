@@ -26,7 +26,7 @@ const AdminNav = () => {
                 <Link to={"/upload"} className='hidden sm:block text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform'>Uploader article</Link>
                 <Link to={"/upload"} className='block sm:hidden text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform'>Uploader</Link>
                 {/* <label htmlFor="fileInput" className='text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform cursor-pointer'>Uploader articles</label>
-                <input type="file" id="fileInput" onChange={handleFileChange} style={{ display: 'none' }} /> */}
+                <input type="file" id="fileInput" onChange={handleFileChange} style={{ display: 'none' }} /> */} 
             </li>
         </ul>
     )
