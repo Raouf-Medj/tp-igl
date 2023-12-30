@@ -17,7 +17,7 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles }) => {
 
   const handleViewPdf = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/uploads/${url}`, {
+      const response = await axios.get(`http://localhost:5000/api/uploads/${url}`, {
         responseType: 'arraybuffer',
       });
 
@@ -58,7 +58,7 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles }) => {
   };
 
   return (
-    <div className='flex flex-col sm:flex-row items-center justify-between bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5'>
+    <div className='flex flex-col sm:flex-row items-center justify-between bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5 hover:drop-shadow-lg transition duration-300 ease-in-out transform'>
       <div className='mb-4 sm:mb-0 sm:mr-6'>
         <Link  to={`/article/${id}`} rel='noopener noreferrer'>
           <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-xl sm:text-2xl transition duration-300 ease-in-out transform'>

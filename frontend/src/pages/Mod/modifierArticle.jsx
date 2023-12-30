@@ -85,7 +85,20 @@ const ModModification = () => {
 
   const handleSupprimer = async () => {
     setLoading(true);
-    await axios.put(`http://localhost:5000/api/articles/${id}`)
+    await axios.delete(`http://localhost:5000/api/articles/${id}`)
+    .then(() => {})
+    .catch(error => {
+        if (error.response && error.response.data) {
+            // setErr(error.response.data.error);
+        } else {
+            // setErr('Une erreur est survenue');
+        }
+    })
+    .finally(() => {
+        setLoading(false);
+    })
+
+    await axios.delete(`http://localhost:5000/api/uploads/${url}`)
     .then(() => {
       navigate("/mod");
     })

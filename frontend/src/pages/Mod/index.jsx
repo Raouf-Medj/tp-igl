@@ -78,7 +78,7 @@ const ModHome = () => {
           ) :
             <h1 className='font-bold text-xl sm:text-2xl mb-3 sm:mb-0'>Articles à réctifier ({articles.filter((article) => !article.validated).length})</h1>
           }
-          <div className='relative mt-4 sm:mt-0'>
+          <div className='relative mt-4 sm:mt-0 z-10'>
             <button
               onClick={() => setIsOpen(prev => !prev)}
               className='px-6 w-56 py-2 bg-[#21A0A0] text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out flex items-center relative z-10'

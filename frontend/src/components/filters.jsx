@@ -44,7 +44,7 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
     };
 
     return (
-        <div className='bg-white rounded-2xl border border-[#E5E5E5] p-8'>
+        <div className='bg-white rounded-2xl border border-[#E5E5E5] p-8 hover:drop-shadow-xl transition duration-300 ease-in-out transform'>
             <div className='flex items-center justify-between'>
                 <h1 className='font-bold text-lg'>Filtrer par:</h1>
                 <FaSliders className='text-lg'/>
@@ -168,6 +168,15 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
                         onChange={handleEndDateChange}
                     />
                 </div>
+            </div>
+            <div className='flex flex-col mt-10 items-center justify-center'>
+                <button onClick={() => {
+                    setKeywords([]);
+                    setAuthors([]);
+                    setInstitutions([]);
+                    setDateDeb("");
+                    setDateFin("");
+                }} className='bg-[#545454] w-full font-semibold hover:bg-[#4c4c4cda] hover:drop-shadow-md text-white p-3 rounded-xl transition duration-300 ease-in-out transform'>Tout effacer</button>
             </div>
         </div>
     )

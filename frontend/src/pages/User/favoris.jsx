@@ -22,6 +22,7 @@ const Favoris = () => {
           await axios.get(`http://localhost:5000/api/favoris/${userid}`)
           .then(response => {
             setArticles(response.data.articles);
+            setSearchResult(response.data.articles);
           })
           .catch(error => {
               if (error.response && error.response.data) {

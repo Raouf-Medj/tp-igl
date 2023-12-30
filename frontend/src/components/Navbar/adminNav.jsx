@@ -24,7 +24,7 @@ const AdminNav = ({ setLoading }) => {
         formData.append('file', fichier);
 
         try {
-            await axios.post('http://localhost:5000/api/upload', formData);
+            await axios.post('http://localhost:5000/api/uploads', formData);
 
             console.log('File uploaded successfully!');
 

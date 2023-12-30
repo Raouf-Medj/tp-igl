@@ -7,7 +7,7 @@ const Article = ({ id, title, url, abstract, isRectifier }) => {
 
     const handleViewPdf = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/uploads/${url}`, {
+          const response = await axios.get(`http://localhost:5000/api/uploads/${url}`, {
             responseType: 'arraybuffer',
           });
     
@@ -35,7 +35,7 @@ const Article = ({ id, title, url, abstract, isRectifier }) => {
     }
 
     return (
-        <div className='flex sm:flex-row flex-col items-center bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5'>
+        <div className='flex sm:flex-row flex-col items-center bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5 hover:drop-shadow-lg transition duration-300 ease-in-out transform'>
             <div>
                 <Link to={`${ isRectifier ? `/mod/article/${id}` : `/article/${id}`}`}>
                     <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-2xl transition duration-300 ease-in-out transform'>{title}</h1>

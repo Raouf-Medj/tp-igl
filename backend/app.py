@@ -113,7 +113,7 @@ def logout():
     return response
 
 
-@app.route('/api/upload', methods=['POST'])
+@app.route('/api/uploads', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'Pas de fichier'}), 404
@@ -133,12 +133,23 @@ def upload_file():
 
         return jsonify({'message': 'Succes'}), 200
     else:
-        return jsonify({'error': 'Type de fichier invalide'}), 200
+        return jsonify({'error': 'Type de fichier invalide'}), 415
 
 
-@app.route('/uploads/<filename>', methods=['GET'])
+@app.route('/api/uploads/<filename>', methods=['GET'])
 def download_file(filename):
     return send_from_directory('uploads/', filename)
+
+
+@app.route('/api/uploads/<filename>', methods=['DELETE'])
+def delete_file(filename):
+    filepath = os.path.join("uploads/", filename)
+    
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        return jsonify({'message': f'Le fichier {filename} a été supprimé'}), 200
+    else:
+        return jsonify({'error': 'Fichier non trouvé'}), 404
 
 
 @app.after_request
@@ -203,6 +214,7 @@ def delete_mod(id):
         else:
             return jsonify({"error": "Utilisateur introuvable"}), 404
 
+
 @app.route('/api/mods', methods = ['GET'])
 def get_mods():
     users = User.query.filter_by(role = RoleEnum.MOD).all()
@@ -213,6 +225,7 @@ def get_mods():
             "username": user.username
         })
     return jsonify({"mods":usersToReturn}), 200
+
 
 @app.route('/api/mods/<id>', methods = ['GET'])
 def get_mod(id):
@@ -260,7 +273,6 @@ def modify_mod():
                 return jsonify({"error": "Utilisateur introuvable"}), 404
 
 
-
 @app.route("/api/favoris/<id>", methods = ['GET'])
 def get_favoris_user(id):
     user = User.query.filter_by(id = id).first()
@@ -287,7 +299,6 @@ def get_favoris_user(id):
         return jsonify({"articles":articles}), 200
 
 
-
 @app.route('/api/favoris', methods=['POST'])
 def like_article():
     req_json = request.json
@@ -308,8 +319,6 @@ def like_article():
         return jsonify({"error":"Utilisateur introuvable"}), 404
     else:
         return jsonify({"error":"Article introuvable"}), 404
-
-
 
 
 @app.route('/api/favoris/<user_id>/<article_id>', methods=['DELETE'])
