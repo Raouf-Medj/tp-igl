@@ -24,7 +24,6 @@ def getArticleByID(article_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 @articleController.route('/api/articles/search',methods=['POST'])
 def manageArticleSearch():
     index_name = "articles"
@@ -34,9 +33,9 @@ def manageArticleSearch():
         if jsonRequestObject["query"]!="":
             listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
         if jsonRequestObject["authors"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
+            listOfFieldsToMatch.append({ "terms": { "authors.keyword": jsonRequestObject["authors"] }})
         if jsonRequestObject["institutions"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
+            listOfFieldsToMatch.append({ "terms": { "institutions.keyword": jsonRequestObject["institutions"] }})
         if jsonRequestObject["keywords"]!=[]:
             listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
         if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
@@ -49,7 +48,7 @@ def manageArticleSearch():
                         "must" : listOfFieldsToMatch
                     }
                 },
-                "_source":["title","abstract","url","validated"],
+                "_source":["title","abstract","url","validated","publication_date"],
                 "size":100
             }
         else:
@@ -57,7 +56,7 @@ def manageArticleSearch():
                 "query":{
                     "match_all": {}
                 },
-                "_source":["title","abstract","url","validated"],
+                "_source":["title","abstract","url","validated","publication_date"],
                 "size":100
             }
         print(search_query)
@@ -70,6 +69,7 @@ def manageArticleSearch():
             tmp["title"]= result["_source"]["title"]
             tmp["abstract"]= result["_source"]["abstract"]
             tmp["url"]= result["_source"]["url"]
+            tmp["publication_date"]= result["_source"]["publication_date"]
             tmp["validated"]= result["_source"]["validated"]
             finalListOfResults.append(tmp)
         return jsonify({"articles":finalListOfResults})
@@ -114,3 +114,8 @@ def manageArticles():
     else:
         return jsonify({'error': 'methode de requete non supportee'}), 405  
     
+
+
+def stringSpliterLower(string):
+    tmpString = string.lower()
+    return tmpString.split()
