@@ -42,7 +42,6 @@ def gptTextAnalyser(text):
         #making sure the text does not surpass the number of tokens limit
         max_number_of_tokens = 9000
         words = text.split()
-        print(words)
         if len(words) > max_number_of_tokens:
             updatedWords = words[:4500] + words[-4500:]
         else:
