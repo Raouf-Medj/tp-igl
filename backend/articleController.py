@@ -24,59 +24,64 @@ def getArticleByID(article_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@articleController.route('/api/articles',methods=['GET','POST','PUT'])
+
+@articleController.route('/api/articles/search',methods=['POST'])
+def manageArticleSearch():
+    index_name = "articles"
+    try:
+        listOfFieldsToMatch = []
+        jsonRequestObject=request.get_json()
+        if jsonRequestObject["query"]!="":
+            listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
+        if jsonRequestObject["authors"]!=[]:
+            listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
+        if jsonRequestObject["institutions"]!=[]:
+            listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
+        if jsonRequestObject["keywords"]!=[]:
+            listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
+        if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
+            listOfFieldsToMatch.append({ "range": { "publication_date": { "gte": jsonRequestObject["date_debut"],"lte":jsonRequestObject["date_fin"] }}})
+        
+        if listOfFieldsToMatch!=[]:
+            search_query = {
+                "query":{
+                    "bool":{
+                        "must" : listOfFieldsToMatch
+                    }
+                },
+                "_source":["title","abstract","url","validated"],
+                "size":100
+            }
+        else:
+            search_query ={
+                "query":{
+                    "match_all": {}
+                },
+                "_source":["title","abstract","url","validated"],
+                "size":100
+            }
+        print(search_query)
+        response = es.search(index=index_name, body=search_query)
+        listOfResults = response['hits']['hits']
+        finalListOfResults = []
+        for result in listOfResults:
+            tmp = {}
+            tmp["id"]= result["_id"]
+            tmp["title"]= result["_source"]["title"]
+            tmp["abstract"]= result["_source"]["abstract"]
+            tmp["url"]= result["_source"]["url"]
+            tmp["validated"]= result["_source"]["validated"]
+            finalListOfResults.append(tmp)
+        return jsonify({"articles":finalListOfResults})
+    except Exception as e:
+        print(str(e))
+        return jsonify({"erreur":"echec dans la recherche"}),500
+
+@articleController.route('/api/articles',methods=['POST','PUT'])
 def manageArticles():
     index_name = "articles"
-    if request.method == 'GET':
-        try:
-            listOfFieldsToMatch = []
-            jsonRequestObject=request.get_json()
-            if jsonRequestObject["query"]!="":
-                listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
-            if jsonRequestObject["authors"]!=[]:
-                listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
-            if jsonRequestObject["institutions"]!=[]:
-                listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
-            if jsonRequestObject["keywords"]!=[]:
-                listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
-            if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
-                listOfFieldsToMatch.append({ "range": { "publication_date": { "gte": jsonRequestObject["date_debut"],"lte":jsonRequestObject["date_fin"] }}})
-            
-            if listOfFieldsToMatch!=[]:
-                search_query = {
-                    "query":{
-                        "bool":{
-                            "must" : listOfFieldsToMatch
-                        }
-                    },
-                    "_source":["title","abstract","url","validated"],
-                    "size":100
-                }
-            else:
-                search_query ={
-                    "query":{
-                        "match_all": {}
-                    },
-                    "_source":["title","abstract","url","validated"],
-                    "size":100
-                }
-            print(search_query)
-            response = es.search(index=index_name, body=search_query)
-            listOfResults = response['hits']['hits']
-            finalListOfResults = []
-            for result in listOfResults:
-                tmp = {}
-                tmp["id"]= result["_id"]
-                tmp["title"]= result["_source"]["title"]
-                tmp["abstract"]= result["_source"]["abstract"]
-                tmp["url"]= result["_source"]["url"]
-                tmp["validated"]= result["_source"]["validated"]
-                finalListOfResults.append(tmp)
-            return jsonify({"articles":finalListOfResults})
-        except Exception as e:
-            print(str(e))
-            return jsonify({"erreur":"echec dans la recherche"}),500
-    elif request.method == 'POST':
+    
+    if request.method == 'POST':
         try:
             jsonRequestObject = request.get_json()
             

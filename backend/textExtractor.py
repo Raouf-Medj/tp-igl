@@ -99,7 +99,7 @@ def pdfToJson(fileName):
     pureText = extractTextFromPDF(urlToPdf)
     gptText = gptTextAnalyser(pureText)
     gptJson = json.loads(gptText)
-    verified_dict = fixJsonObject(gptJson,pureText,urlToPdf)
+    verified_dict = fixJsonObject(gptJson,pureText,fileName)
 
     '''
     with open(urlToJson,"w") as json_file:

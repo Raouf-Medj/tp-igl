@@ -20,7 +20,7 @@ const SearchBar = ({ query, setQuery, placeholder, searchHandler, isForMod }) =>
                 onKeyDown={(event) => {if (event.key === 'Enter') {searchHandler()}}}
             />
             <div className='bg-[#EDEFF5] rounded w-0.5 h-14 sm:mx-4 sm:block hidden'/>
-            <button onClick={searchHandler} className='sm:px-6 sm:py-2 p-3 bg-[#21A0A0] text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform'>
+            <button id="search" onClick={searchHandler} className='sm:px-6 sm:py-2 p-3 bg-[#21A0A0] text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform'>
                 {!isForMod ? (
                     <div>
                         <h1 className='sm:block hidden'>Trouver article</h1>

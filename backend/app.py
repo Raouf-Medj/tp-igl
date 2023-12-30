@@ -124,12 +124,22 @@ def upload_file():
         return jsonify({'error': 'Pas de fichier selectionné'}), 404
 
     if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() == "pdf":
+        
+        if os.path.isfile(os.path.join("uploads/", file.filename)):
+            return jsonify({'error': 'Un fichier avec le même nom existe déjà'}), 409
+        
         filename = os.path.join("uploads/", file.filename)
         file.save(filename)
 
         return jsonify({'message': 'Succes'}), 200
     else:
         return jsonify({'error': 'Type de fichier invalide'}), 200
+
+
+@app.route('/uploads/<filename>', methods=['GET'])
+def download_file(filename):
+    return send_from_directory('uploads/', filename)
+
 
 @app.after_request
 def refresh_expiring_jwts(response):

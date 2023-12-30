@@ -23,7 +23,7 @@ const LoginForm = ({ setToken }) => {
             password: password
           })
           .then(response => {
-            setToken(response.data.access_token, response.data.role)
+            setToken(response.data.access_token, response.data.role, response.data.id)
             const role = response.data.role
             if (role === 'CLIENT') {
                 navigate("/");

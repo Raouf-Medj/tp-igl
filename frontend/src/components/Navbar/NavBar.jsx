@@ -8,7 +8,7 @@ import ModNav from './modNav';
 import AdminNav from './adminNav';
 import NotFound from '../../pages/Error/404';
 
-const NavBar = ({ removeToken, loading, setLoading }) => {
+const NavBar = ({ removeToken, setLoading }) => {
 
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ const NavBar = ({ removeToken, loading, setLoading }) => {
     
         // Send a request to your server for authentication
         await axios.post('http://localhost:5000/api/logout')
-        .then(response => {
+        .then(() => {
             removeToken();
             navigate("/");
         })
@@ -33,7 +33,7 @@ const NavBar = ({ removeToken, loading, setLoading }) => {
 
         switch (userrole) {
             case 'ADMIN':
-              return <AdminNav loading={loading} setLoading={setLoading}/>;
+              return <AdminNav setLoading={setLoading}/>;
             case 'MOD':
               return <ModNav/>;
             case 'CLIENT':

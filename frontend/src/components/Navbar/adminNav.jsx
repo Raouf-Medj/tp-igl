@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 
-const AdminNav = ({ loading, setLoading }) => {
+const AdminNav = ({ setLoading }) => {
 
     const handleFileChange = (e) => {
         const fichier = e.target.files[0];

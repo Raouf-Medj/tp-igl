@@ -21,14 +21,14 @@ const ArticleDetails = ({ articleData }) => {
           {articleData.title}
         </h2>
   
-        <div className="flex justify-between">
-          <div>
+        <div className="flex justify-between sm:text-base text-xs">
+          <div className='w-[50%]'>
             <p style={customStyle}>Auteurs:</p>
             {articleData.authors.map((author, index) => (
               <p key={index}>{author}</p>
             ))}
           </div>
-          <div className="ml-8 md:ml-20">
+          <div className="w-[50%] ml-8 md:ml-20">
             <p style={customStyle}>Institutions:</p>
             {articleData.institutions.map((institution, index) => (
               <p key={index}>{institution}</p>
@@ -38,32 +38,32 @@ const ArticleDetails = ({ articleData }) => {
   
         <div className="my-4" />
   
-        <div className="flex justify-between">
-          <div>
+        <div className="flex justify-between sm:text-base text-xs">
+          <div className='w-[50%]'>
             <p style={customStyle}>Mots-clés:</p>
             {articleData.keywords.map((keyword, index) => (
               <p key={index}>{keyword}</p>
             ))}
           </div>
-          <div className="ml-8 md:ml-20">
+          <div className="w-[50%] ml-8 md:ml-20">
             <p style={customStyle}>Date de publication:</p>
             <p>{articleData.publication_date}</p>
           </div>
         </div>
   
-        <div className="my-4" />
+        <div className="my-4 h-0.5 bg-gray-300 rounded " />
   
-        <p style={customStyle}>Résumé:</p>
-        <p>{articleData.abstract}</p>
+        <p className='sm:text-base text-xs' style={customStyle}>Résumé:</p>
+        <p className='sm:text-base text-xs'>{articleData.abstract}</p>
   
-        <div className="my-4" />
+        <div className="my-4 h-0.5 bg-gray-300 rounded " />
   
-        <p style={customStyle}>Texte intégral:</p>
-        <p>{articleData.text}</p>
+        <p className='sm:text-base text-xs' style={customStyle}>Texte intégral:</p>
+        <p className='sm:text-base text-xs'>{articleData.text}</p>
   
-        <div className="my-4" />
+        <div className="my-4 h-0.5 bg-gray-300 rounded " />
   
-        <div>
+        <div className='sm:text-base text-xs'>
           <p style={customStyle}>Références:</p>
           {articleData.references.map((reference, index) => (
             <p key={index}>{reference}</p>
@@ -73,26 +73,16 @@ const ArticleDetails = ({ articleData }) => {
     );
   };
 
-const CenteredArticleDetails = () => {
+const CenteredArticleDetails = ({ articleData }) => {
   const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
 
   const handleAddToFavorites = () => {
     setIsAddedToFavorites(true);
   };
 
-  const articleData = {
-    title: 'Titre de l\'article',
-    authors: ['Auteur 1', 'Auteur 2'],
-    institutions: ['Institution 1', 'Institution 2'],
-    keywords: ['Mot-clé 1', 'Mot-clé 2'],
-    publicationDate: '01/01/2024',
-    abstract: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquaor sit ameassa urna felis porta Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis porta',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquaor sit ameassa urna felis porta Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquaor sit ameassa urna felis porta Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquaor sit ameassa urna felis porta Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquaor sit ameassa urna felis porta Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaLorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis portaeleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis porta',
-    references: ['Référence 1', 'Référence 2' , 'Référence 3']
-  };
 
   return (
-    <div className="flex flex-col items-start min-h-screen p-8">
+    <div className="flex flex-col items-start min-h-screen sm:p-8">
       {!isAddedToFavorites ? (
         <button
           onClick={handleAddToFavorites}
@@ -102,11 +92,11 @@ const CenteredArticleDetails = () => {
         </button>
       ) : (
         <div className='mb-8 px-4 py-2 mx-auto text-red-500 bg-white rounded-full border border-gray hover:bg-gray-200 flex items-center'>
-          <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouté aux favoris !
+          <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouté aux favoris!
         </div>
       )}
 
-      <div className="w-11/12 md:w-2000px h-screen md:h-2000px mx-auto bg-white border border-gray p-8 rounded-md overflow-auto">
+      <div className="w-11/12 md:w-2000px h-screen md:h-2000px mx-auto bg-white border border-gray sm:p-8 rounded-md overflow-auto">
         <ArticleDetails articleData={articleData} />
       </div>
     </div>

@@ -28,7 +28,7 @@ function App() {
       </Routes>
     : (
       <div>
-        <NavBar removeToken={removeToken} loading={loading} setLoading={setLoading} />
+        <NavBar removeToken={removeToken} setLoading={setLoading} />
         <div className='min-h-screen bg-[#FCFFF7]'>
           <Routes>
             <Route path="/" exact element={<ClientHome/>} />
