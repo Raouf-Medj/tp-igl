@@ -1,26 +1,52 @@
 import ProtectedComponent from '../../components/protected';
-import React, { useState } from 'react';
-import { FaPencilAlt } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
 import EditableField from '../../components/editableField';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-const ModModification = ({
-  articleTitleParam,
-  authorsParam,
-  institutionsParam,
-  keywordsParam,
-  publicationDateParam,
-  referencesParam,
-  summaryParam,
-  fullTextParam
-}) => {
-  const [articleTitle, setArticleTitle] = useState(articleTitleParam || '');
-  const [authors, setAuthors] = useState(authorsParam || '');
-  const [institutions, setInstitutions] = useState(institutionsParam || '');
-  const [keywords, setKeywords] = useState(keywordsParam || '');
-  const [publicationDate, setPublicationDate] = useState(publicationDateParam || null);
-  const [references, setReferences] = useState(referencesParam || '');
-  const [summary, setSummary] = useState(summaryParam || '');
-  const [fullText, setFullText] = useState(fullTextParam || '');
+const ModModification = () => {
+
+  const { id } = useParams();
+
+  const [articleTitle, setArticleTitle] = useState('');
+  const [authors, setAuthors] = useState([]);
+  const [institutions, setInstitutions] = useState([]);
+  const [keywords, setKeywords] = useState([]);
+  const [publicationDate, setPublicationDate] = useState('');
+  const [references, setReferences] = useState([]);
+  const [summary, setSummary] = useState('');
+  const [fullText, setFullText] = useState('');
+  const [loading, setLoading] = useEffect(false);
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      setLoading(true);
+      await axios.get(`http://localhost:5000/api/articles/${id}`)
+      .then(response => {
+        const article = response.data;
+        setArticleTitle(article.title);
+        setAuthors(article.authors);
+        setInstitutions(article.institutions);
+        setKeywords(article.keywords);
+        setPublicationDate(article.publicationDate);
+        setReferences(article.references);
+        setSummary(article.abstract);
+        setFullText(article.text);
+      })
+      .catch(error => {
+          if (error.response && error.response.data) {
+              // setErr(error.response.data.error);
+          } else {
+              // setErr('Une erreur est survenue');
+          }
+      })
+      .finally(() => {
+          setLoading(false);
+      })
+    }
+
+    fetchArticle();
+  }, []);
 
   const handleValidation = () => {
     // update article infos

@@ -3,7 +3,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Article = ({ id, title, url, abstract }) => {
+const Article = ({ id, title, url, abstract, isRectifier }) => {
 
     const handleViewPdf = async () => {
         try {
@@ -37,9 +37,15 @@ const Article = ({ id, title, url, abstract }) => {
     return (
         <div className='flex sm:flex-row flex-col items-center bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5'>
             <div>
-                <Link to={`/article/${id}`}>
-                    <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-2xl transition duration-300 ease-in-out transform'>{title}</h1>
-                </Link>
+                { isRectifier ? (
+                    <Link to={`/mod/article/${id}`}>
+                        <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-2xl transition duration-300 ease-in-out transform'>{title}</h1>
+                    </Link>
+                ) : (
+                    <Link to={`/article/${id}`}>
+                        <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-2xl transition duration-300 ease-in-out transform'>{title}</h1>
+                    </Link>
+                )}
                 <p className='lg:block hidden'>{shortenAbstract(abstract, 25)} <Link to="/affichage" className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
                 <p className='lg:hidden'>{shortenAbstract(abstract, 15)} <Link className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
 

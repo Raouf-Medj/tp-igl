@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import useToken from '../utils/useToken';
+import axios from 'axios';
 
 const ArticleDetails = ({ articleData }) => {
     const customStyle = { color: '#767F8C' };
@@ -73,27 +75,105 @@ const ArticleDetails = ({ articleData }) => {
     );
   };
 
-const CenteredArticleDetails = ({ articleData }) => {
-  const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
+const CenteredArticleDetails = ({ articleData, id }) => {
 
-  const handleAddToFavorites = () => {
-    setIsAddedToFavorites(true);
+  const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { userid } = useToken();
+  useEffect(() => {
+
+    const fetchFavoris = async () => {
+      setLoading(true);
+      await axios.get(`http://localhost:5000/api/favoris/${userid}`)
+      .then(response => {
+        setIsAddedToFavorites(response.data.articles.some(article => article.id === id));
+      })
+      .catch(error => {
+        if (error.response && error.response.data) {
+            // setErr(error.response.data.error);
+        } else {
+            // setErr('Une erreur est survenue');
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+    }
+
+    fetchFavoris();
+}, []);
+
+  const handleAddToFavorites = async () => {
+    setLoading(true);
+    await axios.post("http://localhost:5000/api/favoris", {
+      article_id: id,
+      user_id: userid
+    })
+    .then(() => {
+      setIsAddedToFavorites(true);
+    })
+    .catch(error => {
+        if (error.response && error.response.data) {
+            // setErr(error.response.data.error);
+        } else {
+            // setErr('Une erreur est survenue');
+        }
+    })
+    .finally(() => {
+      setLoading(false);
+    })
   };
+
+  const handleRemoveFromFavorites = async () => {
+    setLoading(true);
+    await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
+    .then(() => {
+      setIsAddedToFavorites(false);
+    })
+    .catch(error => {
+        if (error.response && error.response.data) {
+            // setErr(error.response.data.error);
+        } else {
+            // setErr('Une erreur est survenue');
+        }
+    })
+    .finally(() => {
+      setLoading(false);
+    })
+  }
 
 
   return (
     <div className="flex flex-col items-start min-h-screen sm:p-8">
       {!isAddedToFavorites ? (
         <button
+          disabled={loading}
           onClick={handleAddToFavorites}
           className="mb-8 px-4 py-2 mx-auto bg-white text-black rounded-full border border-gray hover:bg-gray-200 flex items-center"
         >
-          <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouter aux favoris
+          { loading ? (
+            <div className='w-full flex items-center justify-center flex-col'>
+              <img src="/spinner2.gif" alt="spinner" className=" w-[12%] h-auto"/>
+            </div>
+          ) : (
+            <div>
+              <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouter aux favoris
+            </div>
+          )}
         </button>
       ) : (
-        <div className='mb-8 px-4 py-2 mx-auto text-red-500 bg-white rounded-full border border-gray hover:bg-gray-200 flex items-center'>
-          <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouté aux favoris!
-        </div>
+        <button disabled={loading} onClick={handleRemoveFromFavorites} className='mb-8 px-4 py-2 mx-auto text-red-500 bg-white rounded-full border border-gray hover:bg-gray-200 flex items-center'>
+          { loading ? (
+            <div className='w-full flex items-center justify-center flex-col'>
+              <img src="/spinner2.gif" alt="spinner" className=" w-[12%] h-auto"/>
+            </div>
+          ) : (
+            <div>
+              <FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouté aux favoris!
+            </div>
+          )}
+        </button>
       )}
 
       <div className="w-11/12 md:w-2000px h-screen md:h-2000px mx-auto bg-white border border-gray sm:p-8 rounded-md overflow-auto">

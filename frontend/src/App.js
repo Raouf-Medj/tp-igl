@@ -7,6 +7,7 @@ import ModHome from './pages/Mod';
 import ClientHome from './pages/User';
 import Favoris from './pages/User/favoris';
 import Affichage from './pages/User/affichage';
+import ModModification from './pages/Mod/modifierArticle';
 import AdminHome from './pages/Admin';
 import NavBar from './components/Navbar/NavBar';
 import Footer from './components/Footer';
@@ -35,8 +36,8 @@ function App() {
             <Route path="/favorites" exact element={<Favoris/>} />
             <Route path="/article/:id" exact element={<Affichage/>} />
             <Route path="/mod" exact element={<ModHome/>} />
+            <Route path="/mod/article/:id" exact element={<ModModification/>} />
             <Route path="/admin" exact element={<AdminHome loading={loading} setLoading={setLoading} />} />
-           {/* <Route path="/upload" exact element={<AdminUpload/>} /> */}
             <Route path="*" element={<NotFound/>} />
           </Routes>
         </div>

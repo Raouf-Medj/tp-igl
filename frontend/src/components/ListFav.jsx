@@ -2,12 +2,12 @@ import React from 'react'
 import ArticleFav from './articleFav';
 
 
-const ListFav = ({ articles }) => {
+const ListFav = ({ articles, setArticles }) => {
 
     return (
         <div className='max-h-[650px] overflow-y-auto border border-[#04686516] rounded-xl'>
             {articles.map((article) => (
-                <ArticleFav key={article.id} title={article.title} url={article.url} abstract={article.abstract} />
+                <ArticleFav key={article.id} id={article.id} title={article.title} url={article.url} abstract={article.abstract} articles={articles} setArticles={setArticles}/>
             ))}
         </div>
     )

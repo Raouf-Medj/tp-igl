@@ -1,32 +1,50 @@
 import ProtectedComponent from '../../components/protected';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchBar from '../../components/search';
 import ArticleList from '../../components/articleList';
 import { AiOutlineCaretUp, AiOutlineCaretDown } from "react-icons/ai";
+import axios from 'axios';
 
 const ModHome = () => {
 
-  const temp_abstract = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis"
-
-  const [articles, setArticles] = useState([
-    { id: "article1", title: "Title 1", abstract: temp_abstract, url: "", validated: true},
-    { id: "article2", title: "Title 2", abstract: temp_abstract, url: "", validated: true},
-    { id: "article3", title: "Title 3", abstract: temp_abstract, url: "", validated: false},
-    { id: "article4", title: "Title 4", abstract: temp_abstract, url: "", validated: true},
-    { id: "article5", title: "Title 5", abstract: temp_abstract, url: "", validated: true},
-    { id: "article6", title: "Title 6", abstract: temp_abstract, url: "", validated: false},
-    { id: "article7", title: "Title 7", abstract: temp_abstract, url: "", validated: false},
-    { id: "article8", title: "Title 8", abstract: temp_abstract, url: "", validated: true},
-    { id: "article9", title: "Title 9", abstract: temp_abstract, url: "", validated: true},
-    { id: "article10", title: "Title 10", abstract: temp_abstract, url: "", validated: true}
-  ]);
-
+  const [articles, setArticles] = useState([]);
   const [articlesToShow, setArticlesToShow] = useState(articles.filter((article) => !article.validated));
   const [searchResult, setSearchResult] = useState(articlesToShow);
-
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedOption, setSelectedOption] = useState("Articles à réctifier");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      setLoading(true);
+      await axios.post('http://localhost:5000/api/articles/search', {
+          query: "", 
+          authors: [],
+          institutions: [],
+          keywords: [],
+          date_debut: "",
+          date_fin: ""
+      })
+      .then(response => {
+          // const validatedArticles = response.data.articles.filter(article => article.validated === true)
+          const validatedArticles = response.data.articles;
+          setArticles(validatedArticles);
+      })
+      .catch(error => {
+          if (error.response && error.response.data) {
+              // setErr(error.response.data.error);
+          } else {
+              // setErr('Une erreur est survenue');
+          }
+      })
+      .finally(() => {
+          setLoading(false);
+      })
+    }
+
+    fetchArticles();
+  }, []);
 
   const searchHandler = () => {
     const filteredArticles = articlesToShow.filter(article => article.title.toLowerCase().includes(query.toLowerCase()));
@@ -83,7 +101,20 @@ const ModHome = () => {
             )}
           </div>
         </div>
-        <ArticleList articles={searchResult} />
+        { loading ? (
+            <div className='w-full flex items-center justify-center flex-col'>
+                <img src="/spinner2.gif" alt="spinner" className=" w-[5%] h-auto"/>
+            </div>
+        ) : (
+            articles.length > 0 ? (
+              <ArticleList articles={articles} isRectifier={true}/>
+            ) : (
+                <div className='flex justify-center items-center w-full mt-[10%] flex-col'>
+                    <img src="/images/img_no_result.png" alt="no_result" className="w-[10%] h-auto"/>
+                    <h1 className='font-bold sm:text-2xl mt-5 '>Liste vide...</h1>
+                </div>
+            )
+        )}
       </div>
     </ProtectedComponent>
   );

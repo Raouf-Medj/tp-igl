@@ -33,7 +33,9 @@ const Affichage = () => {
     }
 
     fetchArticle();
-  }, [])
+  }, []);
+
+  
 
   return (
     <ProtectedComponent role="CLIENT">
@@ -43,7 +45,7 @@ const Affichage = () => {
             <img src="/spinner2.gif" alt="spinner" className=" w-[5%] h-auto"/>
           </div>
         ) : (
-          <CenteredArticleDetails articleData={article} />
+          <CenteredArticleDetails articleData={article} id={id}/>
         )}
       </div>
     </ProtectedComponent>
