@@ -58,7 +58,7 @@ const Favoris = () => {
                         </div>
                     ) : (
                         searchResult.length > 0 ? (
-                            <ListFav articles={searchResult} setArticles={setArticles}/>
+                            <ListFav searchResult={searchResult} articles={articles} setSearchResult={setSearchResult} setArticles={setArticles}/>
                         ) : (
                             <div className='flex justify-center items-center w-full mt-[10%] flex-col'>
                                 <img src="/images/img_no_result.png" alt="no_result" className="w-[10%] h-auto"/>

@@ -5,7 +5,7 @@ import { FaHeart } from 'react-icons/fa';
 import axios from 'axios';
 import useToken from '../utils/useToken';
 
-const ArticleFav = ({ title, url, abstract, id, articles, setArticles }) => {
+const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchResult, setSearchResult }) => {
 
   const shortenAbstract = (abstract) => {
     if (abstract != undefined) {
@@ -44,6 +44,8 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles }) => {
     .then(() => {
       const updatedArticles = articles.filter((article) => article.id !== id);
       setArticles(updatedArticles);
+      const updatedSearchResult = searchResult.filter((article) => article.id !== id);
+      setSearchResult(updatedSearchResult);
     })
     .catch(error => {
         if (error.response && error.response.data) {
