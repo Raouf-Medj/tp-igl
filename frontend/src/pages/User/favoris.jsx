@@ -12,6 +12,7 @@ const Favoris = () => {
     const [query, setQuery] = useState("");
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [searchResult, setSearchResult] = useState([]);
     const [err, setErr] = useState("");
 
     useEffect(() => {
@@ -38,7 +39,10 @@ const Favoris = () => {
     }, []);
 
     const searchHandler = () => {
-        setQuery("");
+        const filteredArticles = articles.filter(article => article.title.toLowerCase().includes(query.toLowerCase()));
+        console.log(query);
+        setSearchResult(filteredArticles);
+        // setQuery("");
     };
 
     return (
@@ -52,8 +56,8 @@ const Favoris = () => {
                             <img src="/spinner2.gif" alt="spinner" className=" w-[5%] h-auto"/>
                         </div>
                     ) : (
-                        articles.length > 0 ? (
-                            <ListFav articles={articles} setArticles={setArticles}/>
+                        searchResult.length > 0 ? (
+                            <ListFav articles={searchResult} setArticles={setArticles}/>
                         ) : (
                             <div className='flex justify-center items-center w-full mt-[10%] flex-col'>
                                 <img src="/images/img_no_result.png" alt="no_result" className="w-[10%] h-auto"/>

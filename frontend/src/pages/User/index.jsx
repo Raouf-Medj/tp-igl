@@ -49,8 +49,8 @@ const ClientHome = () => {
                 date_fin: dateFin
             })
             .then(response => {
-                // const validatedArticles = response.data.articles.filter(article => article.validated === true)
-                const validatedArticles = response.data.articles;
+                const validatedArticles = response.data.articles.filter(article => article.validated === true)
+                // const validatedArticles = response.data.articles;
                 setArticles(validatedArticles);
             })
             .catch(error => {

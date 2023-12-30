@@ -1,12 +1,14 @@
 import ProtectedComponent from '../../components/protected';
 import React, { useState, useEffect } from 'react';
 import EditableField from '../../components/editableField';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const ModModification = () => {
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   const [articleTitle, setArticleTitle] = useState('');
   const [authors, setAuthors] = useState([]);
@@ -16,7 +18,8 @@ const ModModification = () => {
   const [references, setReferences] = useState([]);
   const [summary, setSummary] = useState('');
   const [fullText, setFullText] = useState('');
-  const [loading, setLoading] = useEffect(false);
+  const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -28,10 +31,11 @@ const ModModification = () => {
         setAuthors(article.authors);
         setInstitutions(article.institutions);
         setKeywords(article.keywords);
-        setPublicationDate(article.publicationDate);
+        setPublicationDate(article.publication_date);
         setReferences(article.references);
         setSummary(article.abstract);
         setFullText(article.text);
+        setUrl(article.url);
       })
       .catch(error => {
           if (error.response && error.response.data) {
@@ -48,58 +52,100 @@ const ModModification = () => {
     fetchArticle();
   }, []);
 
-  const handleValidation = () => {
-    // update article infos
+  const handleValidation = async () => {
+    
+    setLoading(true);
+    await axios.put("http://localhost:5000/api/articles", {
+      id: id,
+      title: articleTitle,
+      abstract: summary,
+      authors: authors,
+      institutions: institutions,
+      keywords: keywords,
+      publication_date: publicationDate,
+      references: references,
+      text: fullText,
+      url: url,
+      validated: true
+    })
+    .then(() => {
+      navigate("/mod");
+    })
+    .catch(error => {
+        if (error.response && error.response.data) {
+            // setErr(error.response.data.error);
+        } else {
+            // setErr('Une erreur est survenue');
+        }
+    })
+    .finally(() => {
+        setLoading(false);
+    })
   };
 
-  const handleAnnuler = () => {
-    // Cancel modifications
-  };
-
-  const handleSupprimer = () => {
-    // Delete article ?
+  const handleSupprimer = async () => {
+    setLoading(true);
+    await axios.put(`http://localhost:5000/api/articles/${id}`)
+    .then(() => {
+      navigate("/mod");
+    })
+    .catch(error => {
+        if (error.response && error.response.data) {
+            // setErr(error.response.data.error);
+        } else {
+            // setErr('Une erreur est survenue');
+        }
+    })
+    .finally(() => {
+        setLoading(false);
+    })
   };
 
   return (
   <ProtectedComponent role="MOD">
-    <div className="container mx-auto mt-8 px-4 overflow-y-auto min-h-screen">
-      <div className="w-full max-w-7xl mx-auto">
-
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-          <div className="mb-4 sm:mb-0">
-            <h1 className="text-2xl font-bold">Article à rectifier : {articleTitle}</h1>
+    <div className="container mx-auto py-10 px-4 overflow-y-auto min-h-screen">
+      { loading ? (
+        <div className='w-full flex items-center justify-center flex-col mt-10'>
+          <img src="/spinner2.gif" alt="spinner" className=" w-[5%] h-auto"/>
+        </div>
+      ) : (
+        <div className="w-full max-w-7xl mx-auto">
+          <div className="flex w-full flex-col justify-between items-center mb-5">
+            <div className='w-full mb-10'>
+              <Link to="/mod" className="font-semibold mb-2 sm:mb-0 mr-2 bg-[#cdcdcd] hover:bg-[#cdcdcde4] py-2 px-4 rounded transition duration-300 ease-in-out transform">
+                Annuler
+              </Link>
+              <button className="font-semibold mb-2 sm:mb-0 mr-2 bg-[#f84040] hover:bg-[#f84040e4] text-white py-2 px-4 rounded transition duration-300 ease-in-out transform" onClick={handleSupprimer}>
+                Supprimer
+              </button>
+              <button className="font-semibold bg-[#108f8b] hover:bg-[#108f8bdf] text-white py-2 px-4 rounded transition duration-300 ease-in-out transform" onClick={handleValidation}>
+                Valider
+              </button>
+            </div>
+            <div className="mb-4 w-full sm:mb-0">
+              <h1 className="text-2xl font-bold"><span className=' underline'>Article à rectifier :</span> {articleTitle}</h1>
+            </div>
           </div>
           <div>
-            <button className="mb-2 sm:mb-0 mr-2 bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded" onClick={handleAnnuler}>
-              Annuler
-            </button>
-            <button className="mb-2 sm:mb-0 mr-2 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" onClick={handleSupprimer}>
-              Supprimer
-            </button>
-            <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded" onClick={handleValidation}>
-              Valider
-            </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <EditableField label="Titre" value={articleTitle} onChange={setArticleTitle} />
+                <EditableField label="Auteurs" value={authors} onChange={setAuthors} />
+                <EditableField label="Institutions" value={institutions} onChange={setInstitutions} />
+              </div>
+
+              <div>
+                <EditableField label="Mots clés" value={keywords} onChange={setKeywords} />
+                <EditableField label="Date de publication" value={publicationDate} onChange={setPublicationDate} isDateField />
+                <EditableField label="Références" value={references} onChange={setReferences} />
+              </div>
+            </div>
+
+            <EditableField className="w-full sm:w-3/5" label="Résumé de l'article" value={summary} onChange={setSummary} isParagraph />
+            <EditableField label="Texte intégral" value={fullText} onChange={setFullText} isParagraph />
           </div>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <EditableField label="Titre" value={articleTitle} onChange={setArticleTitle} />
-            <EditableField label="Auteurs" value={authors} onChange={setAuthors} multiline />
-            <EditableField label="Institutions" value={institutions} onChange={setInstitutions} multiline />
-          </div>
-
-          <div>
-            <EditableField label="Mots clés" value={keywords} onChange={setKeywords} multiline />
-            <EditableField label="Date de publication" value={publicationDate} onChange={(date) => setPublicationDate(date)} isDateField />
-            <EditableField label="Références" value={references} onChange={setReferences} multiline />
-          </div>
-        </div>
-
-        <EditableField className="w-full sm:w-3/5" label="Résumé de l'article" value={summary} onChange={setSummary}  />
-        <EditableField label="Texte intégral" value={fullText} onChange={setFullText} />
-
-      </div>
+      )}
     </div>
   </ProtectedComponent>
   );

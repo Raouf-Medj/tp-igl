@@ -27,9 +27,10 @@ const ModHome = () => {
           date_fin: ""
       })
       .then(response => {
-          // const validatedArticles = response.data.articles.filter(article => article.validated === true)
-          const validatedArticles = response.data.articles;
-          setArticles(validatedArticles);
+          const allArticles = response.data.articles;
+          setArticles(allArticles);
+          setArticlesToShow(allArticles.filter((article) => !article.validated));
+          setSearchResult(allArticles.filter((article) => !article.validated));
       })
       .catch(error => {
           if (error.response && error.response.data) {
@@ -55,11 +56,11 @@ const ModHome = () => {
   const HandleDropDownOption = () => {
     if (selectedOption === "Articles à réctifier") {
       setArticlesToShow(articles);
-      setSearchResult(articles);
+      setSearchResult(articles.filter(article => article.title.toLowerCase().includes(query.toLowerCase())));
     }
     else {
       setArticlesToShow(articles.filter((article) => !article.validated));
-      setSearchResult(articles.filter((article) => !article.validated));
+      setSearchResult(articles.filter((article) => !article.validated).filter(article => article.title.toLowerCase().includes(query.toLowerCase())));
     }
     setSelectedOption(prevOption => (
       prevOption === "Articles à réctifier" ? "Tous les articles" : "Articles à réctifier"
@@ -106,8 +107,8 @@ const ModHome = () => {
                 <img src="/spinner2.gif" alt="spinner" className=" w-[5%] h-auto"/>
             </div>
         ) : (
-            articles.length > 0 ? (
-              <ArticleList articles={articles} isRectifier={true}/>
+            searchResult.length > 0 ? (
+              <ArticleList articles={searchResult} isRectifier={true}/>
             ) : (
                 <div className='flex justify-center items-center w-full mt-[10%] flex-col'>
                     <img src="/images/img_no_result.png" alt="no_result" className="w-[10%] h-auto"/>

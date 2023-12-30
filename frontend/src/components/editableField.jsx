@@ -1,35 +1,35 @@
 import React from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const EditableField = ({ label, value, onChange, isDateField }) => {
+const EditableField = ({ label, value, onChange, isDateField, isParagraph }) => {
   const isMultiLine = Array.isArray(value);
 
   return (
-    <div className={`mb-4 relative flex-grow ${isMultiLine ? 'h-24' : ''}`}>
+    <div className={`mb-4 relative flex-grow`}>
       <label htmlFor={label.toLowerCase()} className="block font-bold mb-1">
         {label}
       </label>
       <div className="relative">
         {isDateField ? (
-          <DatePicker
+          <input
+            type="date"
             id={label.toLowerCase()}
-            className="w-full border p-2 pr-8 text-base sm:text-lg"
-            selected={value}
-            onChange={(date) => onChange(date)}
+            className="w-full border mb-1 p-2 pr-8 text-base sm:text-lg rounded-md"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
           />
         ) : isMultiLine ? (
           <textarea
             id={label.toLowerCase()}
-            className="w-full border p-2 pr-8 text-base sm:text-lg"
+            className="w-full border p-2 pr-8 text-base sm:text-lg rounded-md min-h-[100px]"
             value={value.join('\n')}
             onChange={(e) => onChange(e.target.value.split('\n'))}
           />
         ) : (
           <textarea
             id={label.toLowerCase()}
-            className="w-full border p-2 pr-8 text-base sm:text-lg min-h-[2em] h-auto resize-none overflow-y-auto"
+            className={`w-full border p-2 pr-8 text-base sm:text-lg ${isParagraph ? "min-h-[200px]" : ""} h-auto rounded-md`}
             value={value}
             onChange={(e) => onChange(e.target.value)}
           />
