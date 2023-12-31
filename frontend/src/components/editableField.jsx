@@ -15,21 +15,21 @@ const EditableField = ({ label, value, onChange, isDateField, isParagraph }) => 
           <input
             type="date"
             id={label.toLowerCase()}
-            className="w-full border mb-1 p-2 pr-8 text-base sm:text-lg rounded-md hover:drop-shadow-lg transition duration-300 ease-in-out transform"
+            className="outline-none focus:border-[#1c8a8a] w-full border mb-1 p-2 pr-8 text-base sm:text-lg rounded-md hover:drop-shadow-lg transition duration-300 ease-in-out transform"
             value={value}
             onChange={(e) => onChange(e.target.value)}
           />
         ) : isMultiLine ? (
           <textarea
             id={label.toLowerCase()}
-            className="w-full border p-2 pr-8 text-base sm:text-lg rounded-md min-h-[100px] hover:drop-shadow-lg transition duration-300 ease-in-out transform"
+            className="outline-none focus:border-[#1c8a8a] w-full border p-2 pr-8 text-base sm:text-lg rounded-md min-h-[100px] hover:drop-shadow-lg transition duration-300 ease-in-out transform"
             value={value.join('\n')}
             onChange={(e) => onChange(e.target.value.split('\n'))}
           />
         ) : (
           <textarea
             id={label.toLowerCase()}
-            className={`w-full border p-2 pr-8 text-base sm:text-lg ${isParagraph ? "min-h-[200px]" : ""} h-auto rounded-md hover:drop-shadow-lg transition duration-300 ease-in-out transform`}
+            className={`outline-none focus:border-[#1c8a8a] w-full border p-2 pr-8 text-base sm:text-lg ${isParagraph ? "min-h-[200px]" : ""} h-auto rounded-md hover:drop-shadow-lg transition duration-300 ease-in-out transform`}
             value={value}
             onChange={(e) => onChange(e.target.value)}
           />

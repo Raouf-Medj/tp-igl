@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { FaUser, FaEdit, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { FaUser, FaPlus } from 'react-icons/fa';
+import { TbEdit } from "react-icons/tb";
+import { FiTrash2 } from "react-icons/fi"
 import SearchBar from '../../components/search';
 import AjouterMod from '../../components/popupajout';
 import EditMod from '../../components/popupEdit';
@@ -10,7 +12,7 @@ const AdminHome = ({ loading, setLoading }) => {
     const [query, setQuery] = useState('');
     const [allMods, setAllMods] = useState([]);
     const [moderators, setModerators] = useState([]);
-    const [err, setErr] = useState("");
+    // const [err, setErr] = useState("");
     const [loading2, setLoading2] = useState(false);
 
     useEffect(() => {
@@ -23,9 +25,9 @@ const AdminHome = ({ loading, setLoading }) => {
             })
             .catch(error => {
                 if (error.response && error.response.data) {
-                    setErr(error.response.data.error);
+                    // setErr(error.response.data.error);
                 } else {
-                    setErr('Une erreur est survenue');
+                    // setErr('Une erreur est survenue');
                 }
             })
             .finally(() => {
@@ -52,9 +54,9 @@ const AdminHome = ({ loading, setLoading }) => {
         })
         .catch(error => {
             if (error.response && error.response.data) {
-                setErr(error.response.data.error);
+                // setErr(error.response.data.error);
             } else {
-                setErr('Une erreur est survenue');
+                // setErr('Une erreur est survenue');
             }
         });
     };
@@ -85,28 +87,32 @@ const AdminHome = ({ loading, setLoading }) => {
                     ) : (
                         <div className="flex flex-wrap">
                             {moderators.map((moderator) => (
-                                <div
-                                    key={moderator.id}
-                                    className="mr-2 mb-2 sm:mr-4 sm:mb-4 p-3 sm:p-4 md:p-5 lg:p-6 bg-white border border-gray-300 rounded-md relative flex items-center justify-center w-36 sm:w-44 md:w-52 lg:w-60 h-36 sm:h-44 md:h-52 lg:h-60 hover:drop-shadow-xl transition duration-300 ease-in-out transform"
-                                    onMouseEnter={() => setHoveredModerator(moderator.id)}
-                                    onMouseLeave={() => setHoveredModerator(null)}
-                                >
-                                    <div className="flex flex-col items-center">
-                                        <FaUser size={80} className="mb-2 text-gray-700 hover:drop-shadow-lg" />
-                                        <p className='text-sm sm:text-base text-gray-700'>{moderator.username}</p>
-                                        {hoveredModerator === moderator.id && (
-                                            <div className="absolute top-0 right-0 p-2 bg-white rounded-bl-lg opacity-100 transition-opacity flex items-end">
-                                                <div className='flex justify-center items-center'>
-                                                    <div className="hover:drop-shadow-sm cursor-pointer text-orange-500 mb-1" onClick={() => handleEdit(moderator.id)}>
-                                                        <FaEdit className='mr-2' size={30} />
-                                                    </div>
-                                                    <div className=" hover:drop-shadow-sm cursor-pointer text-red-600" onClick={() => handleDelete(moderator.id)}>
-                                                        <FaTrashAlt size={25} />
-                                                    </div>
+                                <div onMouseEnter={() => setHoveredModerator(moderator.id)} onMouseLeave={() => setHoveredModerator(null)}>
+                                    <div
+                                        key={moderator.id}
+                                        className="mr-2 mb-2 sm:mr-4 sm:mb-4 p-3 sm:p-4 md:p-5 lg:p-6 bg-white border border-gray-300 rounded-md relative flex items-center justify-center w-36 sm:w-44 md:w-52 lg:w-60 h-36 sm:h-44 md:h-52 lg:h-60 hover:drop-shadow-xl transition duration-300 ease-in-out transform"
+                                    >
+                                        <div className={`flex flex-col items-center transition duration-300 ease-in-out transform ${
+                                            hoveredModerator === moderator.id
+                                            ? 'filter blur-md'
+                                            : ''
+                                        }`}>
+                                            <FaUser size={80} className="mb-2 text-gray-700 hover:drop-shadow-lg" />
+                                            <p className='text-sm sm:text-base text-gray-700'>{moderator.username}</p>
+                                        </div>
+                                    </div>
+                                    {hoveredModerator === moderator.id && (
+                                        <div className="relative -top-[50%] right-[2%] p-2 rounded-bl-lg opacity-100 transition-opacity flex items-center justify-center">
+                                            <div className='flex justify-center items-center'>
+                                                <div className="hover:drop-shadow-sm cursor-pointer" onClick={() => handleEdit(moderator.id)}>
+                                                    <TbEdit className='mr-2 bg-[#E0B545] hover:bg-[#e0b445e3] text-[#695b27] p-2 rounded-md' size={50} />
+                                                </div>
+                                                <div className="hover:drop-shadow-sm cursor-pointer" onClick={() => handleDelete(moderator.id)}>
+                                                    <FiTrash2 size={50} className='bg-[#FB5353] hover:bg-[#fb5353de] text-[#6c2c2a] p-2 rounded-md'/>
                                                 </div>
                                             </div>
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                             <div className="p-3 sm:p-4 md:p-5 lg:p-6 bg-white border border-gray-300 rounded-md relative flex items-center justify-center w-36 sm:w-44 md:w-52 lg:w-60 h-36 sm:h-44 md:h-52 lg:h-60 cursor-pointer hover:drop-shadow-xl transition duration-300 ease-in-out transform" onClick={handleAdd}>

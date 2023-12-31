@@ -26,7 +26,7 @@ const Article = ({ id, title, url, abstract, isRectifier }) => {
 
     const shortenAbstract = (abstract, lengthAbstract) => {
         var words, shortened = "";
-        if (abstract != undefined) {
+        if (abstract !== undefined) {
             words = abstract.split(' ');
             shortened = words.slice(0, lengthAbstract).join(' ');
             shortened = shortened + "..."

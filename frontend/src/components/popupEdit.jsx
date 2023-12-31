@@ -1,4 +1,4 @@
-import React, { useState, useEffect, mods, setMods, allMods, setAllMods } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CgLock } from "react-icons/cg";
 import { TiUserOutline } from "react-icons/ti";
@@ -27,7 +27,7 @@ const EditMod = ({ handleClosePopup, id }) => {
         }
 
         fetchMod();
-    }, []);
+    }, [id]);
 
     const handleUpdate = async (e) => {
         e.preventDefault();

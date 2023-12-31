@@ -102,7 +102,7 @@ const CenteredArticleDetails = ({ articleData, id }) => {
     }
 
     fetchFavoris();
-}, []);
+}, [userid, id]);
 
   const handleAddToFavorites = async () => {
     setLoading(true);

@@ -7,21 +7,6 @@ import Filters from '../../components/filters';
 
 
 const ClientHome = () => {
-
-    // const temp_abstract = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis ipsum dolor sit amet, consectetur adipiscing elit. Bibendum vitae dictumst sit vitae, mi imperdiet sit. Lectus eleifend aliquam nibh mauris, pretium. Lectus magnis lorem massa urna felis"
-    
-    // const [articles, setArticles] = useState([
-    //     { id: "article1", title: "Title 1", abstract: temp_abstract, url: "", validated: true},
-    //     { id: "article2", title: "Title 2", abstract: temp_abstract, url: "", validated: true},
-    //     { id: "article3", title: "Title 3", abstract: temp_abstract, url: "", validated: false},
-    //     { id: "article4", title: "Title 4", abstract: temp_abstract, url: "", validated: true},
-    //     { id: "article5", title: "Title 5", abstract: temp_abstract, url: "", validated: true},
-    //     { id: "article6", title: "Title 6", abstract: temp_abstract, url: "", validated: false},
-    //     { id: "article7", title: "Title 7", abstract: temp_abstract, url: "", validated: false},
-    //     { id: "article8", title: "Title 8", abstract: temp_abstract, url: "", validated: true},
-    //     { id: "article9", title: "Title 9", abstract: temp_abstract, url: "", validated: true},
-    //     { id: "article10", title: "Title 10", abstract: temp_abstract, url: "", validated: true}
-    // ]);
         
     const [query, setQuery] = useState("");
     const [loading, setLoading] = useState(false);
@@ -31,11 +16,38 @@ const ClientHome = () => {
     const [institutions, setInstitutions] = useState([]);
     const [dateDeb, setDateDeb] = useState("");
     const [dateFin, setDateFin] = useState("");
-    const [err, setErr] = useState("");
+    // const [err, setErr] = useState("");
 
     useEffect(() => {
-        searchHandler();
-    }, [keywords, authors, institutions, dateDeb, dateFin]);
+        const fetchArticles = async () => {
+            setLoading(true);
+            await axios.post('http://localhost:5000/api/articles/search', {
+                query: query, 
+                authors: authors,
+                institutions: institutions,
+                keywords: keywords,
+                date_debut: dateDeb,
+                date_fin: dateFin
+            })
+            .then(response => {
+                const validatedArticles = response.data.articles.filter(article => article.validated === true)
+                // const validatedArticles = response.data.articles;
+                setArticles(validatedArticles);
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    // setErr(error.response.data.error);
+                } else {
+                    // setErr('Une erreur est survenue');
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+        }
+
+        fetchArticles();
+    }, [query, keywords, authors, institutions, dateDeb, dateFin]);
 
     const searchHandler = () => {
         const fetchArticles = async () => {
@@ -55,9 +67,9 @@ const ClientHome = () => {
             })
             .catch(error => {
                 if (error.response && error.response.data) {
-                    setErr(error.response.data.error);
+                    // setErr(error.response.data.error);
                 } else {
-                    setErr('Une erreur est survenue');
+                    // setErr('Une erreur est survenue');
                 }
             })
             .finally(() => {

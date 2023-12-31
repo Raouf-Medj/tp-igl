@@ -8,7 +8,7 @@ import useToken from '../utils/useToken';
 const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchResult, setSearchResult }) => {
 
   const shortenAbstract = (abstract) => {
-    if (abstract != undefined) {
+    if (abstract !== undefined) {
       const words = abstract.split(' ');
       return words.slice(0, 25).join(' ') + '...';
     }
@@ -35,7 +35,7 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
 };
 
   const {userid} = useToken();
-  const [err, setErr] = useState("");
+  // const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleFav = async () => {
@@ -49,9 +49,9 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
     })
     .catch(error => {
         if (error.response && error.response.data) {
-            setErr(error.response.data.error);
+            // setErr(error.response.data.error);
         } else {
-            setErr('Une erreur est survenue');
+            // setErr('Une erreur est survenue');
         }
     })
     .finally(() => {

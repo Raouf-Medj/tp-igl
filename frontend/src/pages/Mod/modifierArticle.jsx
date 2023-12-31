@@ -50,7 +50,7 @@ const ModModification = () => {
     }
 
     fetchArticle();
-  }, []);
+  }, [id]);
 
   const handleValidation = async () => {
     

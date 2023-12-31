@@ -7,16 +7,14 @@ const ArticleList = ({ articles, isRectifier }) => {
     const [sortedArticles, setSortedArticles] = useState([]);
 
     useEffect(() => {
-        console.log(articles);
         const sorted = [...articles].sort((a, b) => {
             const dateA = new Date(a.publication_date);
             const dateB = new Date(b.publication_date);
             return dateB - dateA; // Sort in descending order (from recent to oldest)
         });
-    
-        console.log(sorted);
+
         setSortedArticles(sorted);
-    }, []);
+    }, [articles]);
 
     return (
         <div className='max-h-[650px] overflow-y-auto'>

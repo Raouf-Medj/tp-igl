@@ -13,7 +13,7 @@ const Favoris = () => {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
-    const [err, setErr] = useState("");
+    // const [err, setErr] = useState("");
 
     useEffect(() => {
 
@@ -26,9 +26,9 @@ const Favoris = () => {
           })
           .catch(error => {
               if (error.response && error.response.data) {
-                  setErr(error.response.data.error);
+                //   setErr(error.response.data.error);
               } else {
-                  setErr('Une erreur est survenue');
+                //   setErr('Une erreur est survenue');
               }
           })
           .finally(() => {
@@ -37,13 +37,12 @@ const Favoris = () => {
         }
     
         fetchFavoris();
-    }, []);
+    }, [userid]);
 
     const searchHandler = () => {
         const filteredArticles = articles.filter(article => article.title.toLowerCase().includes(query.toLowerCase()));
         console.log(query);
         setSearchResult(filteredArticles);
-        // setQuery("");
     };
 
     return (

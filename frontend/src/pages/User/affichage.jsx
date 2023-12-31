@@ -10,7 +10,7 @@ const Affichage = () => {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
+  // const [err, setErr] = useState("");
 
   useEffect(() => {
 
@@ -22,9 +22,9 @@ const Affichage = () => {
       })
       .catch(error => {
           if (error.response && error.response.data) {
-              setErr(error.response.data.error);
+              // setErr(error.response.data.error);
           } else {
-              setErr('Une erreur est survenue');
+              // setErr('Une erreur est survenue');
           }
       })
       .finally(() => {
@@ -33,7 +33,7 @@ const Affichage = () => {
     }
 
     fetchArticle();
-  }, []);
+  }, [id]);
 
   
 
