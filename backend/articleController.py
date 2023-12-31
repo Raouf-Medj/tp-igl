@@ -33,9 +33,9 @@ def manageArticleSearch():
         if jsonRequestObject["query"]!="":
             listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
         if jsonRequestObject["authors"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "authors.keyword": jsonRequestObject["authors"] }})
+            listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
         if jsonRequestObject["institutions"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "institutions.keyword": jsonRequestObject["institutions"] }})
+            listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
         if jsonRequestObject["keywords"]!=[]:
             listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
         if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
