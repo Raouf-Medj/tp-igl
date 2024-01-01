@@ -33,11 +33,20 @@ def manageArticleSearch():
         if jsonRequestObject["query"]!="":
             listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
         if jsonRequestObject["authors"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
+            authorsList = []
+            for author in jsonRequestObject["authors"]:
+                authorsList += author.stringSpliterLower()
+            listOfFieldsToMatch.append({ "terms": { "authors": authorsList }})
         if jsonRequestObject["institutions"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
+            institutionList = []
+            for institution in jsonRequestObject["institution"]:
+                institutionList += institution.stringSpliterLower()
+            listOfFieldsToMatch.append({ "terms": { "institutions": institutionList }})
         if jsonRequestObject["keywords"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
+            keywordList = []
+            for keyword in jsonRequestObject["keywords"]:
+                keywordList += keyword.stringSpliterLower()
+            listOfFieldsToMatch.append({ "terms": { "keywords": keywordList }})
         if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
             listOfFieldsToMatch.append({ "range": { "publication_date": { "gte": jsonRequestObject["date_debut"],"lte":jsonRequestObject["date_fin"] }}})
         
