@@ -3,6 +3,9 @@ from flask import  request, jsonify
 from elasticsearch import Elasticsearch
 from textExtractor import pdfToJson
 import json, re
+from datetime import datetime
+import unicodedata
+from elasticsearch.helpers import scan
 
 articleController = Blueprint("articleController",__name__)
 es = Elasticsearch(['http://localhost:9200']) 
@@ -26,56 +29,44 @@ def getArticleByID(article_id):
 
 @articleController.route('/api/articles/search',methods=['POST'])
 def manageArticleSearch():
-    index_name = "articles"
-    try:
-        listOfFieldsToMatch = []
-        jsonRequestObject=request.get_json()
-        if jsonRequestObject["query"]!="":
-            listOfFieldsToMatch.append({ "match": { "text": jsonRequestObject["query"] }})
-        if jsonRequestObject["authors"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "authors": jsonRequestObject["authors"] }})
-        if jsonRequestObject["institutions"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "institutions": jsonRequestObject["institutions"] }})
-        if jsonRequestObject["keywords"]!=[]:
-            listOfFieldsToMatch.append({ "terms": { "keywords": jsonRequestObject["keywords"] }})
-        if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
-            listOfFieldsToMatch.append({ "range": { "publication_date": { "gte": jsonRequestObject["date_debut"],"lte":jsonRequestObject["date_fin"] }}})
-        
-        if listOfFieldsToMatch!=[]:
-            search_query = {
-                "query":{
-                    "bool":{
-                        "must" : listOfFieldsToMatch
-                    }
-                },
-                "_source":["title","abstract","url","validated","publication_date"],
-                "size":100
-            }
-        else:
-            search_query ={
-                "query":{
-                    "match_all": {}
-                },
-                "_source":["title","abstract","url","validated","publication_date"],
-                "size":100
-            }
-        print(search_query)
-        response = es.search(index=index_name, body=search_query)
-        listOfResults = response['hits']['hits']
-        finalListOfResults = []
-        for result in listOfResults:
-            tmp = {}
-            tmp["id"]= result["_id"]
-            tmp["title"]= result["_source"]["title"]
-            tmp["abstract"]= result["_source"]["abstract"]
-            tmp["url"]= result["_source"]["url"]
-            tmp["publication_date"]= result["_source"]["publication_date"]
-            tmp["validated"]= result["_source"]["validated"]
-            finalListOfResults.append(tmp)
-        return jsonify({"articles":finalListOfResults})
-    except Exception as e:
-        print(str(e))
-        return jsonify({"erreur":"echec dans la recherche"}),500
+
+    words_to_search = [request.json["query"]]
+    authors_to_search = request.json["authors"]
+    institutions_to_search = request.json["institutions"]
+    keywords_to_search = request.json["keywords"]
+    date_debut = request.json["date_debut"]
+    date_fin = request.json["date_fin"]
+
+    articles_to_return = []
+
+    fields_to_retrieve = ["_id", "title", "abstract", "authors", "institutions", "keywords", "url", "publication_date", "text", "validated"]
+
+    scroll = scan(es, index='articles', query={"query": {"match_all": {}}}, _source=fields_to_retrieve)
+
+    for document in scroll:
+
+        doc_id = document['_id']
+        title = document['_source']['title']
+        abstract = document['_source']['abstract']
+        authors = document['_source']['authors']
+        institutions = document['_source']['institutions']
+        keywords = document['_source']['keywords']
+        url = document['_source']['url']
+        publication_date = document['_source']['publication_date']
+        text = document['_source']['text']
+        validated = document['_source']['validated']
+
+        if is_between_dates(initial_date_str=date_debut, final_date_str=date_fin, date_to_check_str=publication_date) and check_all_words_existence(words=words_to_search, text_content=text) and all_searched_words_exist(searched_words=keywords_to_search, strings_retrieved=keywords) and all_searched_words_exist(searched_words=authors_to_search, strings_retrieved=authors) and all_searched_words_exist(searched_words=institutions_to_search, strings_retrieved=institutions):
+            articles_to_return.append({
+                "id": doc_id,
+                "title": title,
+                "abstract": abstract,
+                "url": url,
+                "publication_date": publication_date,
+                "validated": validated,
+            })
+    
+    return jsonify({"articles":articles_to_return}), 200
 
 @articleController.route('/api/articles',methods=['POST','PUT'])
 def manageArticles():
@@ -119,3 +110,50 @@ def manageArticles():
 def stringSpliterLower(string):
     tmpString = string.lower()
     return tmpString.split()
+
+
+def normalize_string(s):
+    return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode('utf-8')
+
+def check_all_words_existence(words, text_content):
+
+    normalized_text = normalize_string(text_content.lower())
+
+    normalized_words = []
+    for word in words:
+        if isinstance(word, str): 
+            normalized_words.extend(normalize_string(word.lower()).split()) 
+        else:
+            normalized_words.append(normalize_string(word.lower())) 
+
+    for word in normalized_words:
+        found = False
+        for text_word in normalized_text.split():
+            if word in text_word:
+                found = True
+                break
+        if not found:
+            return False  
+
+    return True 
+
+
+def is_between_dates(initial_date_str, final_date_str, date_to_check_str):
+    initial_date = datetime.strptime(initial_date_str, '%Y-%m-%d') if initial_date_str else None
+    final_date = datetime.strptime(final_date_str, '%Y-%m-%d') if final_date_str else None
+    date_to_check = datetime.strptime(date_to_check_str, '%Y-%m-%d')
+
+    if initial_date and final_date:
+        return initial_date <= date_to_check <= final_date
+    elif initial_date:
+        return date_to_check >= initial_date
+    elif final_date:
+        return date_to_check <= final_date
+    else:
+        return True
+
+
+
+def all_searched_words_exist(searched_words, strings_retrieved):
+    concatenated_strings = ' '.join(strings_retrieved)
+    return check_all_words_existence(searched_words, concatenated_strings)
