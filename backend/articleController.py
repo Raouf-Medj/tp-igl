@@ -35,17 +35,17 @@ def manageArticleSearch():
         if jsonRequestObject["authors"]!=[]:
             authorsList = []
             for author in jsonRequestObject["authors"]:
-                authorsList += author.stringSpliterLower()
+                authorsList += stringSpliterLower(author)
             listOfFieldsToMatch.append({ "terms": { "authors": authorsList }})
         if jsonRequestObject["institutions"]!=[]:
             institutionList = []
-            for institution in jsonRequestObject["institution"]:
-                institutionList += institution.stringSpliterLower()
+            for institution in jsonRequestObject["institutions"]:
+                institutionList += stringSpliterLower(institution)
             listOfFieldsToMatch.append({ "terms": { "institutions": institutionList }})
         if jsonRequestObject["keywords"]!=[]:
             keywordList = []
             for keyword in jsonRequestObject["keywords"]:
-                keywordList += keyword.stringSpliterLower()
+                keywordList += stringSpliterLower(keyword)
             listOfFieldsToMatch.append({ "terms": { "keywords": keywordList }})
         if jsonRequestObject["date_debut"]!="" and jsonRequestObject["date_fin"]!="":
             listOfFieldsToMatch.append({ "range": { "publication_date": { "gte": jsonRequestObject["date_debut"],"lte":jsonRequestObject["date_fin"] }}})
