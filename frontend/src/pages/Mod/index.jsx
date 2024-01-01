@@ -74,9 +74,9 @@ const ModHome = () => {
         <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher un article par titre" searchHandler={searchHandler} />
         <div className='mt-6 sm:mt-10 flex flex-col sm:flex-row justify-between items-center mb-4'>
           { selectedOption === "Tous les articles" ? (
-            <h1 className='font-bold text-xl sm:text-2xl mb-3 sm:mb-0'>Tous les articles ({articles.length})</h1>
+            <h1 className='font-bold text-xl sm:text-2xl mb-3 sm:mb-0'>Tous les articles ({articlesToShow.length})</h1>
           ) :
-            <h1 className='font-bold text-xl sm:text-2xl mb-3 sm:mb-0'>Articles à réctifier ({articles.filter((article) => !article.validated).length})</h1>
+            <h1 className='font-bold text-xl sm:text-2xl mb-3 sm:mb-0'>Articles à réctifier ({articlesToShow.filter((article) => !article.validated).length})</h1>
           }
           <div className='relative mt-4 sm:mt-0 z-10'>
             <button
