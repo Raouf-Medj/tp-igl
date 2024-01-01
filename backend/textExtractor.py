@@ -50,7 +50,7 @@ def gptTextAnalyser(text):
 
         # Join the words to form the truncated string
         finalText = ' '.join(updatedWords)
-        prompt = f"Extract the exact following sections from the provided text :\n\n{finalText}\nthe json file contains only: \nAuthors:'a list of strings'\nTitle:\nAbstract:-the paragraph written in the section: abstract-\nInstitutions:'a list of strings'\nKeyWords:'a list of strings, all the keywords in the -keywords section-'\nReferences:'a list of strings, all references in the section : references'\nPublication_date:'YYYY-MM-DD'"
+        prompt = f"Extract the exact following sections from the provided text :\n\n{finalText}\nthe json file contains only: \nAuthors:'a list of strings'\nTitle:\nAbstract:-the paragraph written in the section: abstract, from a to z-\nInstitutions:'a list of strings'\nKeyWords:'a list of strings, all the keywords in the -keywords section-'\nReferences:'a list of strings, all references in the section : references'\nPublication_date:'follow the format YYYY-MM-DD'"
         completion = client.chat.completions.create(
         model="gpt-3.5-turbo-1106",
         response_format={ "type": "json_object" },
