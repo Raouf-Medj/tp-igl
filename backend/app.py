@@ -124,11 +124,11 @@ def upload_file():
         return jsonify({'error': 'Pas de fichier selectionné'}), 404
 
     if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() == "pdf":
-        
-        if os.path.isfile(os.path.join("uploads/", file.filename)):
+        upload_folder = os.path.join(app.root_path, 'uploads')  # Define the upload folder path
+        if os.path.isfile(os.path.join(upload_folder, file.filename)):
             return jsonify({'error': 'Un fichier avec le même nom existe déjà'}), 409
         
-        filename = os.path.join("uploads/", file.filename)
+        filename = os.path.join(upload_folder, file.filename)
         file.save(filename)
 
         return jsonify({'message': 'Succes'}), 200
@@ -138,12 +138,15 @@ def upload_file():
 
 @app.route('/api/uploads/<filename>', methods=['GET'])
 def download_file(filename):
-    return send_from_directory('uploads/', filename)
+    upload_folder = os.path.join(app.root_path, 'uploads')  # Define the upload folder path
+    return send_from_directory(upload_folder, filename)
+
 
 
 @app.route('/api/uploads/<filename>', methods=['DELETE'])
 def delete_file(filename):
-    filepath = os.path.join("uploads/", filename)
+    upload_folder = os.path.join(app.root_path, 'uploads')  # Define the upload folder path
+    filepath = os.path.join(upload_folder, filename)
     
     if os.path.exists(filepath):
         os.remove(filepath)

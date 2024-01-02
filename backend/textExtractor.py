@@ -1,3 +1,4 @@
+from importlib.machinery import SourceFileLoader
 import fitz
 import re
 import os
@@ -89,20 +90,31 @@ def fixJsonObject(json_object,text,url):
     return finalObject
 
 
+def get_app_root_path():
+    # Load app.py as a module to access its variables and functions
+    app_module = SourceFileLoader('app', os.path.join(os.path.dirname(__file__), 'app.py')).load_module()
+
+    # Retrieve the root path from the loaded app module
+    app_root_path = app_module.app.root_path
+    return app_root_path
+
+
 
 def pdfToJson(fileName):
-    #final method which uses all previously defined method, and this is the exported function that the article controller will actually use
-    urlToPdf = "./uploads/"+fileName
-    #urlToJson = "./json_results/"+fileName+".json"
+    app_root_path = get_app_root_path()
+    upload_folder = os.path.join(app_root_path, 'uploads')
+    urlToPdf = os.path.join(upload_folder, fileName)
+    # json_results_folder = os.path.join(app.root_path, 'json_results')  # Define the JSON results folder path
+    # urlToJson = os.path.join(json_results_folder, fileName + ".json")
 
     pureText = extractTextFromPDF(urlToPdf)
     gptText = gptTextAnalyser(pureText)
     gptJson = json.loads(gptText)
-    verified_dict = fixJsonObject(gptJson,pureText,fileName)
+    verified_dict = fixJsonObject(gptJson, pureText, fileName)
 
     '''
-    with open(urlToJson,"w") as json_file:
-        json_file.write(json.dumps(verified_dict,indent=2))
+    with open(urlToJson, "w") as json_file:
+        json_file.write(json.dumps(verified_dict, indent=2))
     '''
     return verified_dict
 
