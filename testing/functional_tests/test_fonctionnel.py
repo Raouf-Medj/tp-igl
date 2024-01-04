@@ -17,11 +17,11 @@ class TestArticleValidation(unittest.TestCase):
 
     def setUp(self):
         self.search_words = [] # Words to be put within the search text field: write each word followed by a comma
-        self.keywords_to_search = []
-        self.authors_to_search = []
-        self.institutions_to_search = [""]
+        self.keywords_to_search = ["OPTIMIZÀTÎON"]
+        self.authors_to_search = ["KhâLID","sàhIl"]
+        self.institutions_to_search = ["IndiÀ","DèL"]
         self.date_debut_search = "1990-01-01" #YYYY-MM-dd
-        self.date_fin_search = "2008-01-01" #YYYY-MM-DD
+        self.date_fin_search = "2024-01-01" #YYYY-MM-DD
         self.website_link = "http://localhost:3000/"
 
     def test_article_validation(self):
