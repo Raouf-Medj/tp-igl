@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>articleController module &mdash; SciFetch 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f6245a2f"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="textExtractor module" href="textExtractor.html" />
+    <link rel="prev" title="app module" href="app.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SciFetch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">app module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">articleController module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.all_searched_words_exist"><code class="docutils literal notranslate"><span class="pre">all_searched_words_exist()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.check_all_words_existence"><code class="docutils literal notranslate"><span class="pre">check_all_words_existence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.getArticleByID"><code class="docutils literal notranslate"><span class="pre">getArticleByID()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.is_between_dates"><code class="docutils literal notranslate"><span class="pre">is_between_dates()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.manageArticleSearch"><code class="docutils literal notranslate"><span class="pre">manageArticleSearch()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.manageArticles"><code class="docutils literal notranslate"><span class="pre">manageArticles()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.normalize_string"><code class="docutils literal notranslate"><span class="pre">normalize_string()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#articleController.stringSpliterLower"><code class="docutils literal notranslate"><span class="pre">stringSpliterLower()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">textExtractor module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SciFetch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">articleController module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/articleController.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-articleController">
+<span id="articlecontroller-module"></span><h1>articleController module<a class="headerlink" href="#module-articleController" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.all_searched_words_exist">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">all_searched_words_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">searched_words</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strings_retrieved</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/articleController.html#all_searched_words_exist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#articleController.all_searched_words_exist" title="Permalink to this definition"></a></dt>
+<dd><p>all searched words exist</p>
+<p>this method returns wether or not a word from the list of words exists in one of the strings provided</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>searched_words</strong> (<em>list</em>) – list of words that we want to check the existence of the strings</p></li>
+<li><p><strong>strings_retrieved</strong> (<em>list</em>) – list of strings in which we should check the existence of one of the words</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean saying wether on of the words exists in one of the strings provided</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.check_all_words_existence">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">check_all_words_existence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/articleController.html#check_all_words_existence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#articleController.check_all_words_existence" title="Permalink to this definition"></a></dt>
+<dd><p>check all words existence</p>
+<p>this method checks wether at least one word “from the word list” exists in the text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>words</strong> (<em>list</em>) – the list of words that we check the existence in the text</p></li>
+<li><p><strong>text_content</strong> (<em>string</em>) – the full text in which we search the existence of the words</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean saying wether one of the words exists in the text or not</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.getArticleByID">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">getArticleByID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">article_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#articleController.getArticleByID" title="Permalink to this definition"></a></dt>
+<dd><p>Get an article by ID</p>
+<p>This endpoint allows acessing a specefic article through its ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>article_id</strong> (<em>int</em>) – the ID of the article</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON structure containing detailed information about the article, or an error message if something went wrong</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.is_between_dates">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">is_between_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_date_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_date_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_to_check_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/articleController.html#is_between_dates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#articleController.is_between_dates" title="Permalink to this definition"></a></dt>
+<dd><p>is between dates</p>
+<p>this method makes a given date is in between two specified dates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_date_str</strong> (<em>string</em>) – initial date</p></li>
+<li><p><strong>final_date_str</strong> (<em>string</em>) – final date</p></li>
+<li><p><strong>date_to_check_str</strong> (<em>string</em>) – the date to check wether it is between the initial and final date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean saying wether the provided date is included in the time interval or not</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.manageArticleSearch">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">manageArticleSearch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#articleController.manageArticleSearch" title="Permalink to this definition"></a></dt>
+<dd><p>manage article search</p>
+<p>this endpoint allows the server to perform a search operation of articles through elastic search engine, the query is provided in the body of the request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of article headers “basic information” that are relevant to the query provided in the request body</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.manageArticles">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">manageArticles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#articleController.manageArticles" title="Permalink to this definition"></a></dt>
+<dd><p>manage articles</p>
+<p>This endpoint allows to either update an existing article by providing the exact information of the updated article in the request body, or upload a new article “that is converting the uploaded pdf to a json structure that will be indexed by elastic search”, by provding the pdf file name in the request body</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON response indicating success/failure of the upload/update operation</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.normalize_string">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">normalize_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/articleController.html#normalize_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#articleController.normalize_string" title="Permalink to this definition"></a></dt>
+<dd><p>normalise string</p>
+<p>This method modifies a string, deletes non-Ascii characters, and makes sure it returns a valid Unicode string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>string</em>) – the string input “to normalize”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a valid Unicode string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="articleController.stringSpliterLower">
+<span class="sig-prename descclassname"><span class="pre">articleController.</span></span><span class="sig-name descname"><span class="pre">stringSpliterLower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/articleController.html#stringSpliterLower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#articleController.stringSpliterLower" title="Permalink to this definition"></a></dt>
+<dd><p>String splitter lower</p>
+<p>This method splites a string “more specefically a sentence” into an array of words, making sure they are in lowercase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>string</em>) – the sentence we want to split into words</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list “an array” of lowercased words</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="app.html" class="btn btn-neutral float-left" title="app module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="textExtractor.html" class="btn btn-neutral float-right" title="textExtractor module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Equipe 1, Groupe 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

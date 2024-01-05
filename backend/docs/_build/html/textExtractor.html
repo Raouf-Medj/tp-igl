@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>textExtractor module &mdash; SciFetch 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f6245a2f"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="articleController module" href="articleController.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SciFetch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">app module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="articleController.html">articleController module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">textExtractor module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.extractTextFromPDF"><code class="docutils literal notranslate"><span class="pre">extractTextFromPDF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.fixJsonObject"><code class="docutils literal notranslate"><span class="pre">fixJsonObject()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.get_app_root_path"><code class="docutils literal notranslate"><span class="pre">get_app_root_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.gptTextAnalyser"><code class="docutils literal notranslate"><span class="pre">gptTextAnalyser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.pdfToJson"><code class="docutils literal notranslate"><span class="pre">pdfToJson()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.remove_non_ascii"><code class="docutils literal notranslate"><span class="pre">remove_non_ascii()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#textExtractor.writeStringToFile"><code class="docutils literal notranslate"><span class="pre">writeStringToFile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SciFetch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">textExtractor module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/textExtractor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-textExtractor">
+<span id="textextractor-module"></span><h1>textExtractor module<a class="headerlink" href="#module-textExtractor" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.extractTextFromPDF">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">extractTextFromPDF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#extractTextFromPDF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.extractTextFromPDF" title="Permalink to this definition"></a></dt>
+<dd><p>extract Text from PDF</p>
+<p>This method scans a pdf file whose path is provided in the parameters, and extracts the entire text as a string, using “fitz” library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>string</em>) – path to the pdf file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the extracted text “the entire content of the pdf”</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.fixJsonObject">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">fixJsonObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#fixJsonObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.fixJsonObject" title="Permalink to this definition"></a></dt>
+<dd><p>fix json object</p>
+<p>this method makes sure the json object provided as a reponse of gpt-3.5 model follows the exact structure of the articles stored in the database
+:param json_object: the json string returned by gpt-3.5 “converted to a JSON object”
+:type json_object: dict
+:param text: the entire text extracted from the pdf, to be added to the final article structure
+:type text: string
+:param url: the exact path to the pdf file
+:type url: string
+:return: the final article object structured according to what has been designed in the database
+:rtype: dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.get_app_root_path">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">get_app_root_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#get_app_root_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.get_app_root_path" title="Permalink to this definition"></a></dt>
+<dd><p>get app root path</p>
+<p>this method allows to return the path of the application, to guarrantee a correct path naming no matter the os</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the correct path according to the device</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.gptTextAnalyser">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">gptTextAnalyser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#gptTextAnalyser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.gptTextAnalyser" title="Permalink to this definition"></a></dt>
+<dd><p>gpt text analyser</p>
+<p>this method uses the paid openAI api service inorder to analyse a text provided in the prompt, returning a structured json containing different sections of the text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>string</em>) – the entire text “for example extracted from a pdf file”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>all the extracted sections of the text organised json-like structure “JSON string”</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.pdfToJson">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">pdfToJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#pdfToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.pdfToJson" title="Permalink to this definition"></a></dt>
+<dd><p>pdf to json</p>
+<p>this method gathers all previous methods to have the entire process of converting a pdf file into a json strucutre containing details and sections of the pdf file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>string</em>) – the name of the pdf file to be converted “example.pdf”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary containing the entire article included in the pdf file, structured to different sections like title, abstract, authors … etc”</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.remove_non_ascii">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">remove_non_ascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#remove_non_ascii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.remove_non_ascii" title="Permalink to this definition"></a></dt>
+<dd><p>remove non ascii</p>
+<p>this method makes sure the text filtered from all non printable characters, using the “regular expression” library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>string</em>) – the provided text, to be filtered</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the final text filtered from any non printable characters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="textExtractor.writeStringToFile">
+<span class="sig-prename descclassname"><span class="pre">textExtractor.</span></span><span class="sig-name descname"><span class="pre">writeStringToFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/textExtractor.html#writeStringToFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#textExtractor.writeStringToFile" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="articleController.html" class="btn btn-neutral float-left" title="articleController module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Equipe 1, Groupe 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
