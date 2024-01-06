@@ -9,7 +9,7 @@ import json
 #dotenv.load_dotenv('.env')
 #print(os.environ['OPENAI_API_KEY'])
 # set the openAI api Key
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="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")
 
 
 def remove_non_ascii(text):
