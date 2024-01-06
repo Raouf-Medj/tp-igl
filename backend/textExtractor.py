@@ -4,14 +4,12 @@ import re
 import os
 from openai import OpenAI
 import json
-#import os
-#import dotenv
-#dotenv.load_dotenv('.env')
-#print(os.environ['OPENAI_API_KEY'])
-# set the openAI api Key
-client = OpenAI(api_key="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")
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
-
+# Access the variables using the os.environ dictionary
+openAI_api_key = os.environ.get("API_KEY")
+client = OpenAI(api_key=openAI_api_key)
 def remove_non_ascii(text):
     """
     remove non ascii
