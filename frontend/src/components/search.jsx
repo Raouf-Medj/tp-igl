@@ -1,7 +1,16 @@
-import React from 'react'
+import React from 'react';
 import { RiSearchFill } from "react-icons/ri";
 
-
+/**
+ * SearchBar component for handling search functionalities.
+ * @param {Object} props - Component properties.
+ * @param {string} props.query - Current search query.
+ * @param {Function} props.setQuery - Function to set the search query.
+ * @param {string} props.placeholder - Placeholder text for the search input.
+ * @param {Function} props.searchHandler - Function to handle search actions.
+ * @param {boolean} props.isForMod - Flag indicating if the search is for a moderator.
+ * @returns {JSX.Element} SearchBar component
+ */
 const SearchBar = ({ query, setQuery, placeholder, searchHandler, isForMod }) => {
 
     return (

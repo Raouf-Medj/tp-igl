@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: popupEdit.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: popupEdit.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { CgLock } from "react-icons/cg";
+import { TiUserOutline } from "react-icons/ti";
+
+/**
+ * EditMod component to modify a moderator.
+ * @param {Object} props - Component properties.
+ * @param {Function} props.handleClosePopup - Function to close the popup.
+ * @param {string} props.id - Moderator ID.
+ * @returns {JSX.Element} EditMod component
+ */
+const EditMod = ({ handleClosePopup, id }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPass, setConfirmPass] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState('');
+
+    /**
+     * Fetches moderator details by ID.
+     * @param {string} id - Moderator ID.
+     */
+    useEffect(() => {
+        const fetchMod = async () => {
+            console.log(id);
+            await axios.get(`http://localhost:5000/api/mods/${id}`)
+            .then(response => {
+                setUsername(response.data.username);
+            })
+            .catch(error => {
+                if (error.response &amp;&amp; error.response.data) {
+                    setErr(error.response.data.error);
+                } else {
+                    setErr('An error occurred');
+                }
+            });
+        }
+
+        fetchMod();
+    }, [id]);
+
+    /**
+     * Handles the update of a moderator.
+     * @param {Object} e - Event object.
+     */
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+    
+        if (password !== confirmPass) {
+            setErr("Passwords do not match")
+            setLoading(false);
+        }
+        else {
+            await axios.put('http://localhost:5000/api/mods', {
+                id: id,
+                username: username,
+                password: password
+            })
+            .then((response) => {
+                window.location.reload();
+                handleClosePopup();
+            })
+            .catch(error => {
+                if (error.response &amp;&amp; error.response.data) {
+                  setErr(error.response.data.error);
+                } else {
+                  setErr('An error occurred');
+                }
+            }).finally(() => {
+                setLoading(false);
+            });
+        }
+    };
+
+
+    return (
+        &lt;div className=' container-fluid d-flex justify-content-center align-items-center h-100'>
+        &lt;div className='row'>
+            &lt;div className='col-lg-6 col-md-8 col-sm-10 col-12'>
+                &lt;div className='bg-[#FCFFF7] rounded-tl-[8%] p-4'>
+                    &lt;h2 className='font-bold text-2xl mt-4 mb-5 flex justify-center'>Modifier modérateur&lt;/h2>
+                    &lt;form onSubmit={handleUpdate} className='w-full'>
+                        &lt;div className="">
+                            &lt;label htmlFor="username" className="block pb-1">
+                                Le pseudo :
+                            &lt;/label>
+                            &lt;div className="bg-white p-2 rounded-md border border-[#E5E5E5] flex items-center w-full focus-within:border-[#21A0A0]">
+                                &lt;TiUserOutline className='text-[#404040] text-xl' />
+                                &lt;input
+                                type="text"
+                                name="username"
+                                id="username"
+                                placeholder="Changer le pseudo"
+                                className="outline-none px-3 flex-1"
+                                value={username}
+                                onChange={(e) => {
+                                    setUsername(e.target.value)
+                                    setErr('')
+                                }}
+                                />
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className="mt-[5%]">
+                            &lt;label htmlFor="password" className="block pb-1">
+                               Le mot de passe : 
+                            &lt;/label>
+                            &lt;div className="bg-white p-2 rounded-md border border-[#E5E5E5] flex items-center w-full focus-within:border-[#21A0A0]">
+                                &lt;CgLock className='text-[#404040]' />
+                                &lt;input
+                                type="password"
+                                name="password"
+                                id="password"
+                                placeholder="Changer le mot de passe"
+                                className="outline-none px-4 flex-1"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                    setErr('')
+                                }}
+                                />
+                            &lt;/div>
+                        &lt;/div>
+
+                        &lt;div className="mt-5">
+                            &lt;label htmlFor="confirmPassword" className="block pb-1">
+                                Confirmation du mot de passe :
+                            &lt;/label>
+                            &lt;div className="bg-white p-2 rounded-md border border-[#E5E5E5] flex items-center w-full focus-within:border-[#21A0A0]">
+                                &lt;CgLock className='text-[#404040]' />
+                                &lt;input
+                                    type="password"
+                                    name="confirmPassword"
+                                    id="confirmPassword"
+                                    placeholder="Confirmer le mot de passe"
+                                    className="outline-none px-4 flex-1"
+                                    value={confirmPass}
+                                    onChange={(e) => {
+                                        setConfirmPass(e.target.value)
+                                        setErr('')
+                                    }}
+                                />
+                            &lt;/div>
+                        &lt;/div>
+
+                        &lt;div className='text-red-600 mt-2 h-3'>
+                            {err}
+                        &lt;/div>
+                        &lt;div className='flex px-[15%] mt-[20%] sm:mt-[10%] w-full'>
+                            &lt;button onClick={handleClosePopup} className={`p-2 w-[45%] mr-[10%] ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>Annuler&lt;/button>
+                            &lt;button type="submit" className={`p-2 w-[45%] ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? &lt;div className='flex justify-center items-center'>&lt;img src="/spinner1.gif" alt="img_auth_2" className="ml-2 lg:block hidden w-[10%] h-auto"/>&lt;/div> : "Confirmer"}&lt;/button>
+                        &lt;/div>
+                    &lt;/form>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+    );
+};
+
+export default EditMod;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AjouterMod">AjouterMod</a></li><li><a href="global.html#Article">Article</a></li><li><a href="global.html#ArticleDetails">ArticleDetails</a></li><li><a href="global.html#ArticleFav">ArticleFav</a></li><li><a href="global.html#ArticleList">ArticleList</a></li><li><a href="global.html#CenteredArticleDetails">CenteredArticleDetails</a></li><li><a href="global.html#EditMod">EditMod</a></li><li><a href="global.html#EditableField">EditableField</a></li><li><a href="global.html#Filters">Filters</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#ListFav">ListFav</a></li><li><a href="global.html#ProtectedComponent">ProtectedComponent</a></li><li><a href="global.html#SearchBar">SearchBar</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Jan 07 2024 17:41:13 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

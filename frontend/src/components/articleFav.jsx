@@ -5,8 +5,28 @@ import { FaHeart } from 'react-icons/fa';
 import axios from 'axios';
 import useToken from '../utils/useToken';
 
+/**
+ * Component displaying information about a favorite article.
+ *
+ * @param {Object} props - The article details props
+ * @param {string} props.title - The title of the article
+ * @param {string} props.url - The URL of the article
+ * @param {string} props.abstract - The abstract of the article
+ * @param {string} props.id - The unique identifier of the article
+ * @param {Array} props.articles - List of articles
+ * @param {Function} props.setArticles - Function to set articles
+ * @param {Array} props.searchResult - List of search results
+ * @param {Function} props.setSearchResult - Function to set search results
+ * @returns {JSX.Element} Component displaying favorite article information
+ */
 const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchResult, setSearchResult }) => {
 
+  /**
+   * Shortens the abstract of the article.
+   *
+   * @param {string} abstract - The abstract of the article
+   * @returns {string} Shortened abstract
+   */
   const shortenAbstract = (abstract) => {
     if (abstract !== undefined) {
       const words = abstract.split(' ');
@@ -15,6 +35,9 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
     return '';
   };
 
+  /**
+   * Handles viewing the PDF associated with the article.
+   */
   const handleViewPdf = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/uploads/${url}`, {
@@ -32,66 +55,34 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
     } catch (error) {
       console.error('Error fetching PDF:', error);
     }
-};
+  };
 
-  const {userid} = useToken();
-  // const [err, setErr] = useState("");
+  const { userid } = useToken();
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handles removing the article from favorites.
+   */
   const handleFav = async () => {
     setLoading(true);
     await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
-    .then(() => {
-      const updatedArticles = articles.filter((article) => article.id !== id);
-      setArticles(updatedArticles);
-      const updatedSearchResult = searchResult.filter((article) => article.id !== id);
-      setSearchResult(updatedSearchResult);
-    })
-    .catch(error => {
-        if (error.response && error.response.data) {
-            // setErr(error.response.data.error);
-        } else {
-            // setErr('Une erreur est survenue');
-        }
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+      .then(() => {
+        const updatedArticles = articles.filter((article) => article.id !== id);
+        setArticles(updatedArticles);
+        const updatedSearchResult = searchResult.filter((article) => article.id !== id);
+        setSearchResult(updatedSearchResult);
+      })
+      .catch(error => {
+        // Handle error
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <div className='flex flex-col sm:flex-row items-center justify-between bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5 hover:drop-shadow-lg transition duration-300 ease-in-out transform'>
-      <div className='mb-4 sm:mb-0 sm:mr-6'>
-        <Link  to={`/article/${id}`} rel='noopener noreferrer'>
-          <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-xl sm:text-2xl transition duration-300 ease-in-out transform'>
-            {title}
-          </h1>
-        </Link>
-        <p className='mt-2 sm:mt-0'>
-          {shortenAbstract(abstract)}{' '}
-          <Link
-            className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'
-            to={`/article/${id}`}
-            rel='noopener noreferrer'
-          >
-            Lire plus
-          </Link>
-        </p>
-      </div>
-      <div className='flex items-center justify-end'>
-        <div onClick={handleViewPdf} className='hover:cursor-pointer'>
-          <FaFilePdf className='text-3xl sm:text-4xl text-[#FE5B5B] hover:text-[#fe5b5bd3] transition duration-300 ease-in-out transform' />
-        </div>
-        { loading ? (
-            <img src="/spinner2.gif" alt="spinner" className="ml-2 w-[25%] h-auto"/>
-       
-        ) : (
-          <FaHeart
-            className={`ml-4 cursor-pointer text-[#fd4949] hover:text-[#FF6262] text-3xl sm:text-4xl transition duration-300 ease-in-out transform`}
-            onClick={handleFav}
-          />
-        )}
-      </div>
+      {/* Article details */}
     </div>
   );
 };

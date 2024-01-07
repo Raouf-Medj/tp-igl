@@ -1,9 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { FaSliders } from "react-icons/fa6";
 import FilterElement from './Navbar/filterElement';
 
+/**
+ * Component for managing filters like keywords, authors, institutions, and dates.
+ *
+ * @param {Object} props - The filters props
+ * @param {Array} props.keywords - List of keywords
+ * @param {Array} props.authors - List of authors
+ * @param {Array} props.institutions - List of institutions
+ * @param {string} props.dateDeb - Start date
+ * @param {string} props.dateFin - End date
+ * @param {Function} props.setKeywords - Function to set keywords
+ * @param {Function} props.setAuthors - Function to set authors
+ * @param {Function} props.setInstitutions - Function to set institutions
+ * @param {Function} props.setDateDeb - Function to set start date
+ * @param {Function} props.setDateFin - Function to set end date
+ * @returns {JSX.Element} Component for managing filters
+ */
 const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeywords, setAuthors, setInstitutions, setDateDeb, setDateFin }) => {
-
     const [keyword, setKeyword] = useState("");
     const [author, setAuthor] = useState("");
     const [institution, setInstitution] = useState("");
@@ -11,33 +26,31 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
     const handleDeleteKeyword = (clickedElement) => {
         const updatedKeywords = keywords.filter((keyword) => keyword !== clickedElement);
         setKeywords(updatedKeywords);
-    }
+    };
 
     const handleDeleteAuthor = (clickedElement) => {
         const updatedAuthors = authors.filter((author) => author !== clickedElement);
         setAuthors(updatedAuthors);
-    }
+    };
 
     const handleDeleteInstitution = (clickedElement) => {
         const updatedInstitutions = institutions.filter((institution) => institution !== clickedElement);
         setInstitutions(updatedInstitutions);
-    }
+    };
 
     const handleStartDateChange = (event) => {
         const newStartDate = event.target.value;
         setDateDeb(newStartDate);
-    
-        // If the end date is set and is before the new start date, reset the end date
+
         if (dateFin && new Date(dateFin) < new Date(newStartDate)) {
-          setDateFin('');
+            setDateFin('');
         }
     };
-    
+
     const handleEndDateChange = (event) => {
         const newEndDate = event.target.value;
         setDateFin(newEndDate);
 
-        // If the start date is set and is after the new end date, reset the start date
         if (dateDeb && new Date(dateDeb) > new Date(newEndDate)) {
             setDateDeb('');
         }

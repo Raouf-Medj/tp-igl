@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: articleDetails.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: articleDetails.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import useToken from '../utils/useToken';
+import axios from 'axios';
+
+/**
+ * Renders detailed information about the article.
+ *
+ * @param {Object} props - The article details props
+ * @param {Object} props.articleData - Information about the article
+ * @returns {JSX.Element} Component displaying detailed article information
+ */
+const ArticleDetails = ({ articleData }) => {
+    // Styles
+    const customStyle = { color: '#767F8C' };
+    const titleStyle = {
+        color: '#046865',
+        textAlign: 'center',
+        fontFamily: 'Poppins',
+        fontSize: '3vw',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        marginTop: '2rem',
+        marginBottom: '3rem',
+    };
+
+    return (
+        &lt;div className="article-details mx-8 md:mx-16">
+            {/* Content */}
+        &lt;/div>
+    );
+};
+
+/**
+ * Renders the article details centered on the page.
+ *
+ * @param {Object} props - The centered article details props
+ * @param {Object} props.articleData - Information about the article
+ * @param {string} props.id - The unique identifier for the article
+ * @returns {JSX.Element} Component rendering centered article details
+ */
+const CenteredArticleDetails = ({ articleData, id }) => {
+    // State
+    const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    // Token
+    const { userid } = useToken();
+
+    // Fetch favorites on component load
+    useEffect(() => {
+        const fetchFavoris = async () => {
+            setLoading(true);
+            await axios.get(`http://localhost:5000/api/favoris/${userid}`)
+                .then(response => {
+                    setIsAddedToFavorites(response.data.articles.some(article => article.id === id));
+                })
+                .catch(error => {
+                    // Handle error
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        };
+        fetchFavoris();
+    }, [userid, id]);
+
+    // Add article to favorites
+    const handleAddToFavorites = async () => {
+        setLoading(true);
+        await axios.post("http://localhost:5000/api/favoris", {
+            article_id: id,
+            user_id: userid
+        })
+            .then(() => {
+                setIsAddedToFavorites(true);
+            })
+            .catch(error => {
+                // Handle error
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    // Remove article from favorites
+    const handleRemoveFromFavorites = async () => {
+        setLoading(true);
+        await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
+            .then(() => {
+                setIsAddedToFavorites(false);
+            })
+            .catch(error => {
+                // Handle error
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+
+    return (
+        &lt;div className="flex flex-col items-start min-h-screen sm:p-8">
+            {/* Favorites button */}
+            {/* Article details */}
+        &lt;/div>
+    );
+};
+
+export default CenteredArticleDetails;
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AjouterMod">AjouterMod</a></li><li><a href="global.html#Article">Article</a></li><li><a href="global.html#ArticleDetails">ArticleDetails</a></li><li><a href="global.html#ArticleFav">ArticleFav</a></li><li><a href="global.html#ArticleList">ArticleList</a></li><li><a href="global.html#CenteredArticleDetails">CenteredArticleDetails</a></li><li><a href="global.html#EditMod">EditMod</a></li><li><a href="global.html#EditableField">EditableField</a></li><li><a href="global.html#Filters">Filters</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#ListFav">ListFav</a></li><li><a href="global.html#ProtectedComponent">ProtectedComponent</a></li><li><a href="global.html#SearchBar">SearchBar</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Jan 07 2024 17:41:13 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
