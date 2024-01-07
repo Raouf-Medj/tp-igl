@@ -9,17 +9,17 @@ services:
       - "discovery.type=single-node"
     ports:
       - "9200:9200"
+      - "9300:9300"
   
   backend:
     build: ./backend
     container_name: backend
-    command: sh -c "sleep 10s; python app.py"
+    command: sh -c "sleep 5s; python app.py"
     ports:
       - "5000:5000"
     volumes:
       - ./backend:/app
     environment:
-      ELASTICSEARCH_URL: "http://elasticsearch:9200"
       FLASK_ENV: development # remove if it causes issues
     depends_on:
       - elasticsearch

@@ -8,8 +8,7 @@ import unicodedata
 from elasticsearch.helpers import scan
 
 articleController = Blueprint("articleController",__name__)
-es = Elasticsearch(['http://localhost:9200']) 
-
+es = Elasticsearch(['http://elasticsearch:9200']) 
 
 #Get an article by ID
 @articleController.route('/api/articles/<string:article_id>', methods=['GET'])
