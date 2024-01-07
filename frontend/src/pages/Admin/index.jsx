@@ -87,7 +87,7 @@ const AdminHome = ({ loading }) => {
                     ) : (
                         <div className="flex flex-wrap">
                             {moderators.map((moderator) => (
-                                <div onMouseEnter={() => setHoveredModerator(moderator.id)} onMouseLeave={() => setHoveredModerator(null)}>
+                                <div key={moderator.id} onMouseEnter={() => setHoveredModerator(moderator.id)} onMouseLeave={() => setHoveredModerator(null)}>
                                     <div
                                         key={moderator.id}
                                         className="mr-2 mb-2 sm:mr-4 sm:mb-4 p-3 sm:p-4 md:p-5 lg:p-6 bg-white border border-gray-300 rounded-md relative flex items-center justify-center w-36 sm:w-44 md:w-52 lg:w-60 h-36 sm:h-44 md:h-52 lg:h-60 hover:drop-shadow-xl transition duration-300 ease-in-out transform"

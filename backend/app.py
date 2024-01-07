@@ -12,7 +12,8 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 
 
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+# es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch(hosts=["http://elasticsearch:9200"], scheme="http", retry_on_timeout=True)
 
 
 # Flask instance
@@ -26,6 +27,14 @@ app.config["JWT_SECRET_KEY"] = "zYpEicDyBgF704lYByrQVVDqDd3eRX0b"
 # app.config["SQLALCHEMY_ECHO"] = True
 
 CORS(app, supports_credentials=True)
+
+@app.after_request
+def after_request(response):
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  response.headers.add('Access-Control-Allow-Credentials', 'true')
+  return response
 
 jwt = JWTManager(app)
 

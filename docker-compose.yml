@@ -1,35 +1,39 @@
 version: "3.8"
 services:
-  mysql_db:
-    build: ./db
-    restart: always
+
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:8.11.2"
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
     ports:
-      - "3307:3306"
-  
+      - "9200:9200"
   
   backend:
     build: ./backend
+    container_name: backend
     command: sh -c "sleep 10s; python app.py"
     ports:
       - "5000:5000"
     volumes:
       - ./backend:/app
     environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
       FLASK_ENV: development # remove if it causes issues
     depends_on:
-      - mysql_db
-
+      - elasticsearch
+    restart: always
   
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "3000:3000"
     volumes: 
       - ./frontend:/user/src/app
     stdin_open: true
     tty: true
-    environment:
-      WATCHPACK_POLLING: true
     depends_on:
       - backend
 
