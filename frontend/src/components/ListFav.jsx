@@ -14,17 +14,8 @@ const ListFav = ({ articles, setArticles, searchResult, setSearchResult }) => {
     return (
         <div className='max-h-[650px] overflow-y-auto'>
             {searchResult.map((article) => (
-                <ArticleFav
-                    key={article.id}
-                    id={article.id}
-                    title={article.title}
-                    url={article.url}
-                    abstract={article.abstract}
-                    articles={articles}
-                    setArticles={setArticles}
-                    searchResult={searchResult}
-                    setSearchResult={setSearchResult}
-                />
+                <ArticleFav key={article.id} id={article.id} title={article.title} url={article.url} abstract={article.abstract} articles={articles} setArticles={setArticles} searchResult={searchResult} setSearchResult={setSearchResult}/>
+
             ))}
         </div>
     );

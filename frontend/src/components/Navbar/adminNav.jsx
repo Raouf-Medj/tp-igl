@@ -56,19 +56,20 @@ const AdminNav = ({ setLoading }) => {
     return (
         <ul className='flex items-center lg:w-[70%] xl:w-[55%] w-[90%] justify-around'>
             <li>
-                {/* Link to manage moderators */}
-                <Link to={"/admin"} className='hidden sm:block text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform'>Manage Moderators</Link>
-                <Link to={"/admin"} className='block sm:hidden text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform'>Moderators</Link>
+            <Link to={"/admin"} className='hidden sm:block text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform'>Gérer modérateurs</Link>
+            <Link to={"/admin"} className='block sm:hidden text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform'>Modérateurs</Link>
+
             </li>
             <li>
                 {/* Input to upload a PDF file */}
                 <div>
-                    <label htmlFor="fileInput" className='hidden sm:block text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform cursor-pointer'>Upload Article</label>
-                    <input type="file" accept=".pdf" id="fileInput" onChange={handleFileChange} style={{ display: 'none' }} />
+                <label htmlFor="fileInput" className='hidden sm:block text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform cursor-pointer'>Uploader article</label>
+                    <input type="file" accept=".pdf" id="fileInput" onChange={handleFileChange} style={{ display: 'none' }} /> 
                 </div>
                 <div>
-                    <label htmlFor="fileInput" className='block sm:hidden text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform cursor-pointer'>Upload</label>
-                    <input type="file" accept=".pdf" id="fileInput" onChange={handleFileChange} style={{ display: 'none' }} />
+                <label htmlFor="fileInput" className='block sm:hidden text-sm sm:text-base md:text-[110%] hover:text-[#46aaa7] transition duration-300 ease-in-out transform cursor-pointer'>Uploader</label>
+                    <input type="file" accept=".pdf" id="fileInput" onChange={handleFileChange} style={{ display: 'none' }} /> 
+
                 </div>
             </li>
         </ul>

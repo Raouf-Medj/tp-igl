@@ -23,21 +23,14 @@ const ArticleList = ({ articles, isRectifier }) => {
     setSortedArticles(sorted);
   }, [articles]);
 
+  
   return (
     <div className='max-h-[650px] overflow-y-auto'>
-      {/* Render each article */}
-      {sortedArticles.map((article) => (
-        <Article
-          key={article.id}
-          id={article.id}
-          title={article.title}
-          url={article.url}
-          abstract={article.abstract}
-          isRectifier={isRectifier}
-        />
-      ))}
+        {sortedArticles.map((article) => (
+            <Article key={article.id} id={article.id} title={article.title} url={article.url} abstract={article.abstract} isRectifier={isRectifier} />
+        ))}
     </div>
-  );
-};
+)
+}
 
 export default ArticleList;

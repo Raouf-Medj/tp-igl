@@ -41,6 +41,8 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
     const handleStartDateChange = (event) => {
         const newStartDate = event.target.value;
         setDateDeb(newStartDate);
+        
+        // If the end date is set and is before the new start date, reset the end date
 
         if (dateFin && new Date(dateFin) < new Date(newStartDate)) {
             setDateFin('');
@@ -50,6 +52,7 @@ const Filters = ({ keywords, authors, institutions, dateDeb, dateFin, setKeyword
     const handleEndDateChange = (event) => {
         const newEndDate = event.target.value;
         setDateFin(newEndDate);
+        // If the start date is set and is after the new end date, reset the start date
 
         if (dateDeb && new Date(dateDeb) > new Date(newEndDate)) {
             setDateDeb('');

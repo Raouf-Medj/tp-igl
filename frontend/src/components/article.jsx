@@ -48,26 +48,28 @@ const Article = ({ id, title, url, abstract, isRectifier }) => {
      * @returns {string} Shortened abstract text
      */
     const shortenAbstract = (abstract, lengthAbstract) => {
-        let words, shortened = "";
+        var words, shortened = "";
         if (abstract !== undefined) {
             words = abstract.split(' ');
             shortened = words.slice(0, lengthAbstract).join(' ');
-            shortened = shortened + "...";
+            shortened = shortened + "..."
         }
         return shortened;
+
     };
 
     return (
         <div className='flex sm:flex-row flex-col items-center bg-[#FFFFFF] border border-[#E5E5E5] py-4 px-6 rounded-lg mb-5 hover:drop-shadow-lg transition duration-300 ease-in-out transform'>
             <div>
-                <Link to={`${isRectifier ? `/mod/article/${id}` : `/article/${id}`}`}>
+                <Link to={`${ isRectifier ? `/mod/article/${id}` : `/article/${id}`}`}>
                     <h1 className='font-bold text-[#046865] hover:text-[#21a0a0e4] text-2xl transition duration-300 ease-in-out transform'>{title}</h1>
                 </Link>
-                <p className='lg:block hidden'>{shortenAbstract(abstract, 25)} <Link to={`${isRectifier ? `/mod/article/${id}` : `/article/${id}`}`} className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Read more</Link></p>
-                <p className='lg:hidden'>{shortenAbstract(abstract, 15)} <Link to={`${isRectifier ? `/mod/article/${id}` : `/article/${id}`}`} className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Read more</Link></p>
+                <p className='lg:block hidden'>{shortenAbstract(abstract, 25)} <Link to={`${ isRectifier ? `/mod/article/${id}` : `/article/${id}`}`} className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
+                <p className='lg:hidden'>{shortenAbstract(abstract, 15)} <Link to={`${ isRectifier ? `/mod/article/${id}` : `/article/${id}`}`} className='ml-2 text-[#21A0A0] hover:text-[#21a0a0b5] font-bold transition duration-300 ease-in-out transform'>Lire plus</Link></p>
+
             </div>
-            <div className='bg-[#EDEFF5] sm:block hidden rounded w-0.5 h-24 mx-6' />
-            <div className='bg-[#EDEFF5] sm:hidden block rounded w-full h-0.5 my-3' />
+            <div className='bg-[#EDEFF5] sm:block hidden rounded w-0.5 h-24 mx-6'/>
+            <div className='bg-[#EDEFF5] sm:hidden block rounded w-full h-0.5 my-3'/>
             <div onClick={handleViewPdf} className='hover:cursor-pointer'>
                 <FaFilePdf className='text-[40px] text-[#FE5B5B] hover:text-[#fe5b5bd3] transition duration-300 ease-in-out transform' />
             </div>

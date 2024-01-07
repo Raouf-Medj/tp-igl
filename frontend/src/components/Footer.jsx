@@ -35,8 +35,8 @@ const Footer = () => {
 
           {/* Scroll To Top Button */}
           <Link to="#" onClick={scrollToTop} className='lg:flex sm:block hidden items-center bg-[#046865] hover:bg-[#046865d4] hover:shadow-lg text-white font-semibold rounded-full lg:py-3 lg:px-5 p-4 transition duration-300 ease-in-out transform'>
-            <h1 className='lg:mr-1 lg:block hidden'>Top</h1>
-            <IoArrowUp className='lg:text-lg text-2xl'/>
+          <h1 className='lg:mr-1 lg:block hidden'>Haut de page</h1>   
+          <IoArrowUp className='lg:text-lg text-2xl'/>
           </Link>
 
           {/* Social Media Icons */}

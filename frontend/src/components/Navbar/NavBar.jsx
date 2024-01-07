@@ -14,6 +14,7 @@ import NotFound from '../../pages/Error/404';
  * @param {Object} props - Props containing removeToken and setLoading functions
  * @returns {JSX.Element} Navigation bar component
  */
+
 const NavBar = ({ removeToken, setLoading }) => {
 
     const navigate = useNavigate();
@@ -26,18 +27,20 @@ const NavBar = ({ removeToken, setLoading }) => {
      * @param {Object} e - Event object
      * @returns {void}
      */
+
     const logoutHandler = async (e) => {
         e.preventDefault();
     
-        try {
-            // Send a request to the server for logout
-            await axios.post('http://localhost:5000/api/logout');
+        // Send a request to your server for authentication
+        await axios.post('http://localhost:5000/api/logout')
+        .then(() => {
             removeToken();
             navigate("/");
-        } catch (error) {
-            // Handle logout error
+        })
+        .catch(error => {
+            // Handle login error
             console.log(error);
-        }
+        });
     }
 
     /**
@@ -45,17 +48,18 @@ const NavBar = ({ removeToken, setLoading }) => {
      *
      * @returns {JSX.Element} Rendered navigation component based on user role
      */
+
     const renderLinks = () => {
-        switch (userrole) {
+          switch (userrole) {
             case 'ADMIN':
-                return <AdminNav setLoading={setLoading}/>;
+              return <AdminNav setLoading={setLoading}/>;
             case 'MOD':
-                return <ModNav/>;
+              return <ModNav/>;
             case 'CLIENT':
-                return <ClientNav/>;
+              return <ClientNav/>;
             default:
-                return <NotFound/>;
-        }
+              return <NotFound/>;
+          }
     } 
 
     return (
@@ -71,10 +75,8 @@ const NavBar = ({ removeToken, setLoading }) => {
                     {renderLinks()}
                 </div>
             </div>
-            <button type="submit" onClick={logoutHandler} className={`p-1 sm:p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}>
-                <HiOutlineLogout className='text-xl md:mr-2'/>
-                <h1 className='hidden md:block'>Se déconnecter</h1>
-            </button>
+            <button type="submit" onClick={logoutHandler} className={`p-1 sm:p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}><HiOutlineLogout className='text-xl md:mr-2'/><h1 className='hidden md:block'>Se déconnecter</h1></button>
+
         </div>
     );
 };
