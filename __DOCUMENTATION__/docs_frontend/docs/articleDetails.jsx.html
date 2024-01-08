@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: articleDetails.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: articleDetails.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import useToken from '../utils/useToken';
+import axios from 'axios';
+
+/**
+ * Renders detailed information about the article.
+ *
+ * @param {Object} props - The article details props
+ * @param {Object} props.articleData - Information about the article
+ * @returns {JSX.Element} Component displaying detailed article information
+ */
+const ArticleDetails = ({ articleData }) => {
+    // Styles
+    const customStyle = { color: '#767F8C' };
+    const titleStyle = {
+        color: '#046865',
+        textAlign: 'center',
+        fontFamily: 'Poppins',
+        fontSize: '3vw',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        marginTop: '2rem',
+        marginBottom: '3rem',
+    };
+
+    return (
+        &lt;div className="article-details mx-8 md:mx-16">
+          &lt;h2 style={titleStyle}>
+            {articleData.title}
+          &lt;/h2>
+    
+          &lt;div className="flex justify-between sm:text-base text-xs">
+            &lt;div className='w-[50%]'>
+              &lt;p style={customStyle}>Auteurs:&lt;/p>
+              {articleData.authors.map((author, index) => (
+                &lt;p key={index}>{author}&lt;/p>
+              ))}
+            &lt;/div>
+            &lt;div className="w-[50%] ml-8 md:ml-20">
+              &lt;p style={customStyle}>Institutions:&lt;/p>
+              {articleData.institutions.map((institution, index) => (
+                &lt;p key={index}>{institution}&lt;/p>
+              ))}
+            &lt;/div>
+          &lt;/div>
+    
+          &lt;div className="my-4" />
+    
+          &lt;div className="flex justify-between sm:text-base text-xs">
+            &lt;div className='w-[50%]'>
+              &lt;p style={customStyle}>Mots-clés:&lt;/p>
+              {articleData.keywords.map((keyword, index) => (
+                &lt;p key={index}>{keyword}&lt;/p>
+              ))}
+            &lt;/div>
+            &lt;div className="w-[50%] ml-8 md:ml-20">
+              &lt;p style={customStyle}>Date de publication:&lt;/p>
+              &lt;p>{articleData.publication_date}&lt;/p>
+            &lt;/div>
+          &lt;/div>
+    
+          &lt;div className="my-4 h-0.5 bg-gray-300 rounded " />
+    
+          &lt;p className='sm:text-base text-xs' style={customStyle}>Résumé:&lt;/p>
+          &lt;p className='sm:text-base text-xs'>{articleData.abstract}&lt;/p>
+    
+          &lt;div className="my-4 h-0.5 bg-gray-300 rounded " />
+    
+          &lt;p className='sm:text-base text-xs' style={customStyle}>Texte intégral:&lt;/p>
+          &lt;p className='sm:text-base text-xs'>{articleData.text}&lt;/p>
+    
+          &lt;div className="my-4 h-0.5 bg-gray-300 rounded " />
+    
+          &lt;div className='sm:text-base text-xs'>
+            &lt;p style={customStyle}>Références:&lt;/p>
+            {articleData.references.map((reference, index) => (
+              &lt;p key={index}>{reference}&lt;/p>
+            ))}
+          &lt;/div>
+        &lt;/div>
+      );
+    };
+  
+
+/**
+ * Renders the article details centered on the page.
+ *
+ * @param {Object} props - The centered article details props
+ * @param {Object} props.articleData - Information about the article
+ * @param {string} props.id - The unique identifier for the article
+ * @returns {JSX.Element} Component rendering centered article details
+ */
+const CenteredArticleDetails = ({ articleData, id }) => {
+
+    const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
+    const [loading, setLoading] = useState(false);
+  
+    const { userid } = useToken();
+    useEffect(() => {
+  
+      const fetchFavoris = async () => {
+        setLoading(true);
+        await axios.get(`http://localhost:5000/api/favoris/${userid}`)
+        .then(response => {
+          setIsAddedToFavorites(response.data.articles.some(article => article.id === id));
+        })
+        .catch(error => {
+          if (error.response &amp;&amp; error.response.data) {
+              // setErr(error.response.data.error);
+          } else {
+              // setErr('Une erreur est survenue');
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+      }
+  
+      fetchFavoris();
+  }, [userid, id]);
+  
+    const handleAddToFavorites = async () => {
+      setLoading(true);
+      await axios.post("http://localhost:5000/api/favoris", {
+        article_id: id,
+        user_id: userid
+      })
+      .then(() => {
+        setIsAddedToFavorites(true);
+      })
+      .catch(error => {
+          if (error.response &amp;&amp; error.response.data) {
+              // setErr(error.response.data.error);
+          } else {
+              // setErr('Une erreur est survenue');
+          }
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+    };
+  
+    const handleRemoveFromFavorites = async () => {
+      setLoading(true);
+      await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
+      .then(() => {
+        setIsAddedToFavorites(false);
+      })
+      .catch(error => {
+          if (error.response &amp;&amp; error.response.data) {
+              // setErr(error.response.data.error);
+          } else {
+              // setErr('Une erreur est survenue');
+          }
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+    }
+  
+
+    return (
+        &lt;div className="flex flex-col items-start min-h-screen sm:p-8">
+          {!isAddedToFavorites ? (
+            &lt;button
+              disabled={loading}
+              onClick={handleAddToFavorites}
+              className="mb-8 px-4 py-2 mx-auto bg-white text-black rounded-full border border-gray hover:bg-gray-200 flex items-center"
+            >
+              { loading ? (
+                &lt;div className='w-full flex items-center justify-center flex-col'>
+                  &lt;img src="/spinner2.gif" alt="spinner" className=" w-[12%] h-auto"/>
+                &lt;/div>
+              ) : (
+                &lt;div>
+                  &lt;FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouter aux favoris
+                &lt;/div>
+              )}
+            &lt;/button>
+          ) : (
+            &lt;button disabled={loading} onClick={handleRemoveFromFavorites} className='mb-8 px-4 py-2 mx-auto text-red-500 bg-white rounded-full border border-gray hover:bg-gray-200 flex items-center'>
+              { loading ? (
+                &lt;div className='w-full flex items-center justify-center flex-col'>
+                  &lt;img src="/spinner2.gif" alt="spinner" className=" w-[12%] h-auto"/>
+                &lt;/div>
+              ) : (
+                &lt;div>
+                  &lt;FontAwesomeIcon icon={faHeart} className="mr-2" /> Ajouté aux favoris!
+                &lt;/div>
+              )}
+            &lt;/button>
+          )}
+    
+          &lt;div className="w-11/12 md:w-2000px h-screen md:h-2000px mx-auto bg-white border border-gray sm:p-8 rounded-md overflow-auto">
+            &lt;ArticleDetails articleData={articleData} />
+          &lt;/div>
+        &lt;/div>
+      );
+    
+};
+
+export default CenteredArticleDetails;
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminNav">AdminNav</a></li><li><a href="global.html#AjouterMod">AjouterMod</a></li><li><a href="global.html#Article">Article</a></li><li><a href="global.html#ArticleDetails">ArticleDetails</a></li><li><a href="global.html#ArticleFav">ArticleFav</a></li><li><a href="global.html#ArticleList">ArticleList</a></li><li><a href="global.html#CenteredArticleDetails">CenteredArticleDetails</a></li><li><a href="global.html#ClientNav">ClientNav</a></li><li><a href="global.html#EditMod">EditMod</a></li><li><a href="global.html#EditableField">EditableField</a></li><li><a href="global.html#FilterElement">FilterElement</a></li><li><a href="global.html#Filters">Filters</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#ListFav">ListFav</a></li><li><a href="global.html#ModNav">ModNav</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#ProtectedComponent">ProtectedComponent</a></li><li><a href="global.html#SearchBar">SearchBar</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Jan 08 2024 18:46:43 GMT+0100 (West Africa Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
