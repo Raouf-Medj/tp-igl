@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>articleController &mdash; SciFetch 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f6245a2f"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SciFetch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../app.html">app module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../articleController.html">articleController module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../textExtractor.html">textExtractor module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SciFetch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">articleController</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for articleController</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span>  <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">elasticsearch</span> <span class="kn">import</span> <span class="n">Elasticsearch</span>
+<span class="kn">from</span> <span class="nn">textExtractor</span> <span class="kn">import</span> <span class="n">pdfToJson</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">unicodedata</span>
+<span class="kn">from</span> <span class="nn">elasticsearch.helpers</span> <span class="kn">import</span> <span class="n">scan</span>
+
+<span class="n">articleController</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">&quot;articleController&quot;</span><span class="p">,</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">es</span> <span class="o">=</span> <span class="n">Elasticsearch</span><span class="p">([</span><span class="s1">&#39;http://localhost:9200&#39;</span><span class="p">])</span> 
+
+
+<span class="c1">#Get an article by ID</span>
+<span class="nd">@articleController</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/articles/&lt;string:article_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getArticleByID</span><span class="p">(</span><span class="n">article_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get an article by ID</span>
+
+<span class="sd">    This endpoint allows acessing a specefic article through its ID</span>
+
+<span class="sd">    :param article_id: the ID of the article</span>
+<span class="sd">    :type article_id: int</span>
+<span class="sd">    :return: JSON structure containing detailed information about the article, or an error message if something went wrong</span>
+<span class="sd">    :rtype: flask.Response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">index_name</span> <span class="o">=</span> <span class="s1">&#39;articles&#39;</span>  
+        <span class="n">result</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">article_id</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;found&quot;</span><span class="p">]):</span>
+            <span class="n">article</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">article</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span><span class="s2">&quot;auccun article avec id corespondant trouvé&quot;</span><span class="p">}),</span><span class="mi">404</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}),</span> <span class="mi">500</span>
+
+<span class="nd">@articleController</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/articles/search&#39;</span><span class="p">,</span><span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">manageArticleSearch</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    manage article search</span>
+
+<span class="sd">    this endpoint allows the server to perform a search operation of articles through elastic search engine, the query is provided in the body of the request</span>
+<span class="sd">    </span>
+<span class="sd">    :return: a list of article headers &quot;basic information&quot; that are relevant to the query provided in the request body</span>
+<span class="sd">    :rtype: flask.Response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">words_to_search</span> <span class="o">=</span> <span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]]</span>
+    <span class="n">authors_to_search</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;authors&quot;</span><span class="p">]</span>
+    <span class="n">institutions_to_search</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;institutions&quot;</span><span class="p">]</span>
+    <span class="n">keywords_to_search</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span>
+    <span class="n">date_debut</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;date_debut&quot;</span><span class="p">]</span>
+    <span class="n">date_fin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;date_fin&quot;</span><span class="p">]</span>
+
+    <span class="n">articles_to_return</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">fields_to_retrieve</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">,</span> <span class="s2">&quot;authors&quot;</span><span class="p">,</span> <span class="s2">&quot;institutions&quot;</span><span class="p">,</span> <span class="s2">&quot;keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;publication_date&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;validated&quot;</span><span class="p">]</span>
+
+    <span class="n">scroll</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;articles&#39;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;match_all&quot;</span><span class="p">:</span> <span class="p">{}}},</span> <span class="n">_source</span><span class="o">=</span><span class="n">fields_to_retrieve</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">scroll</span><span class="p">:</span>
+
+        <span class="n">doc_id</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">]</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">]</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;abstract&#39;</span><span class="p">]</span>
+        <span class="n">authors</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;authors&#39;</span><span class="p">]</span>
+        <span class="n">institutions</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;institutions&#39;</span><span class="p">]</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;keywords&#39;</span><span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+        <span class="n">publication_date</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;publication_date&#39;</span><span class="p">]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;text&#39;</span><span class="p">]</span>
+        <span class="n">validated</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s1">&#39;_source&#39;</span><span class="p">][</span><span class="s1">&#39;validated&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">is_between_dates</span><span class="p">(</span><span class="n">initial_date_str</span><span class="o">=</span><span class="n">date_debut</span><span class="p">,</span> <span class="n">final_date_str</span><span class="o">=</span><span class="n">date_fin</span><span class="p">,</span> <span class="n">date_to_check_str</span><span class="o">=</span><span class="n">publication_date</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_all_words_existence</span><span class="p">(</span><span class="n">words</span><span class="o">=</span><span class="n">words_to_search</span><span class="p">,</span> <span class="n">text_content</span><span class="o">=</span><span class="n">text</span><span class="p">)</span> <span class="ow">and</span> <span class="n">all_searched_words_exist</span><span class="p">(</span><span class="n">searched_words</span><span class="o">=</span><span class="n">keywords_to_search</span><span class="p">,</span> <span class="n">strings_retrieved</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span> <span class="ow">and</span> <span class="n">all_searched_words_exist</span><span class="p">(</span><span class="n">searched_words</span><span class="o">=</span><span class="n">authors_to_search</span><span class="p">,</span> <span class="n">strings_retrieved</span><span class="o">=</span><span class="n">authors</span><span class="p">)</span> <span class="ow">and</span> <span class="n">all_searched_words_exist</span><span class="p">(</span><span class="n">searched_words</span><span class="o">=</span><span class="n">institutions_to_search</span><span class="p">,</span> <span class="n">strings_retrieved</span><span class="o">=</span><span class="n">institutions</span><span class="p">):</span>
+            <span class="n">articles_to_return</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">doc_id</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="n">abstract</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+                <span class="s2">&quot;publication_date&quot;</span><span class="p">:</span> <span class="n">publication_date</span><span class="p">,</span>
+                <span class="s2">&quot;validated&quot;</span><span class="p">:</span> <span class="n">validated</span><span class="p">,</span>
+            <span class="p">})</span>
+    
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;articles&quot;</span><span class="p">:</span><span class="n">articles_to_return</span><span class="p">}),</span> <span class="mi">200</span>
+
+<span class="nd">@articleController</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/articles&#39;</span><span class="p">,</span><span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span><span class="s1">&#39;PUT&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">manageArticles</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    manage articles</span>
+
+<span class="sd">    This endpoint allows to either update an existing article by providing the exact information of the updated article in the request body, or upload a new article &quot;that is converting the uploaded pdf to a json structure that will be indexed by elastic search&quot;, by provding the pdf file name in the request body</span>
+
+<span class="sd">    :return: JSON response indicating success/failure of the upload/update operation</span>
+<span class="sd">    :rtype: flask.Response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">index_name</span> <span class="o">=</span> <span class="s2">&quot;articles&quot;</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">jsonRequestObject</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="s2">&quot;pdf_name&quot;</span> <span class="ow">in</span> <span class="n">jsonRequestObject</span><span class="p">:</span>
+                <span class="c1">#we suppose that the pdf exists in the docs folder in frontend/public/</span>
+                <span class="n">extractedJson</span> <span class="o">=</span> <span class="n">pdfToJson</span><span class="p">(</span><span class="n">jsonRequestObject</span><span class="p">[</span><span class="s2">&quot;pdf_name&quot;</span><span class="p">])</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">extractedJson</span><span class="p">)</span>
+                
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="n">extractedJson</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;erreur&#39;</span><span class="p">:</span> <span class="s2">&quot;nom de fichier incoherent&quot;</span><span class="p">})</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;erreur&#39;</span><span class="p">:</span> <span class="s2">&quot;echec d&#39;ajout d&#39;un article&quot;</span><span class="p">}),</span> <span class="mi">500</span>  <span class="c1"># Internal Server Error</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;PUT&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">jsonRequestObject</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">jsonRequestObject</span><span class="p">:</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="n">jsonRequestObject</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+                <span class="n">jsonRequestObject</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;champ &quot;id&quot; abscent&#39;</span><span class="p">}),</span> <span class="mi">500</span>  
+            <span class="n">es</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;doc&#39;</span><span class="p">:</span><span class="n">jsonRequestObject</span> <span class="p">})</span>
+
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="n">jsonRequestObject</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]})</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;erreur&#39;</span><span class="p">:</span> <span class="s1">&#39;mise a jour echouee&#39;</span><span class="p">}),</span> <span class="mi">500</span>  
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;methode de requete non supportee&#39;</span><span class="p">}),</span> <span class="mi">405</span>  
+    
+
+
+<div class="viewcode-block" id="stringSpliterLower"><a class="viewcode-back" href="../articleController.html#articleController.stringSpliterLower">[docs]</a><span class="k">def</span> <span class="nf">stringSpliterLower</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String splitter lower</span>
+
+<span class="sd">    This method splites a string &quot;more specefically a sentence&quot; into an array of words, making sure they are in lowercase</span>
+
+<span class="sd">    :param string: the sentence we want to split into words</span>
+<span class="sd">    :type string: string</span>
+<span class="sd">    :return: a list &quot;an array&quot; of lowercased words</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tmpString</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">tmpString</span><span class="o">.</span><span class="n">split</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="normalize_string"><a class="viewcode-back" href="../articleController.html#articleController.normalize_string">[docs]</a><span class="k">def</span> <span class="nf">normalize_string</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    normalise string</span>
+
+<span class="sd">    This method modifies a string, deletes non-Ascii characters, and makes sure it returns a valid Unicode string</span>
+
+<span class="sd">    :param s: the string input &quot;to normalize&quot;</span>
+<span class="sd">    :type s: string</span>
+<span class="sd">    :return: a valid Unicode string</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFD&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="check_all_words_existence"><a class="viewcode-back" href="../articleController.html#articleController.check_all_words_existence">[docs]</a><span class="k">def</span> <span class="nf">check_all_words_existence</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">text_content</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check all words existence</span>
+
+<span class="sd">    this method checks wether at least one word &quot;from the word list&quot; exists in the text</span>
+
+<span class="sd">    :param words: the list of words that we check the existence in the text</span>
+<span class="sd">    :type words: list</span>
+<span class="sd">    :param text_content: the full text in which we search the existence of the words</span>
+<span class="sd">    :type text_content: string</span>
+<span class="sd">    :return: Boolean saying wether one of the words exists in the text or not</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">normalized_text</span> <span class="o">=</span> <span class="n">normalize_string</span><span class="p">(</span><span class="n">text_content</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+    <span class="n">normalized_words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> 
+            <span class="n">normalized_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">normalize_string</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">normalized_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalize_string</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span> 
+
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">normalized_words</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">text_word</span> <span class="ow">in</span> <span class="n">normalized_text</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text_word</span><span class="p">:</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>  
+
+    <span class="k">return</span> <span class="kc">True</span> </div>
+
+
+<div class="viewcode-block" id="is_between_dates"><a class="viewcode-back" href="../articleController.html#articleController.is_between_dates">[docs]</a><span class="k">def</span> <span class="nf">is_between_dates</span><span class="p">(</span><span class="n">initial_date_str</span><span class="p">,</span> <span class="n">final_date_str</span><span class="p">,</span> <span class="n">date_to_check_str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    is between dates</span>
+
+<span class="sd">    this method makes a given date is in between two specified dates</span>
+
+<span class="sd">    :param initial_date_str: initial date</span>
+<span class="sd">    :type initial_date_str: string</span>
+<span class="sd">    :param final_date_str: final date</span>
+<span class="sd">    :type final_date_str: string</span>
+<span class="sd">    :param date_to_check_str: the date to check wether it is between the initial and final date</span>
+<span class="sd">    :type date_to_check_str: string</span>
+<span class="sd">    :return: Boolean saying wether the provided date is included in the time interval or not</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">initial_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">initial_date_str</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">initial_date_str</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">final_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">final_date_str</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">final_date_str</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">date_to_check</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_to_check_str</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">initial_date</span> <span class="ow">and</span> <span class="n">final_date</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">initial_date</span> <span class="o">&lt;=</span> <span class="n">date_to_check</span> <span class="o">&lt;=</span> <span class="n">final_date</span>
+    <span class="k">elif</span> <span class="n">initial_date</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">date_to_check</span> <span class="o">&gt;=</span> <span class="n">initial_date</span>
+    <span class="k">elif</span> <span class="n">final_date</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">date_to_check</span> <span class="o">&lt;=</span> <span class="n">final_date</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="all_searched_words_exist"><a class="viewcode-back" href="../articleController.html#articleController.all_searched_words_exist">[docs]</a><span class="k">def</span> <span class="nf">all_searched_words_exist</span><span class="p">(</span><span class="n">searched_words</span><span class="p">,</span> <span class="n">strings_retrieved</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    all searched words exist</span>
+
+<span class="sd">    this method returns wether or not a word from the list of words exists in one of the strings provided</span>
+
+<span class="sd">    :param searched_words: list of words that we want to check the existence of the strings</span>
+<span class="sd">    :type searched_words: list</span>
+<span class="sd">    :param strings_retrieved: list of strings in which we should check the existence of one of the words</span>
+<span class="sd">    :type strings_retrieved: list</span>
+<span class="sd">    :return: boolean saying wether on of the words exists in one of the strings provided</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">concatenated_strings</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strings_retrieved</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">check_all_words_existence</span><span class="p">(</span><span class="n">searched_words</span><span class="p">,</span> <span class="n">concatenated_strings</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Equipe 1, Groupe 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

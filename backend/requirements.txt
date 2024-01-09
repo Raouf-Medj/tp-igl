@@ -6,3 +6,6 @@
     psycopg2
     openai
     pymupdf
+    sphinx 
+    sphinx_rtd_theme
+    python-dotenv

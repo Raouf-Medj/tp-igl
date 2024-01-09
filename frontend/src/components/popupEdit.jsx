@@ -3,6 +3,13 @@ import axios from 'axios';
 import { CgLock } from "react-icons/cg";
 import { TiUserOutline } from "react-icons/ti";
 
+/**
+ * EditMod component to modify a moderator.
+ * @param {Object} props - Component properties.
+ * @param {Function} props.handleClosePopup - Function to close the popup.
+ * @param {string} props.id - Moderator ID.
+ * @returns {JSX.Element} EditMod component
+ */
 const EditMod = ({ handleClosePopup, id }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -10,6 +17,10 @@ const EditMod = ({ handleClosePopup, id }) => {
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState('');
 
+    /**
+     * Fetches moderator details by ID.
+     * @param {string} id - Moderator ID.
+     */
     useEffect(() => {
         const fetchMod = async () => {
             console.log(id);
@@ -29,6 +40,10 @@ const EditMod = ({ handleClosePopup, id }) => {
         fetchMod();
     }, [id]);
 
+    /**
+     * Handles the update of a moderator.
+     * @param {Object} e - Event object.
+     */
     const handleUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -58,7 +73,6 @@ const EditMod = ({ handleClosePopup, id }) => {
             });
         }
     };
-
 
 
     return (

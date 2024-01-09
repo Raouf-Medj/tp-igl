@@ -14,11 +14,19 @@ es = Elasticsearch(['http://localhost:9200'])
 #Get an article by ID
 @articleController.route('/api/articles/<string:article_id>', methods=['GET'])
 def getArticleByID(article_id):
+    """
+    Get an article by ID
+
+    This endpoint allows acessing a specefic article through its ID
+
+    :param article_id: the ID of the article
+    :type article_id: int
+    :return: JSON structure containing detailed information about the article, or an error message if something went wrong
+    :rtype: flask.Response
+    """
     try:
-        index_name = 'articles'  # Replace with your index name
-        # REMEMBER TO GET THIS VARIABLE -index_name- OUT "REFACTORED" EXTERNAL TO ALL METHODS
+        index_name = 'articles'  
         result = es.get(index=index_name, id=article_id)
-        # Extract the source document from the result
         if(result["found"]):
             article = result['_source']
             return jsonify(article)
@@ -29,7 +37,14 @@ def getArticleByID(article_id):
 
 @articleController.route('/api/articles/search',methods=['POST'])
 def manageArticleSearch():
+    """
+    manage article search
 
+    this endpoint allows the server to perform a search operation of articles through elastic search engine, the query is provided in the body of the request
+    
+    :return: a list of article headers "basic information" that are relevant to the query provided in the request body
+    :rtype: flask.Response
+    """
     words_to_search = [request.json["query"]]
     authors_to_search = request.json["authors"]
     institutions_to_search = request.json["institutions"]
@@ -70,6 +85,14 @@ def manageArticleSearch():
 
 @articleController.route('/api/articles',methods=['POST','PUT'])
 def manageArticles():
+    """
+    manage articles
+
+    This endpoint allows to either update an existing article by providing the exact information of the updated article in the request body, or upload a new article "that is converting the uploaded pdf to a json structure that will be indexed by elastic search", by provding the pdf file name in the request body
+
+    :return: JSON response indicating success/failure of the upload/update operation
+    :rtype: flask.Response
+    """
     index_name = "articles"
     
     if request.method == 'POST':
@@ -108,15 +131,46 @@ def manageArticles():
 
 
 def stringSpliterLower(string):
+    """
+    String splitter lower
+
+    This method splites a string "more specefically a sentence" into an array of words, making sure they are in lowercase
+
+    :param string: the sentence we want to split into words
+    :type string: string
+    :return: a list "an array" of lowercased words
+    :rtype: list
+    """
     tmpString = string.lower()
     return tmpString.split()
 
 
 def normalize_string(s):
+    """
+    normalise string
+
+    This method modifies a string, deletes non-Ascii characters, and makes sure it returns a valid Unicode string
+
+    :param s: the string input "to normalize"
+    :type s: string
+    :return: a valid Unicode string
+    :rtype: string
+    """
     return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode('utf-8')
 
 def check_all_words_existence(words, text_content):
+    """
+    check all words existence
 
+    this method checks wether at least one word "from the word list" exists in the text
+
+    :param words: the list of words that we check the existence in the text
+    :type words: list
+    :param text_content: the full text in which we search the existence of the words
+    :type text_content: string
+    :return: Boolean saying wether one of the words exists in the text or not
+    :rtype: bool
+    """
     normalized_text = normalize_string(text_content.lower())
 
     normalized_words = []
@@ -139,6 +193,20 @@ def check_all_words_existence(words, text_content):
 
 
 def is_between_dates(initial_date_str, final_date_str, date_to_check_str):
+    """
+    is between dates
+
+    this method makes a given date is in between two specified dates
+
+    :param initial_date_str: initial date
+    :type initial_date_str: string
+    :param final_date_str: final date
+    :type final_date_str: string
+    :param date_to_check_str: the date to check wether it is between the initial and final date
+    :type date_to_check_str: string
+    :return: Boolean saying wether the provided date is included in the time interval or not
+    :rtype: bool
+    """
     initial_date = datetime.strptime(initial_date_str, '%Y-%m-%d') if initial_date_str else None
     final_date = datetime.strptime(final_date_str, '%Y-%m-%d') if final_date_str else None
     date_to_check = datetime.strptime(date_to_check_str, '%Y-%m-%d')
@@ -155,5 +223,17 @@ def is_between_dates(initial_date_str, final_date_str, date_to_check_str):
 
 
 def all_searched_words_exist(searched_words, strings_retrieved):
+    """
+    all searched words exist
+
+    this method returns wether or not a word from the list of words exists in one of the strings provided
+
+    :param searched_words: list of words that we want to check the existence of the strings
+    :type searched_words: list
+    :param strings_retrieved: list of strings in which we should check the existence of one of the words
+    :type strings_retrieved: list
+    :return: boolean saying wether on of the words exists in one of the strings provided
+    :rtype: bool
+    """
     concatenated_strings = ' '.join(strings_retrieved)
     return check_all_words_existence(searched_words, concatenated_strings)

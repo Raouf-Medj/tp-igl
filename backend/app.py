@@ -19,10 +19,15 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 app = Flask(__name__)
 app.register_blueprint(articleController,url_prefix="")
 
+app.config.update(
+   SQLALCHEMY_DATABASE_URI="postgresql://postgres:scifetch.23@db.bglmxtkawutiaiyihpij.supabase.co:5432/postgres",
+   SECRET_KEY="zYpEicDyBgF704lYByrQVVDqDd3eRX0b",
+   JWT_SECRET_KEY="zYpEicDyBgF704lYByrQVVDqDd3eRX0b",
+)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:scifetch.23@db.bglmxtkawutiaiyihpij.supabase.co:5432/postgres"
-app.config["SECRET_KEY"] = "zYpEicDyBgF704lYByrQVVDqDd3eRX0b"
-app.config["JWT_SECRET_KEY"] = "zYpEicDyBgF704lYByrQVVDqDd3eRX0b"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:scifetch.23@db.bglmxtkawutiaiyihpij.supabase.co:5432/postgres"
+#app.config["SECRET_KEY"] = "zYpEicDyBgF704lYByrQVVDqDd3eRX0b"
+#app.config["JWT_SECRET_KEY"] = "zYpEicDyBgF704lYByrQVVDqDd3eRX0b"
 # app.config["SQLALCHEMY_ECHO"] = True
 
 CORS(app, supports_credentials=True)
@@ -33,13 +38,23 @@ bcrypt = Bcrypt(app)
 
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+   # db.create_all()
 
 
 # Handling requests
 @app.route('/api/register', methods=['POST'])
 def register():
+    
+    """
+    Register a new user.
+
+    This endpoint allows users to register by providing a username, password, and role.
+
+    :return: JSON response containing user details or an error message.
+    :rtype: flask.Response
+    """
+    
     username = request.json["username"]
     password = request.json["password"]
     role = request.json["role"]
@@ -85,6 +100,16 @@ def register():
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    
+    """
+    Authenticate and login a user.
+
+    This endpoint allows users to login by providing a username and password.
+
+    :return: JSON response containing user details or an error message.
+    :rtype: flask.Response
+    """
+    
     username = request.json["username"]
     password = request.json["password"]
 
@@ -108,6 +133,16 @@ def login():
 
 @app.route("/api/logout", methods=["POST"])
 def logout():
+    
+    """
+    Logout the current user.
+
+    This endpoint logs out the user by unsetting JWT cookies.
+
+    :return: JSON response indicating successful logout.
+    :rtype: flask.Response
+    """
+    
     response = jsonify({"msg": "Logout successful"})
     unset_jwt_cookies(response)
     return response
@@ -115,6 +150,16 @@ def logout():
 
 @app.route('/api/uploads', methods=['POST'])
 def upload_file():
+    
+    """
+    Upload a file.
+
+    This endpoint allows users to upload a PDF file.
+
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    
     if 'file' not in request.files:
         return jsonify({'error': 'Pas de fichier'}), 404
 
@@ -138,6 +183,18 @@ def upload_file():
 
 @app.route('/api/uploads/<filename>', methods=['GET'])
 def download_file(filename):
+    
+    """
+    Download a file.
+
+    This endpoint allows users to download a previously uploaded file.
+
+    :param filename: Name of the file to be downloaded.
+    :type filename: str
+    :return: The file to be downloaded.
+    :rtype: flask.Response
+    """
+    
     upload_folder = os.path.join(app.root_path, 'uploads')  # Define the upload folder path
     return send_from_directory(upload_folder, filename)
 
@@ -145,6 +202,18 @@ def download_file(filename):
 
 @app.route('/api/uploads/<filename>', methods=['DELETE'])
 def delete_file(filename):
+    
+    """
+    Delete an uploaded file.
+
+    This endpoint allows the deletion of an uploaded file by specifying its filename.
+
+    :param filename: The name of the file to be deleted.
+    :type filename: str
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    
     upload_folder = os.path.join(app.root_path, 'uploads')  # Define the upload folder path
     filepath = os.path.join(upload_folder, filename)
     
@@ -157,6 +226,18 @@ def delete_file(filename):
 
 @app.after_request
 def refresh_expiring_jwts(response):
+    
+    """
+    Refresh expiring JWTs.
+
+    This function intercepts responses and refreshes expiring JWTs by extending their validity.
+
+    :param response: The Flask response object.
+    :type response: flask.Response
+    :return: The modified response.
+    :rtype: flask.Response
+    """
+    
     try:
         exp_timestamp = get_jwt()["exp"]
         now = datetime.now(timezone.utc)
@@ -175,6 +256,16 @@ def refresh_expiring_jwts(response):
 
 @app.route('/api/mods', methods=['POST'])
 def add_mod():
+    
+    """
+    Add a new moderator.
+
+    This endpoint allows the addition of a new moderator by providing a username and password.
+
+    :return: JSON response containing moderator details or an error message.
+    :rtype: flask.Response
+    """
+    
     username = request.json["username"]
     password = request.json["password"]
     
@@ -206,6 +297,18 @@ def add_mod():
 
 @app.route('/api/mods/<id>', methods=['DELETE'])
 def delete_mod(id):
+    
+    """
+    Delete a moderator.
+
+    This endpoint allows the deletion of a moderator by specifying their user ID.
+
+    :param id: The ID of the moderator to be deleted.
+    :type id: int
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    
     user = User.query.filter_by(id = id).first()
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 404
@@ -220,6 +323,16 @@ def delete_mod(id):
 
 @app.route('/api/mods', methods = ['GET'])
 def get_mods():
+    
+    """
+    Get all moderators.
+
+    This endpoint retrieves a list of all moderators.
+
+    :return: JSON response containing a list of moderators or an error message.
+    :rtype: flask.Response
+    """
+    
     users = User.query.filter_by(role = RoleEnum.MOD).all()
     usersToReturn = []
     for user in users:
@@ -232,6 +345,18 @@ def get_mods():
 
 @app.route('/api/mods/<id>', methods = ['GET'])
 def get_mod(id):
+    
+    """
+    Get a specific moderator.
+
+    This endpoint retrieves details of a specific moderator by specifying their user ID.
+
+    :param id: The ID of the moderator to be retrieved.
+    :type id: int
+    :return: JSON response containing moderator details or an error message.
+    :rtype: flask.Response
+    """
+    
     user = User.query.filter_by(id = id).first()
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 404
@@ -244,6 +369,17 @@ def get_mod(id):
 
 @app.route('/api/mods',methods = ['PUT'])
 def modify_mod():
+    
+    """
+    Modify a moderator.
+
+    This endpoint allows the modification of a moderator's details by specifying their user ID,
+    and providing the updated username and/or password.
+
+    :return: JSON response containing updated moderator details or an error message.
+    :rtype: flask.Response
+    """
+    
     id = request.json["id"]
     username = request.json["username"]
     password = request.json["password"]
@@ -278,6 +414,18 @@ def modify_mod():
 
 @app.route("/api/favoris/<id>", methods = ['GET'])
 def get_favoris_user(id):
+    
+    """
+    Get favorited articles for a user.
+
+    This endpoint retrieves the list of articles favorited by a user by specifying their user ID.
+
+    :param id: The ID of the user.
+    :type id: int
+    :return: JSON response containing a list of favorited articles or an error message.
+    :rtype: flask.Response
+    """
+    
     user = User.query.filter_by(id = id).first()
     articles = []
     if not user:
@@ -304,6 +452,16 @@ def get_favoris_user(id):
 
 @app.route('/api/favoris', methods=['POST'])
 def like_article():
+    
+    """
+    Like an article.
+
+    This endpoint allows a user to like an article by providing their user ID and the article ID.
+
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    
     req_json = request.json
     user_id = req_json["user_id"]
     article_id = req_json["article_id"]
@@ -326,6 +484,20 @@ def like_article():
 
 @app.route('/api/favoris/<user_id>/<article_id>', methods=['DELETE'])
 def unlike_article(user_id, article_id):
+    
+    """
+    Unlike an article.
+
+    This endpoint allows a user to unlike an article by specifying their user ID and the article ID.
+
+    :param user_id: The ID of the user.
+    :type user_id: int
+    :param article_id: The ID of the article.
+    :type article_id: int
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    
     article_favori = UserArticle.query.filter_by(user_id=user_id, article_id=article_id).first()
     if article_favori:
         db.session.delete(article_favori)
@@ -337,6 +509,18 @@ def unlike_article(user_id, article_id):
 
 @app.route('/api/articles/<id>', methods=['DELETE'])
 def delete_article(id):
+    
+    """
+    Delete an article.
+
+    This endpoint allows the deletion of an article by specifying its ID.
+
+    :param id: The ID of the article to be deleted.
+    :type id: int
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    
     article_exists = es.exists(index = "articles", id = id)
     if article_exists:
         article = es.get(index = "articles", id = id)
@@ -353,6 +537,8 @@ def delete_article(id):
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, host='0.0.0.0')
 
 

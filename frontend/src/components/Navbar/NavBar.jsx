@@ -8,11 +8,25 @@ import ModNav from './modNav';
 import AdminNav from './adminNav';
 import NotFound from '../../pages/Error/404';
 
+/**
+ * Functional component representing the navigation bar.
+ *
+ * @param {Object} props - Props containing removeToken and setLoading functions
+ * @returns {JSX.Element} Navigation bar component
+ */
+
 const NavBar = ({ removeToken, setLoading }) => {
 
     const navigate = useNavigate();
 
     const { userrole } = useToken();
+
+    /**
+     * Handles the logout process by sending a request to the server.
+     *
+     * @param {Object} e - Event object
+     * @returns {void}
+     */
 
     const logoutHandler = async (e) => {
         e.preventDefault();
@@ -29,9 +43,14 @@ const NavBar = ({ removeToken, setLoading }) => {
         });
     }
 
-    const renderLinks = () => {
+    /**
+     * Renders different navigation components based on the user's role.
+     *
+     * @returns {JSX.Element} Rendered navigation component based on user role
+     */
 
-        switch (userrole) {
+    const renderLinks = () => {
+          switch (userrole) {
             case 'ADMIN':
               return <AdminNav setLoading={setLoading}/>;
             case 'MOD':
@@ -55,9 +74,9 @@ const NavBar = ({ removeToken, setLoading }) => {
                 <div className='w-full'>
                     {renderLinks()}
                 </div>
-                
             </div>
             <button type="submit" onClick={logoutHandler} className={`p-1 sm:p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}><HiOutlineLogout className='text-xl md:mr-2'/><h1 className='hidden md:block'>Se déconnecter</h1></button>
+
         </div>
     );
 };

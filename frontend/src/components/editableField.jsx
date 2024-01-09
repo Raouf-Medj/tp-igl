@@ -2,6 +2,17 @@ import React from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 import 'react-datepicker/dist/react-datepicker.css';
 
+/**
+ * Component for an editable field.
+ *
+ * @param {Object} props - The editable field props
+ * @param {string} props.label - The label for the field
+ * @param {string | Array} props.value - The value of the field
+ * @param {Function} props.onChange - Function to handle field value change
+ * @param {boolean} props.isDateField - Indicates if the field is a date field
+ * @param {boolean} props.isParagraph - Indicates if the field is a paragraph
+ * @returns {JSX.Element} Component for an editable field
+ */
 const EditableField = ({ label, value, onChange, isDateField, isParagraph }) => {
   const isMultiLine = Array.isArray(value);
 

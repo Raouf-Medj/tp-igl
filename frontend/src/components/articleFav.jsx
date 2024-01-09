@@ -5,8 +5,28 @@ import { FaHeart } from 'react-icons/fa';
 import axios from 'axios';
 import useToken from '../utils/useToken';
 
+/**
+ * Component displaying information about a favorite article.
+ *
+ * @param {Object} props - The article details props
+ * @param {string} props.title - The title of the article
+ * @param {string} props.url - The URL of the article
+ * @param {string} props.abstract - The abstract of the article
+ * @param {string} props.id - The unique identifier of the article
+ * @param {Array} props.articles - List of articles
+ * @param {Function} props.setArticles - Function to set articles
+ * @param {Array} props.searchResult - List of search results
+ * @param {Function} props.setSearchResult - Function to set search results
+ * @returns {JSX.Element} Component displaying favorite article information
+ */
 const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchResult, setSearchResult }) => {
 
+  /**
+   * Shortens the abstract of the article.
+   *
+   * @param {string} abstract - The abstract of the article
+   * @returns {string} Shortened abstract
+   */
   const shortenAbstract = (abstract) => {
     if (abstract !== undefined) {
       const words = abstract.split(' ');
@@ -15,6 +35,9 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
     return '';
   };
 
+  /**
+   * Handles viewing the PDF associated with the article.
+   */
   const handleViewPdf = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/uploads/${url}`, {
@@ -32,12 +55,14 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
     } catch (error) {
       console.error('Error fetching PDF:', error);
     }
-};
+  };
 
-  const {userid} = useToken();
-  // const [err, setErr] = useState("");
+  const { userid } = useToken();
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handles removing the article from favorites.
+   */
   const handleFav = async () => {
     setLoading(true);
     await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
@@ -57,6 +82,7 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
     .finally(() => {
       setLoading(false);
     });
+
   };
 
   return (
