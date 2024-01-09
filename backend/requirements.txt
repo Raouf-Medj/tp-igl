@@ -6,6 +6,4 @@
     psycopg2
     openai
     pymupdf
-    sphinx 
-    sphinx_rtd_theme
-    python-dotenv
+    elasticsearch==7.13.4
