@@ -77,6 +77,7 @@ const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods }) =>
                                     setUsername(e.target.value)
                                     setErr('')
                                 }}
+                                onKeyDown={(event) => { if (event.key === 'Enter') {handleAdd(event)}}}
                                 />
                             </div>
                         </div>
@@ -97,6 +98,7 @@ const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods }) =>
                                     setPassword(e.target.value)
                                     setErr('')
                                 }}
+                                onKeyDown={(event) => { if (event.key === 'Enter') {handleAdd(event)}}}
                                 />
                             </div>
                         </div>
@@ -118,6 +120,7 @@ const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods }) =>
                                         setConfirmPass(e.target.value)
                                         setErr('')
                                     }}
+                                    onKeyDown={(event) => { if (event.key === 'Enter') {handleAdd(event)}}}
                                 />
                             </div>
                         </div>

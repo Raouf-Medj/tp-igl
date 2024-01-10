@@ -20,6 +20,7 @@ const ModModification = () => {
   const [fullText, setFullText] = useState('');
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
+  const [validated, setValidated] = useState(false);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -36,6 +37,7 @@ const ModModification = () => {
         setSummary(article.abstract);
         setFullText(article.text);
         setUrl(article.url);
+        setValidated(article.validated);
       })
       .catch(error => {
           if (error.response && error.response.data) {
@@ -69,7 +71,7 @@ const ModModification = () => {
       validated: true
     })
     .then(() => {
-      navigate("/mod");
+      window.location.replace("/mod");
     })
     .catch(error => {
         if (error.response && error.response.data) {
@@ -82,6 +84,16 @@ const ModModification = () => {
         setLoading(false);
     })
   };
+
+  const confirmDeletion = () => {
+    const confirmation = window.confirm(`Confirmez-vous la suppression de cet article ?`);
+    if (confirmation) {
+        handleSupprimer();
+    }
+    else {
+        console.log("Suppression annulée");
+    }
+  }
 
   const handleSupprimer = async () => {
     setLoading(true);
@@ -128,11 +140,11 @@ const ModModification = () => {
               <Link to="/mod" className="font-semibold mb-2 sm:mb-0 mr-2 bg-[#cdcdcd] hover:bg-[#cdcdcde4] py-2 px-4 rounded transition duration-300 ease-in-out transform">
                 Annuler
               </Link>
-              <button className="font-semibold mb-2 sm:mb-0 mr-2 bg-[#f84040] hover:bg-[#f84040e4] text-white py-2 px-4 rounded transition duration-300 ease-in-out transform" onClick={handleSupprimer}>
+              <button className="font-semibold mb-2 sm:mb-0 mr-2 bg-[#f84040] hover:bg-[#f84040e4] text-white py-2 px-4 rounded transition duration-300 ease-in-out transform" onClick={confirmDeletion}>
                 Supprimer
               </button>
               <button className="font-semibold bg-[#108f8b] hover:bg-[#108f8bdf] text-white py-2 px-4 rounded transition duration-300 ease-in-out transform" onClick={handleValidation}>
-                Valider
+                { validated ? "Sauvegarder" : "Valider"}
               </button>
             </div>
             <div className="mb-4 w-full sm:mb-0">

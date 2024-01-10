@@ -14,6 +14,7 @@ const AdminHome = ({ loading }) => {
     const [moderators, setModerators] = useState([]);
     // const [err, setErr] = useState("");
     const [loading2, setLoading2] = useState(false);
+    const [loading3, setLoading3] = useState(false);
 
     useEffect(() => {
         const fetchMods = async () => {
@@ -46,8 +47,18 @@ const AdminHome = ({ loading }) => {
         setSelectedModerator(id);
     };
 
-    const handleDelete = async (id) => {
+    const confirmDeletion = (id, username) => {
+        const confirmation = window.confirm(`Confirmez-vous la suppression du modérateur: ${username}?`);
+        if (confirmation) {
+            handleDelete(id);
+        }
+        else {
+            console.log("Suppression annulée");
+        }
+    }
 
+    const handleDelete = async (id) => {
+        setLoading3(true);
         await axios.delete("http://localhost:5000/api/mods/"+id)
         .then(response => {
             setModerators(prevModerators => prevModerators.filter(moderator => moderator.id !== response.data.id));
@@ -58,6 +69,9 @@ const AdminHome = ({ loading }) => {
             } else {
                 // setErr('Une erreur est survenue');
             }
+        })
+        .finally(() => {
+            setLoading3(false);
         });
     };
 
@@ -93,7 +107,7 @@ const AdminHome = ({ loading }) => {
                                         className="mr-2 mb-2 sm:mr-4 sm:mb-4 p-3 sm:p-4 md:p-5 lg:p-6 bg-white border border-gray-300 rounded-md relative flex items-center justify-center w-36 sm:w-44 md:w-52 lg:w-60 h-36 sm:h-44 md:h-52 lg:h-60 hover:drop-shadow-xl transition duration-300 ease-in-out transform"
                                     >
                                         <div className={`flex flex-col items-center transition duration-300 ease-in-out transform ${
-                                            hoveredModerator === moderator.id
+                                            (hoveredModerator === moderator.id || loading3)
                                             ? 'filter blur-md'
                                             : ''
                                         }`}>
@@ -101,16 +115,22 @@ const AdminHome = ({ loading }) => {
                                             <p className='text-sm sm:text-base text-gray-700'>{moderator.username}</p>
                                         </div>
                                     </div>
-                                    {hoveredModerator === moderator.id && (
+                                    {(hoveredModerator === moderator.id) && (
                                         <div className="relative -top-[50%] right-[2%] p-2 rounded-bl-lg opacity-100 transition-opacity flex items-center justify-center">
-                                            <div className='flex justify-center items-center'>
-                                                <div className="hover:drop-shadow-sm cursor-pointer" onClick={() => handleEdit(moderator.id)}>
-                                                    <TbEdit className='mr-2 bg-[#E0B545] hover:bg-[#e0b445e3] text-[#695b27] p-2 rounded-md' size={50} />
+                                            { loading3 ? (
+                                                <div className='w-full flex items-center justify-center flex-col'>
+                                                    <img src="/spinner2.gif" alt="spinner" className=" w-[25%] h-auto"/>
                                                 </div>
-                                                <div className="hover:drop-shadow-sm cursor-pointer" onClick={() => handleDelete(moderator.id)}>
-                                                    <FiTrash2 size={50} className='bg-[#FB5353] hover:bg-[#fb5353de] text-[#6c2c2a] p-2 rounded-md'/>
+                                            ) : (
+                                                <div className='flex justify-center items-center'>
+                                                    <div className="hover:drop-shadow-sm cursor-pointer" onClick={() => handleEdit(moderator.id)}>
+                                                        <TbEdit className='mr-2 bg-[#E0B545] hover:bg-[#e0b445e3] text-[#695b27] p-2 rounded-md' size={50} />
+                                                    </div>
+                                                    <div className="hover:drop-shadow-sm cursor-pointer" onClick={() => confirmDeletion(moderator.id, moderator.username)}>
+                                                        <FiTrash2 size={50} className='bg-[#FB5353] hover:bg-[#fb5353de] text-[#6c2c2a] p-2 rounded-md'/>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -152,8 +172,8 @@ const LoadingOverlay = ({ isLoading, waitMessage }) => {
         }`}
       >
         <div className='bg-[#FCFFF7] px-3 py-8 flex items-center justify-center text-[#137575] font-bold text-xl rounded-xl'>
+            <img src="/spinner2.gif" alt="spinner" className="mr-2 lg:block hidden w-[8%] h-auto"/>
             {waitMessage}
-            <img src="/spinner2.gif" alt="spinner" className="ml-2 lg:block hidden w-[10%] h-auto"/>
         </div>
       </div>
     );
