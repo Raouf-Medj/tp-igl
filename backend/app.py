@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.register_blueprint(articleController,url_prefix="")
 
 app.config.update(
-   SQLALCHEMY_DATABASE_URI="postgresql://postgres:scifetch.23@db.bglmxtkawutiaiyihpij.supabase.co:5432/postgres",
+   SQLALCHEMY_DATABASE_URI="postgresql://postgres.bglmxtkawutiaiyihpij:scifetch.23@aws-0-eu-central-1.pooler.supabase.com:5432/postgres",
    SECRET_KEY="zYpEicDyBgF704lYByrQVVDqDd3eRX0b",
    JWT_SECRET_KEY="zYpEicDyBgF704lYByrQVVDqDd3eRX0b",
 )

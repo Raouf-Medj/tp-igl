@@ -15,7 +15,7 @@ import NotFound from '../../pages/Error/404';
  * @returns {JSX.Element} Navigation bar component
  */
 
-const NavBar = ({ removeToken, setLoading }) => {
+const NavBar = ({ removeToken, setLoading, setMessage, setIsPopupOpenInfo, setErr, setIsPopupOpenSuccess, setIsPopupOpenError }) => {
 
     const navigate = useNavigate();
 
@@ -52,7 +52,7 @@ const NavBar = ({ removeToken, setLoading }) => {
     const renderLinks = () => {
           switch (userrole) {
             case 'ADMIN':
-              return <AdminNav setLoading={setLoading}/>;
+              return <AdminNav setLoading={setLoading} setMessage={setMessage} setIsPopupOpenInfo={setIsPopupOpenInfo} setErr={setErr} setIsPopupOpenError={setIsPopupOpenError} setIsPopupOpenSuccess={setIsPopupOpenSuccess}/>;
             case 'MOD':
               return <ModNav/>;
             case 'CLIENT':

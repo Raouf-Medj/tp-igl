@@ -8,7 +8,7 @@ import axios from 'axios';
  * @param {Function} props.setLoading - Function to set loading state.
  * @returns {JSX.Element} Admin navigation component.
  */
-const AdminNav = ({ setLoading }) => {
+const AdminNav = ({ setLoading, setMessage, setIsPopupOpenInfo, setIsPopupOpenSuccess, setIsPopupOpenError, setErr }) => {
 
     /**
      * Handles file change.
@@ -21,7 +21,9 @@ const AdminNav = ({ setLoading }) => {
             if (confirmation) {
                 handleFileUpload(fichier);
             } else {
-                console.log('Ajout annulé');
+                setMessage("Upload annulé");
+                setIsPopupOpenInfo(true);
+                setTimeout(() => {setMessage(""); setIsPopupOpenInfo(false)}, 1500);
             }
         }
     };
@@ -45,9 +47,17 @@ const AdminNav = ({ setLoading }) => {
             // Create an article with the PDF file name
             await axios.post('http://localhost:5000/api/articles', { pdf_name: fichier.name });
 
-            console.log("done");
+            setMessage("Fichier uploadé avec succès");
+            setIsPopupOpenSuccess(true);
+            setTimeout(() => {setMessage(""); setIsPopupOpenSuccess(false)}, 3000);
         } catch (error) {
-            console.error('Error uploading file:', error);
+            if (error.response && error.response.data) {
+                setErr(error.response.data.error);
+                setIsPopupOpenError(true);
+            } else {
+                setErr('Une erreur est survenue');
+                setIsPopupOpenError(true);
+            }
         } finally {
             setLoading(false); // Disable loading, regardless of the result
         }
