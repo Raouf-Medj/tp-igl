@@ -100,7 +100,6 @@ const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOp
 
     return (
         <ProtectedComponent role="ADMIN">
-            <button onClick={() => {setIsPopupOpenSuccess(true)}}>TEST</button>
             <Popup message={message} isOpen={isPopupOpenSuccess} type={"succès"} onClose={() => {setIsPopupOpenSuccess(false); setMessage("")}} />
             <Popup message={err} isOpen={isPopupOpenError} type={"erreur"} onClose={() => {setIsPopupOpenError(false); setErr("")}} />
             <Popup message={message} isOpen={isPopupOpenInfo} type={"info"} onClose={() => {setIsPopupOpenInfo(false); setMessage("")}} />
