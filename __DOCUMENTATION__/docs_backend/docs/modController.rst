@@ -1,5 +1,5 @@
-Moderators module
-==================
+modController.py module
+=======================
 
 .. automodule:: modController
    :members:

@@ -1,5 +1,5 @@
-Article Controller module
-=========================
+articleController.py module
+===========================
 
 .. automodule:: articleController
    :members:

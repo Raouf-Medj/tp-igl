@@ -30,6 +30,11 @@ autodoc_mock_imports = ['flask', 'flask_sqlalchemy', 'flask_bcrypt', 'flask_jwt_
 
 autodoc_default_flags = ['members']
 
+autodoc_default_options = {
+    'members': True,            # Include all members (functions, classes, etc.)
+}
+
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
@@ -41,3 +46,5 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 
 html_static_path = ['_static']
+html_show_sourcelink = True
+
