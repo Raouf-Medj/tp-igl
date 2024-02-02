@@ -10,12 +10,27 @@ from modController import modController
 from fileController import fileController
 from favoriteController import favoriteController
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import RequestError
 from dotenv import load_dotenv
 
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
+# Specify the index name
+index_name = 'articles'
+
+# Check if the index exists
+index_exists = es.indices.exists(index=index_name)
+
+if not index_exists:
+    try:
+        # Create the index without specifying a mapping
+        es.indices.create(index=index_name)
+        print(f"Index '{index_name}' created successfully.")
+    except RequestError as e:
+        print(f"Failed to create index '{index_name}': {e}")
+
 #read the .env variables
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+load_dotenv()
 
 # Flask instance
 app = Flask(__name__)

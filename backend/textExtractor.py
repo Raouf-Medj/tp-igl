@@ -7,7 +7,7 @@ import json
 from dotenv import load_dotenv
 
 #read the .env variables
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+load_dotenv()
 
 #get the variable of your choice
 openAI_api_key= os.environ.get("API_KEY")
