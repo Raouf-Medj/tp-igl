@@ -8,7 +8,7 @@ fileController = Blueprint("fileController",__name__)
 
 @fileController.route('/api/uploads', methods=['POST'])
 def upload_file():
-    import app
+    
     """
     Upload a file.
 
@@ -17,6 +17,7 @@ def upload_file():
     :return: JSON response indicating success or an error message.
     :rtype: flask.Response
     """
+    import app
     
     if 'file' not in request.files:
         return jsonify({'error': 'Pas de fichier'}), 404
@@ -41,7 +42,7 @@ def upload_file():
 
 @fileController.route('/api/uploads/<filename>', methods=['GET'])
 def download_file(filename):
-    import app
+    
     """
     Download a file.
 
@@ -52,6 +53,7 @@ def download_file(filename):
     :return: The file to be downloaded.
     :rtype: flask.Response
     """
+    import app
     
     upload_folder = os.path.join(app.app.root_path, 'uploads')  # Define the upload folder path
     return send_from_directory(upload_folder, filename)
@@ -60,7 +62,7 @@ def download_file(filename):
 
 @fileController.route('/api/uploads/<filename>', methods=['DELETE'])
 def delete_file(filename):
-    import app
+    
     """
     Delete an uploaded file.
 
@@ -71,6 +73,7 @@ def delete_file(filename):
     :return: JSON response indicating success or an error message.
     :rtype: flask.Response
     """
+    import app
     
     upload_folder = os.path.join(app.app.root_path, 'uploads')  # Define the upload folder path
     filepath = os.path.join(upload_folder, filename)

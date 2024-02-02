@@ -10,7 +10,7 @@ favoriteController = Blueprint("favoriteController",__name__)
 
 @favoriteController.route("/api/favoris/<id>", methods = ['GET'])
 def get_favoris_user(id):
-    import app
+    
     
     """
     Get favorited articles for a user.
@@ -22,6 +22,7 @@ def get_favoris_user(id):
     :return: JSON response containing a list of favorited articles or an error message.
     :rtype: flask.Response
     """
+    import app
     
     user = User.query.filter_by(id = id).first()
     articles = []
@@ -49,7 +50,7 @@ def get_favoris_user(id):
 
 @favoriteController.route('/api/favoris', methods=['POST'])
 def like_article():
-    import app
+    
     
     """
     Like an article.
@@ -59,6 +60,7 @@ def like_article():
     :return: JSON response indicating success or an error message.
     :rtype: flask.Response
     """
+    import app
     
     req_json = request.json
     user_id = req_json["user_id"]

@@ -1,10 +1,13 @@
-backend
-=======
+Backend controllers
+===================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 7
 
    models
-   app
+   authController
+   favoriteController
    articleController
+   modController
+   fileController
    textExtractor

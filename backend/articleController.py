@@ -15,7 +15,7 @@ articleController = Blueprint("articleController",__name__)
 #Get an article by ID
 @articleController.route('/api/articles/<string:article_id>', methods=['GET'])
 def getArticleByID(article_id):
-    import app
+    
     """
     Get an article by ID
 
@@ -26,6 +26,7 @@ def getArticleByID(article_id):
     :return: JSON structure containing detailed information about the article, or an error message if something went wrong
     :rtype: flask.Response
     """
+    import app
     try:
         index_name = 'articles'  
         result = app.es.get(index=index_name, id=article_id)
@@ -39,7 +40,7 @@ def getArticleByID(article_id):
 
 @articleController.route('/api/articles/search',methods=['POST'])
 def manageArticleSearch():
-    import app
+    
     """
     manage article search
 
@@ -48,6 +49,7 @@ def manageArticleSearch():
     :return: a list of article headers "basic information" that are relevant to the query provided in the request body
     :rtype: flask.Response
     """
+    import app
     words_to_search = [request.json["query"]]
     authors_to_search = request.json["authors"]
     institutions_to_search = request.json["institutions"]
@@ -88,7 +90,7 @@ def manageArticleSearch():
 
 @articleController.route('/api/articles',methods=['POST','PUT'])
 def manageArticles():
-    import app
+    
     """
     manage articles
 
@@ -97,6 +99,7 @@ def manageArticles():
     :return: JSON response indicating success/failure of the upload/update operation
     :rtype: flask.Response
     """
+    import app
     index_name = "articles"
     
     if request.method == 'POST':
@@ -137,7 +140,7 @@ def manageArticles():
 
 @articleController.route('/api/articles/<id>', methods=['DELETE'])
 def delete_article(id):
-    import app
+    
     """
     Delete an article.
 
@@ -148,6 +151,7 @@ def delete_article(id):
     :return: JSON response indicating success or an error message.
     :rtype: flask.Response
     """
+    import app
     
     article_exists = app.es.exists(index = "articles", id = id)
     if article_exists:

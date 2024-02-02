@@ -43,8 +43,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../models.html">models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../app.html">app module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authController.html">authentification module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../favoriteController.html">favorite articles module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../articleController.html">articleController module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modController.html">moderators module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fileController.html">file module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../textExtractor.html">textExtractor module</a></li>
 </ul>
 
@@ -79,12 +82,14 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="c1">#import os</span>
-<span class="c1">#import dotenv</span>
-<span class="c1">#dotenv.load_dotenv(&#39;.env&#39;)</span>
-<span class="c1">#print(os.environ[&#39;OPENAI_API_KEY&#39;])</span>
-<span class="c1"># set the openAI api Key</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;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&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="c1">#read the .env variables</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;.env&#39;</span><span class="p">))</span>
+
+<span class="c1">#get the variable of your choice</span>
+<span class="n">openAI_api_key</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">openAI_api_key</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="remove_non_ascii"><a class="viewcode-back" href="../textExtractor.html#textExtractor.remove_non_ascii">[docs]</a><span class="k">def</span> <span class="nf">remove_non_ascii</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
@@ -264,7 +269,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Equipe 1, Groupe 2.</p>
+    <p>&#169; Copyright 2024, Equipe 3, Groupe 2.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
