@@ -4,9 +4,9 @@ import ProtectedComponent from '../../components/protected';
 import SearchBar from '../../components/search';
 import ArticleList from '../../components/articleList';
 import Filters from '../../components/filters';
+import Popup from '../../components/popup';
 
-
-const ClientHome = () => {
+const ClientHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError }) => {
         
     const [query, setQuery] = useState("");
     const [loading, setLoading] = useState(false);
@@ -31,14 +31,15 @@ const ClientHome = () => {
             })
             .then(response => {
                 const validatedArticles = response.data.articles.filter(article => article.validated === true)
-                // const validatedArticles = response.data.articles;
                 setArticles(validatedArticles);
             })
             .catch(error => {
                 if (error.response && error.response.data) {
-                    // setErr(error.response.data.error);
+                    setErr(error.response.data.error);
+                    setIsPopupOpenError(true);
                 } else {
-                    // setErr('Une erreur est survenue');
+                    setErr('Une erreur est survenue');
+                    setIsPopupOpenError(true);
                 }
             })
             .finally(() => {
@@ -82,6 +83,7 @@ const ClientHome = () => {
 
     return (
         <ProtectedComponent role="CLIENT">
+            <Popup message={err} isOpen={isPopupOpenError} type={"erreur"} onClose={() => {setIsPopupOpenError(false); setErr("")}} />
             <div className='xl:px-[10%] lg:px-[5%] px-10 pt-16 pb-10'>
                 <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher un article" searchHandler={searchHandler}/>
                 <div className='mt-10'>

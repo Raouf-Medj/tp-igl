@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import  request, jsonify
-from elasticsearch import Elasticsearch
+from models import db,  UserArticle
 from textExtractor import pdfToJson
 import json, re
 from datetime import datetime
@@ -13,6 +13,7 @@ es = Elasticsearch(['http://elasticsearch:9200'])
 #Get an article by ID
 @articleController.route('/api/articles/<string:article_id>', methods=['GET'])
 def getArticleByID(article_id):
+    
     """
     Get an article by ID
 
@@ -23,9 +24,10 @@ def getArticleByID(article_id):
     :return: JSON structure containing detailed information about the article, or an error message if something went wrong
     :rtype: flask.Response
     """
+    import app
     try:
         index_name = 'articles'  
-        result = es.get(index=index_name, id=article_id)
+        result = app.es.get(index=index_name, id=article_id)
         if(result["found"]):
             article = result['_source']
             return jsonify(article)
@@ -36,6 +38,7 @@ def getArticleByID(article_id):
 
 @articleController.route('/api/articles/search',methods=['POST'])
 def manageArticleSearch():
+    
     """
     manage article search
 
@@ -44,6 +47,7 @@ def manageArticleSearch():
     :return: a list of article headers "basic information" that are relevant to the query provided in the request body
     :rtype: flask.Response
     """
+    import app
     words_to_search = [request.json["query"]]
     authors_to_search = request.json["authors"]
     institutions_to_search = request.json["institutions"]
@@ -55,7 +59,7 @@ def manageArticleSearch():
 
     fields_to_retrieve = ["_id", "title", "abstract", "authors", "institutions", "keywords", "url", "publication_date", "text", "validated"]
 
-    scroll = scan(es, index='articles', query={"query": {"match_all": {}}}, _source=fields_to_retrieve)
+    scroll = scan(app.es, index='articles', query={"query": {"match_all": {}}}, _source=fields_to_retrieve)
 
     for document in scroll:
 
@@ -84,6 +88,7 @@ def manageArticleSearch():
 
 @articleController.route('/api/articles',methods=['POST','PUT'])
 def manageArticles():
+    
     """
     manage articles
 
@@ -92,6 +97,7 @@ def manageArticles():
     :return: JSON response indicating success/failure of the upload/update operation
     :rtype: flask.Response
     """
+    import app
     index_name = "articles"
     
     if request.method == 'POST':
@@ -101,7 +107,7 @@ def manageArticles():
             if "pdf_name" in jsonRequestObject:
                 #we suppose that the pdf exists in the docs folder in frontend/public/
                 extractedJson = pdfToJson(jsonRequestObject["pdf_name"])
-                response = es.index(index=index_name, body=extractedJson)
+                response = app.es.index(index=index_name, body=extractedJson)
                 
                 return jsonify({"id":response['_id'],"title":extractedJson["title"]})
             else:
@@ -117,7 +123,7 @@ def manageArticles():
                 jsonRequestObject.pop("id")
             else:
                 return jsonify({'error': 'champ "id" abscent'}), 500  
-            es.update(index=index_name, id=id, body={'doc':jsonRequestObject })
+            app.es.update(index=index_name, id=id, body={'doc':jsonRequestObject })
 
             return jsonify({"id": id,"title":jsonRequestObject["title"]})
 
@@ -127,6 +133,37 @@ def manageArticles():
     else:
         return jsonify({'error': 'methode de requete non supportee'}), 405  
     
+
+
+
+@articleController.route('/api/articles/<id>', methods=['DELETE'])
+def delete_article(id):
+    
+    """
+    Delete an article.
+
+    This endpoint allows the deletion of an article by specifying its ID.
+
+    :param id: The ID of the article to be deleted.
+    :type id: int
+    :return: JSON response indicating success or an error message.
+    :rtype: flask.Response
+    """
+    import app
+    
+    article_exists = app.es.exists(index = "articles", id = id)
+    if article_exists:
+        article = app.es.get(index = "articles", id = id)
+        article_title  = article['_source']['title']
+        app.es.delete(index="articles", id = id)
+        article_favoris = UserArticle.query.filter_by(article_id=id).all()
+        if len(article_favoris) > 0:
+            for favoris in article_favoris:
+                db.session.delete(favoris)
+                db.session.commit()
+        return jsonify({"id":id, "title":article_title}), 200
+    else:
+        return jsonify({"error":"Article introuvable"}), 404    
 
 
 def stringSpliterLower(string):

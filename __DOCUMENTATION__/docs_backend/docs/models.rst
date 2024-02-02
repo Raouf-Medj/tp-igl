@@ -1,5 +1,5 @@
-models 
-=============
+models.py module
+================
 
 .. automodule:: models
    :members:

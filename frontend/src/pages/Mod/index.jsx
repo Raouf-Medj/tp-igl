@@ -4,8 +4,9 @@ import SearchBar from '../../components/search';
 import ArticleList from '../../components/articleList';
 import { AiOutlineCaretUp, AiOutlineCaretDown } from "react-icons/ai";
 import axios from 'axios';
+import Popup from '../../components/popup';
 
-const ModHome = () => {
+const ModHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError }) => {
 
   const [articles, setArticles] = useState([]);
   const [articlesToShow, setArticlesToShow] = useState(articles.filter((article) => !article.validated));
@@ -33,11 +34,13 @@ const ModHome = () => {
           setSearchResult(allArticles.filter((article) => !article.validated));
       })
       .catch(error => {
-          if (error.response && error.response.data) {
-              // setErr(error.response.data.error);
-          } else {
-              // setErr('Une erreur est survenue');
-          }
+        if (error.response && error.response.data) {
+          setErr(error.response.data.error);
+          setIsPopupOpenError(true);
+        } else {
+          setErr('Une erreur est survenue');
+          setIsPopupOpenError(true);
+        }
       })
       .finally(() => {
           setLoading(false);
@@ -70,6 +73,7 @@ const ModHome = () => {
 
   return (
     <ProtectedComponent role="MOD">
+      <Popup message={err} isOpen={isPopupOpenError} type={"erreur"} onClose={() => {setIsPopupOpenError(false); setErr("")}} />
       <div className='sm:px-4 md:px-8 lg:px-[5%] xl:px-[10%] pt-16 pb-10 relative'>
         <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher un article par titre" searchHandler={searchHandler} />
         <div className='mt-6 sm:mt-10 flex flex-col sm:flex-row justify-between items-center mb-4'>

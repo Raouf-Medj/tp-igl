@@ -1,5 +1,5 @@
-textExtractor module
-====================
+textExtractor.py module
+=======================
 
 .. automodule:: textExtractor
    :members:

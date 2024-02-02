@@ -16,8 +16,12 @@ import { useState } from 'react';
 function App() {
 
   const { token, removeToken, setToken } = useToken();
-
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isPopupOpenInfo, setIsPopupOpenInfo] = useState(false);
+  const [err, setErr] = useState("");
+  const [isPopupOpenError, setIsPopupOpenError] = useState(false);
+  const [isPopupOpenSuccess, setIsPopupOpenSuccess] = useState(false);
 
   return (
     !token && token!=="" && token!==undefined ? 
@@ -29,15 +33,15 @@ function App() {
       </Routes>
     : (
       <div>
-        <NavBar removeToken={removeToken} setLoading={setLoading} />
+        <NavBar removeToken={removeToken} setLoading={setLoading} setMessage={setMessage} setIsPopupOpenInfo={setIsPopupOpenInfo} setErr={setErr} setIsPopupOpenError={setIsPopupOpenError} setIsPopupOpenSuccess={setIsPopupOpenSuccess} />
         <div className='min-h-screen bg-[#FCFFF7]'>
           <Routes>
-            <Route path="/" exact element={<ClientHome/>} />
+            <Route path="/" exact element={<ClientHome err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError}/>} />
             <Route path="/favorites" exact element={<Favoris/>} />
             <Route path="/article/:id" exact element={<Affichage/>} />
-            <Route path="/mod" exact element={<ModHome/>} />
+            <Route path="/mod" exact element={<ModHome err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError}/>} />
             <Route path="/mod/article/:id" exact element={<ModModification/>} />
-            <Route path="/admin" exact element={<AdminHome loading={loading} setLoading={setLoading} />} />
+            <Route path="/admin" exact element={<AdminHome loading={loading} setLoading={setLoading} message={message} setMessage={setMessage} isPopupOpenInfo={isPopupOpenInfo} setIsPopupOpenInfo={setIsPopupOpenInfo} isPopupOpenSuccess={isPopupOpenSuccess} setIsPopupOpenSuccess={setIsPopupOpenSuccess} err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError} />} />
             <Route path="*" element={<NotFound/>} />
           </Routes>
         </div>

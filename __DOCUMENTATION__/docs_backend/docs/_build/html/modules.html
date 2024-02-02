@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>backend &mdash; SciFetch 0.0.1 documentation</title>
+  <title>Backend controllers &mdash; SciFetch 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -43,10 +43,13 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="models.html">models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="app.html">app module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="articleController.html">articleController module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">textExtractor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">models.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authController.html">authController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="favoriteController.html">favoriteController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="articleController.html">articleController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modController.html">modController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fileController.html">fileController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">textExtractor.py module</a></li>
 </ul>
 
         </div>
@@ -63,7 +66,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">backend</li>
+      <li class="breadcrumb-item active">Backend controllers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -73,11 +76,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="backend">
-<h1>backend<a class="headerlink" href="#backend" title="Permalink to this heading"></a></h1>
+  <section id="backend-controllers">
+<h1>Backend controllers<a class="headerlink" href="#backend-controllers" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="models.html">models</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="models.html">models.py module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="models.html#models.RoleEnum"><code class="docutils literal notranslate"><span class="pre">RoleEnum</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="models.html#models.RoleEnum.ADMIN"><code class="docutils literal notranslate"><span class="pre">RoleEnum.ADMIN</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="models.html#models.RoleEnum.CLIENT"><code class="docutils literal notranslate"><span class="pre">RoleEnum.CLIENT</span></code></a></li>
@@ -89,28 +92,22 @@
 <li class="toctree-l2"><a class="reference internal" href="models.html#models.get_uuid"><code class="docutils literal notranslate"><span class="pre">get_uuid()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="app.html">app module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.add_mod"><code class="docutils literal notranslate"><span class="pre">add_mod()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.delete_article"><code class="docutils literal notranslate"><span class="pre">delete_article()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.delete_file"><code class="docutils literal notranslate"><span class="pre">delete_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.delete_mod"><code class="docutils literal notranslate"><span class="pre">delete_mod()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.download_file"><code class="docutils literal notranslate"><span class="pre">download_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.get_favoris_user"><code class="docutils literal notranslate"><span class="pre">get_favoris_user()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.get_mod"><code class="docutils literal notranslate"><span class="pre">get_mod()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.get_mods"><code class="docutils literal notranslate"><span class="pre">get_mods()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.like_article"><code class="docutils literal notranslate"><span class="pre">like_article()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.logout"><code class="docutils literal notranslate"><span class="pre">logout()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.modify_mod"><code class="docutils literal notranslate"><span class="pre">modify_mod()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.refresh_expiring_jwts"><code class="docutils literal notranslate"><span class="pre">refresh_expiring_jwts()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.unlike_article"><code class="docutils literal notranslate"><span class="pre">unlike_article()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html#app.upload_file"><code class="docutils literal notranslate"><span class="pre">upload_file()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="authController.html">authController.py module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="authController.html#authController.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="authController.html#authController.logout"><code class="docutils literal notranslate"><span class="pre">logout()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="authController.html#authController.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="articleController.html">articleController module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="favoriteController.html">favoriteController.py module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="favoriteController.html#favoriteController.get_favoris_user"><code class="docutils literal notranslate"><span class="pre">get_favoris_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="favoriteController.html#favoriteController.like_article"><code class="docutils literal notranslate"><span class="pre">like_article()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="favoriteController.html#favoriteController.unlike_article"><code class="docutils literal notranslate"><span class="pre">unlike_article()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="articleController.html">articleController.py module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.all_searched_words_exist"><code class="docutils literal notranslate"><span class="pre">all_searched_words_exist()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.check_all_words_existence"><code class="docutils literal notranslate"><span class="pre">check_all_words_existence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.delete_article"><code class="docutils literal notranslate"><span class="pre">delete_article()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.getArticleByID"><code class="docutils literal notranslate"><span class="pre">getArticleByID()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.is_between_dates"><code class="docutils literal notranslate"><span class="pre">is_between_dates()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.manageArticleSearch"><code class="docutils literal notranslate"><span class="pre">manageArticleSearch()</span></code></a></li>
@@ -119,7 +116,21 @@
 <li class="toctree-l2"><a class="reference internal" href="articleController.html#articleController.stringSpliterLower"><code class="docutils literal notranslate"><span class="pre">stringSpliterLower()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">textExtractor module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="modController.html">modController.py module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modController.html#modController.add_mod"><code class="docutils literal notranslate"><span class="pre">add_mod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modController.html#modController.delete_mod"><code class="docutils literal notranslate"><span class="pre">delete_mod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modController.html#modController.get_mod"><code class="docutils literal notranslate"><span class="pre">get_mod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modController.html#modController.get_mods"><code class="docutils literal notranslate"><span class="pre">get_mods()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modController.html#modController.modify_mod"><code class="docutils literal notranslate"><span class="pre">modify_mod()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fileController.html">fileController.py module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fileController.html#fileController.delete_file"><code class="docutils literal notranslate"><span class="pre">delete_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fileController.html#fileController.download_file"><code class="docutils literal notranslate"><span class="pre">download_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fileController.html#fileController.upload_file"><code class="docutils literal notranslate"><span class="pre">upload_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">textExtractor.py module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="textExtractor.html#textExtractor.extractTextFromPDF"><code class="docutils literal notranslate"><span class="pre">extractTextFromPDF()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="textExtractor.html#textExtractor.fixJsonObject"><code class="docutils literal notranslate"><span class="pre">fixJsonObject()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="textExtractor.html#textExtractor.get_app_root_path"><code class="docutils literal notranslate"><span class="pre">get_app_root_path()</span></code></a></li>
@@ -141,7 +152,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Equipe 1, Groupe 2.</p>
+    <p>&#169; Copyright 2024, Equipe 3, Groupe 2.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

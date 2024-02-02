@@ -7,12 +7,12 @@ import AjouterMod from '../../components/popupajout';
 import EditMod from '../../components/popupEdit';
 import ProtectedComponent from '../../components/protected';
 import axios from 'axios';
+import Popup from '../../components/popup';
 
-const AdminHome = ({ loading }) => {
+const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOpenInfo, isPopupOpenSuccess, setIsPopupOpenSuccess, err, setErr, isPopupOpenError, setIsPopupOpenError }) => {
     const [query, setQuery] = useState('');
     const [allMods, setAllMods] = useState([]);
     const [moderators, setModerators] = useState([]);
-    // const [err, setErr] = useState("");
     const [loading2, setLoading2] = useState(false);
     const [loading3, setLoading3] = useState(false);
 
@@ -26,9 +26,11 @@ const AdminHome = ({ loading }) => {
             })
             .catch(error => {
                 if (error.response && error.response.data) {
-                    // setErr(error.response.data.error);
+                    setErr(error.response.data.error);
+                    setIsPopupOpenError(true);
                 } else {
-                    // setErr('Une erreur est survenue');
+                    setErr('Une erreur est survenue');
+                    setIsPopupOpenError(true);
                 }
             })
             .finally(() => {
@@ -53,7 +55,9 @@ const AdminHome = ({ loading }) => {
             handleDelete(id);
         }
         else {
-            console.log("Suppression annulée");
+            setMessage("Suppression annulée");
+            setIsPopupOpenInfo(true);
+            setTimeout(() => {setMessage(""); setIsPopupOpenInfo(false)}, 1500);
         }
     }
 
@@ -62,12 +66,17 @@ const AdminHome = ({ loading }) => {
         await axios.delete("http://localhost:5000/api/mods/"+id)
         .then(response => {
             setModerators(prevModerators => prevModerators.filter(moderator => moderator.id !== response.data.id));
+            setMessage("Modérateur supprimé avec succès");
+            setIsPopupOpenSuccess(true);
+            setTimeout(() => {setMessage(""); setIsPopupOpenSuccess(false)}, 3000);
         })
         .catch(error => {
             if (error.response && error.response.data) {
-                // setErr(error.response.data.error);
+                setErr(error.response.data.error);
+                setIsPopupOpenError(true);
             } else {
-                // setErr('Une erreur est survenue');
+                setErr('Une erreur est survenue');
+                setIsPopupOpenError(true);
             }
         })
         .finally(() => {
@@ -91,6 +100,9 @@ const AdminHome = ({ loading }) => {
 
     return (
         <ProtectedComponent role="ADMIN">
+            <Popup message={message} isOpen={isPopupOpenSuccess} type={"succès"} onClose={() => {setIsPopupOpenSuccess(false); setMessage("")}} />
+            <Popup message={err} isOpen={isPopupOpenError} type={"erreur"} onClose={() => {setIsPopupOpenError(false); setErr("")}} />
+            <Popup message={message} isOpen={isPopupOpenInfo} type={"info"} onClose={() => {setIsPopupOpenInfo(false); setMessage("")}} />
             <LoadingOverlay isLoading={loading} waitMessage="Upload en cours, veuillez patienter..."/>
             <div className='px-4 sm:px-8 md:px-12 lg:px-[5%] xl:px-[10%] pt-8 sm:pt-12 lg:pt-16 pb-6 sm:pb-10 lg:pb-16'>
                 <SearchBar query={query} setQuery={setQuery} placeholder="Rechercher par pseudo..." searchHandler={searchHandler} isForMod />
@@ -144,7 +156,7 @@ const AdminHome = ({ loading }) => {
                             {selectedModerator && (
                                 <div className="fixed top-0 left-0 z-50 w-full h-full backdrop-blur-md bg-gray-800 bg-opacity-50 flex items-center justify-center">
                                     <div className="bg-[#FCFFF7] w-[90%] sm:w-[60%] lg:w-[40%] p-3 lg:px-10 rounded-xl border border-gray-400">
-                                        <EditMod id={selectedModerator} mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} />
+                                        <EditMod id={selectedModerator} mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} setMessage={setMessage} setIsPopupOpenSuccess={setIsPopupOpenSuccess} />
                                     </div>
                                 </div>
                             )}
@@ -152,7 +164,7 @@ const AdminHome = ({ loading }) => {
                             {showAddPopup && (
                                 <div className="fixed top-0 z-50 left-0 w-full h-full backdrop-blur-md bg-gray-800 bg-opacity-50 flex items-center justify-center">
                                     <div className="bg-[#FCFFF7] w-[90%] sm:w-[60%] lg:w-[40%] p-3 lg:px-10 rounded-xl border border-gray-400"> 
-                                        <AjouterMod mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} />
+                                        <AjouterMod mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} setMessage={setMessage} setIsPopupOpenSuccess={setIsPopupOpenSuccess} />
                                     </div>
                                 </div>
                             )}

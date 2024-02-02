@@ -13,7 +13,7 @@ import axios from 'axios';
  * @param {Function} props.setAllMods - Function to set all moderators.
  * @returns {JSX.Element} AjouterMod component
  */
-const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods }) => {
+const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods, setMessage, setIsPopupOpenSuccess }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
@@ -40,6 +40,9 @@ const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods }) =>
                 handleClosePopup();
                 setMods([...mods, response.data]);
                 setAllMods([...allMods, response.data]);
+                setMessage("Modérateur ajouté avec succès");
+                setIsPopupOpenSuccess(true);
+                setTimeout(() => {setMessage(""); setIsPopupOpenSuccess(false)}, 3000);
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -130,7 +133,7 @@ const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods }) =>
                         </div>
                         <div className='flex px-[15%] mt-[20%] sm:mt-[10%] w-full'>
                             <button onClick={handleClosePopup} className={`p-2 w-[45%] mr-[10%] ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>Annuler</button>
-                            <button type="submit" className={`p-2 w-[45%]  ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? <div className='flex justify-center items-center'><img src="/spinner1.gif" alt="img_auth_2" className="ml-2 lg:block hidden w-[10%] h-auto"/></div> : "Créer"}</button>
+                            <button type="submit" className={`p-2 w-[45%]  ${loading ? "bg-[#21a0a0a4]" : "bg-[#21A0A0]"}  text-white font-semibold rounded-md hover:bg-[#21a0a0a4] transition duration-300 ease-in-out transform`}>{loading ? <div className='flex justify-center items-center'><img src="/spinner1.gif" alt="img_auth_2" className="ml-2 lg:block hidden w-[10%] h-auto"/></div> : "Ajouter"}</button>
                         </div>
                     </form>
                 </div>
