@@ -1,5 +1,5 @@
-Favorite articles module
-========================
+favoriteController.py module
+============================
 
 .. automodule:: favoriteController
    :members:

@@ -1,5 +1,5 @@
-File module
-===========
+fileController.py module
+========================
 
 .. automodule:: fileController
    :members:

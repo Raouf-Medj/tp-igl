@@ -1,5 +1,5 @@
-Authentification module
-=======================
+authController.py module
+========================
 
 .. automodule:: authController
    :members:
