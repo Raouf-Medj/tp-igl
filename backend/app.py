@@ -30,20 +30,6 @@ if not index_exists:
     except RequestError as e:
         print(f"Failed to create index '{index_name}': {e}")
 
-# Specify the index name
-index_name = 'articles'
-
-# Check if the index exists
-index_exists = es.indices.exists(index=index_name)
-
-if not index_exists:
-    try:
-        # Create the index without specifying a mapping
-        es.indices.create(index=index_name)
-        print(f"Index '{index_name}' created successfully.")
-    except RequestError as e:
-        print(f"Failed to create index '{index_name}': {e}")
-
 #read the .env variables
 load_dotenv()
 
