@@ -1,10 +1,10 @@
 from flask import Blueprint
 from flask import  request, jsonify
 import json, re
-from models import db, User, RoleEnum, UserArticle
+from models import db, User, RoleEnum
 authController = Blueprint("authController",__name__)
-from flask_jwt_extended import create_access_token,unset_jwt_cookies
-
+from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies
+from datetime import datetime, timedelta, timezone
 
 # Handling requests
 @authController.route('/api/register', methods=['POST'])
@@ -110,3 +110,33 @@ def logout():
     response = jsonify({"msg": "Logout successful"})
     unset_jwt_cookies(response)
     return response
+
+
+@authController.after_request
+def refresh_expiring_jwts(response):
+    
+    """
+    Refresh expiring JWTs.
+
+    This function intercepts responses and refreshes expiring JWTs by extending their validity.
+
+    :param response: The Flask response object.
+    :type response: flask.Response
+    :return: The modified response.
+    :rtype: flask.Response
+    """
+    
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            data = response.get_json()
+            if type(data) is dict:
+                data["access_token"] = access_token 
+                response.data = json.dumps(data)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original respone
+        return response
