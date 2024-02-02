@@ -1,5 +1,5 @@
-textExtractor module
-====================
+Text Extractor module
+=====================
 
 .. automodule:: textExtractor
    :members:

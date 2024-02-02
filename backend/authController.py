@@ -9,7 +9,7 @@ from flask_jwt_extended import create_access_token,unset_jwt_cookies
 # Handling requests
 @authController.route('/api/register', methods=['POST'])
 def register():
-    import app
+    
     """
     Register a new user.
 
@@ -18,6 +18,7 @@ def register():
     :return: JSON response containing user details or an error message.
     :rtype: flask.Response
     """
+    import app
     
     username = request.json["username"]
     password = request.json["password"]
@@ -64,7 +65,7 @@ def register():
 
 @authController.route('/api/login', methods=['POST'])
 def login():
-    import app
+    
     """
     Authenticate and login a user.
 
@@ -73,6 +74,7 @@ def login():
     :return: JSON response containing user details or an error message.
     :rtype: flask.Response
     """
+    import app
     
     username = request.json["username"]
     password = request.json["password"]

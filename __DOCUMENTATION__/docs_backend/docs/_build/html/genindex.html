@@ -42,10 +42,13 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="models.html">models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="app.html">app module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="articleController.html">articleController module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">textExtractor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Database models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authController.html">Authentification module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="favoriteController.html">Favorite articles module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="articleController.html">Article Controller module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modController.html">Moderators module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fileController.html">File module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textExtractor.html">Text Extractor module</a></li>
 </ul>
 
         </div>
@@ -96,7 +99,7 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.add_mod">add_mod() (in module app)</a>
+      <li><a href="modController.html#modController.add_mod">add_mod() (in module modController)</a>
 </li>
       <li><a href="models.html#models.RoleEnum.ADMIN">ADMIN (models.RoleEnum attribute)</a>
 </li>
@@ -105,17 +108,17 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    app
-
-      <ul>
-        <li><a href="app.html#module-app">module</a>
-</li>
-      </ul></li>
-      <li>
     articleController
 
       <ul>
         <li><a href="articleController.html#module-articleController">module</a>
+</li>
+      </ul></li>
+      <li>
+    authController
+
+      <ul>
+        <li><a href="authController.html#module-authController">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -136,15 +139,15 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.delete_article">delete_article() (in module app)</a>
+      <li><a href="articleController.html#articleController.delete_article">delete_article() (in module articleController)</a>
 </li>
-      <li><a href="app.html#app.delete_file">delete_file() (in module app)</a>
+      <li><a href="fileController.html#fileController.delete_file">delete_file() (in module fileController)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.delete_mod">delete_mod() (in module app)</a>
+      <li><a href="modController.html#modController.delete_mod">delete_mod() (in module modController)</a>
 </li>
-      <li><a href="app.html#app.download_file">download_file() (in module app)</a>
+      <li><a href="fileController.html#fileController.download_file">download_file() (in module fileController)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -160,6 +163,22 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    favoriteController
+
+      <ul>
+        <li><a href="favoriteController.html#module-favoriteController">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    fileController
+
+      <ul>
+        <li><a href="fileController.html#module-fileController">module</a>
+</li>
+      </ul></li>
       <li><a href="textExtractor.html#textExtractor.fixJsonObject">fixJsonObject() (in module textExtractor)</a>
 </li>
   </ul></td>
@@ -170,13 +189,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="textExtractor.html#textExtractor.get_app_root_path">get_app_root_path() (in module textExtractor)</a>
 </li>
-      <li><a href="app.html#app.get_favoris_user">get_favoris_user() (in module app)</a>
+      <li><a href="favoriteController.html#favoriteController.get_favoris_user">get_favoris_user() (in module favoriteController)</a>
 </li>
-      <li><a href="app.html#app.get_mod">get_mod() (in module app)</a>
+      <li><a href="modController.html#modController.get_mod">get_mod() (in module modController)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.get_mods">get_mods() (in module app)</a>
+      <li><a href="modController.html#modController.get_mods">get_mods() (in module modController)</a>
 </li>
       <li><a href="models.html#models.get_uuid">get_uuid() (in module models)</a>
 </li>
@@ -198,13 +217,13 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.like_article">like_article() (in module app)</a>
+      <li><a href="favoriteController.html#favoriteController.like_article">like_article() (in module favoriteController)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.login">login() (in module app)</a>
+      <li><a href="authController.html#authController.login">login() (in module authController)</a>
 </li>
-      <li><a href="app.html#app.logout">logout() (in module app)</a>
+      <li><a href="authController.html#authController.logout">logout() (in module authController)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -219,23 +238,36 @@
       <li><a href="models.html#models.RoleEnum.MOD">MOD (models.RoleEnum attribute)</a>
 </li>
       <li>
+    modController
+
+      <ul>
+        <li><a href="modController.html#module-modController">module</a>
+</li>
+      </ul></li>
+      <li>
     models
 
       <ul>
         <li><a href="models.html#module-models">module</a>
 </li>
       </ul></li>
+      <li><a href="modController.html#modController.modify_mod">modify_mod() (in module modController)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.modify_mod">modify_mod() (in module app)</a>
-</li>
       <li>
     module
 
       <ul>
-        <li><a href="app.html#module-app">app</a>
-</li>
         <li><a href="articleController.html#module-articleController">articleController</a>
+</li>
+        <li><a href="authController.html#module-authController">authController</a>
+</li>
+        <li><a href="favoriteController.html#module-favoriteController">favoriteController</a>
+</li>
+        <li><a href="fileController.html#module-fileController">fileController</a>
+</li>
+        <li><a href="modController.html#module-modController">modController</a>
 </li>
         <li><a href="models.html#module-models">models</a>
 </li>
@@ -264,9 +296,7 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.refresh_expiring_jwts">refresh_expiring_jwts() (in module app)</a>
-</li>
-      <li><a href="app.html#app.register">register() (in module app)</a>
+      <li><a href="authController.html#authController.register">register() (in module authController)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -301,9 +331,9 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="app.html#app.unlike_article">unlike_article() (in module app)</a>
+      <li><a href="favoriteController.html#favoriteController.unlike_article">unlike_article() (in module favoriteController)</a>
 </li>
-      <li><a href="app.html#app.upload_file">upload_file() (in module app)</a>
+      <li><a href="fileController.html#fileController.upload_file">upload_file() (in module fileController)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -331,7 +361,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Equipe 1, Groupe 2.</p>
+    <p>&#169; Copyright 2024, Equipe 3, Groupe 2.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

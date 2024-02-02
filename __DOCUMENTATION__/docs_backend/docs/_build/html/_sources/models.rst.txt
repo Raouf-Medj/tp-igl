@@ -1,5 +1,5 @@
-models 
-=============
+Database models 
+===============
 
 .. automodule:: models
    :members:

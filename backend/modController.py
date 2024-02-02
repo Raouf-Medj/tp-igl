@@ -9,7 +9,7 @@ modController = Blueprint("modController",__name__)
 
 @modController.route('/api/mods', methods=['POST'])
 def add_mod():
-    import app
+    
     """
     Add a new moderator.
 
@@ -18,6 +18,7 @@ def add_mod():
     :return: JSON response containing moderator details or an error message.
     :rtype: flask.Response
     """
+    import app
     
     username = request.json["username"]
     password = request.json["password"]
@@ -122,7 +123,7 @@ def get_mod(id):
 
 @modController.route('/api/mods',methods = ['PUT'])
 def modify_mod():
-    import app
+  
     """
     Modify a moderator.
 
@@ -132,6 +133,7 @@ def modify_mod():
     :return: JSON response containing updated moderator details or an error message.
     :rtype: flask.Response
     """
+    import app
     
     id = request.json["id"]
     username = request.json["username"]

@@ -1,5 +1,5 @@
-articleController module
-========================
+Article Controller module
+=========================
 
 .. automodule:: articleController
    :members:
