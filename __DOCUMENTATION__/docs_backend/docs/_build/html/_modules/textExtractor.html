@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>textExtractor &mdash; SciFetch 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f6245a2f"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SciFetch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">models.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authController.html">authController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../favoriteController.html">favoriteController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../articleController.html">articleController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modController.html">modController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fileController.html">fileController.py module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../textExtractor.html">textExtractor.py module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SciFetch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">textExtractor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for textExtractor</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">importlib.machinery</span> <span class="kn">import</span> <span class="n">SourceFileLoader</span>
+<span class="kn">import</span> <span class="nn">fitz</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="c1">#read the .env variables</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;.env&#39;</span><span class="p">))</span>
+
+<span class="c1">#get the variable of your choice</span>
+<span class="n">openAI_api_key</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">openAI_api_key</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="remove_non_ascii"><a class="viewcode-back" href="../textExtractor.html#textExtractor.remove_non_ascii">[docs]</a><span class="k">def</span> <span class="nf">remove_non_ascii</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    remove non ascii</span>
+
+<span class="sd">    this method makes sure the text filtered from all non printable characters, using the &quot;regular expression&quot; library</span>
+
+<span class="sd">    :param text: the provided text, to be filtered</span>
+<span class="sd">    :type text: string</span>
+<span class="sd">    :return: the final text filtered from any non printable characters</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use regular expressions to remove non-ASCII characters</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\x00-\x7F</span><span class="si">%s</span><span class="s1">\n]+&#39;</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s2">&quot;éèàáäûúüö&quot;</span><span class="p">))</span>
+    <span class="n">cleaned_text</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">cleaned_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; +&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="n">cleaned_text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cleaned_text</span></div>
+
+
+<div class="viewcode-block" id="extractTextFromPDF"><a class="viewcode-back" href="../textExtractor.html#textExtractor.extractTextFromPDF">[docs]</a><span class="k">def</span> <span class="nf">extractTextFromPDF</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    extract Text from PDF</span>
+
+<span class="sd">    This method scans a pdf file whose path is provided in the parameters, and extracts the entire text as a string, using &quot;fitz&quot; library</span>
+
+<span class="sd">    :param path: path to the pdf file</span>
+<span class="sd">    :type path: string</span>
+<span class="sd">    :return: the extracted text &quot;the entire content of the pdf&quot;</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#using fitz library to extract non-treated text from the pdf</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">pageCount</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">page_count</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pageCount</span><span class="p">):</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">load_page</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+    <span class="n">treatedText</span> <span class="o">=</span> <span class="n">remove_non_ascii</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">pdf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">treatedText</span></div>
+
+<div class="viewcode-block" id="writeStringToFile"><a class="viewcode-back" href="../textExtractor.html#textExtractor.writeStringToFile">[docs]</a><span class="k">def</span> <span class="nf">writeStringToFile</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.txt&quot;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gptTextAnalyser"><a class="viewcode-back" href="../textExtractor.html#textExtractor.gptTextAnalyser">[docs]</a><span class="k">def</span> <span class="nf">gptTextAnalyser</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gpt text analyser</span>
+
+<span class="sd">    this method uses the paid openAI api service inorder to analyse a text provided in the prompt, returning a structured json containing different sections of the text</span>
+
+<span class="sd">    :param text: the entire text &quot;for example extracted from a pdf file&quot;</span>
+<span class="sd">    :type text: string</span>
+<span class="sd">    :return: all the extracted sections of the text organised json-like structure &quot;JSON string&quot;</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1">#making sure the text does not surpass the number of tokens limit</span>
+        <span class="n">max_number_of_tokens</span> <span class="o">=</span> <span class="mi">9000</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_number_of_tokens</span><span class="p">:</span>
+            <span class="n">updatedWords</span> <span class="o">=</span> <span class="n">words</span><span class="p">[:</span><span class="mi">4500</span><span class="p">]</span> <span class="o">+</span> <span class="n">words</span><span class="p">[</span><span class="o">-</span><span class="mi">4500</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If the number of tokens is within the limit, no truncation is needed</span>
+            <span class="n">updatedWords</span> <span class="o">=</span> <span class="n">words</span>
+
+        <span class="c1"># Join the words to form the truncated string</span>
+        <span class="n">finalText</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">updatedWords</span><span class="p">)</span>
+        <span class="c1">#buidling the prompt to send to openAI api &quot;to gpt-3.5 to be more specefic, specifying te role of the system as well, in addition to the return type &quot;JSON string&quot;</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Extract the exact following sections from the provided text :</span><span class="se">\n\n</span><span class="si">{</span><span class="n">finalText</span><span class="si">}</span><span class="se">\n</span><span class="s2">the json file contains only: </span><span class="se">\n</span><span class="s2">Authors:&#39;a list of strings&#39;</span><span class="se">\n</span><span class="s2">Title:</span><span class="se">\n</span><span class="s2">Abstract:-the paragraph written in the section: abstract, from a to z-</span><span class="se">\n</span><span class="s2">Institutions:&#39;a list of strings&#39;</span><span class="se">\n</span><span class="s2">KeyWords:&#39;a list of strings, all the keywords in the -keywords section-&#39;</span><span class="se">\n</span><span class="s2">References:&#39;a list of strings, all references in the section : references&#39;</span><span class="se">\n</span><span class="s2">Publication_date:&#39;follow the format YYYY-MM-DD&#39;&quot;</span>
+        <span class="n">completion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo-1106&quot;</span><span class="p">,</span>
+        <span class="n">response_format</span><span class="o">=</span><span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;json_object&quot;</span> <span class="p">},</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You extract data acurately as it is from the string, you DO NOT REFORMULATE EXTRACTED INFORMATION, you extract all the paragrph, no matter how long, and don&#39;t stop writing because it was too long, designed to output JSON.&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}</span>
+        <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">generated_text</span><span class="o">=</span><span class="n">completion</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+        <span class="k">return</span> <span class="n">generated_text</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erreur : &quot;</span><span class="p">,</span> <span class="n">e</span> <span class="p">)</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="fixJsonObject"><a class="viewcode-back" href="../textExtractor.html#textExtractor.fixJsonObject">[docs]</a><span class="k">def</span> <span class="nf">fixJsonObject</span><span class="p">(</span><span class="n">json_object</span><span class="p">,</span><span class="n">text</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    fix json object</span>
+
+<span class="sd">    this method makes sure the json object provided as a reponse of gpt-3.5 model follows the exact structure of the articles stored in the database</span>
+<span class="sd">    :param json_object: the json string returned by gpt-3.5 &quot;converted to a JSON object&quot;</span>
+<span class="sd">    :type json_object: dict </span>
+<span class="sd">    :param text: the entire text extracted from the pdf, to be added to the final article structure</span>
+<span class="sd">    :type text: string</span>
+<span class="sd">    :param url: the exact path to the pdf file </span>
+<span class="sd">    :type url: string</span>
+<span class="sd">    :return: the final article object structured according to what has been designed in the database</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">intermediateObject</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1">#use the intermediateObject to access data from &quot;json_object&quot; without facing problems of case sensitivity</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">json_object</span><span class="p">:</span>
+        <span class="n">intermediateObject</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">=</span><span class="n">key</span>
+    <span class="c1">#progressively build the final correct structure of the json, based on the json returned by gpt-3.5 model that may have some errors in casing and existence of some fields</span>
+    <span class="n">finalObject</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="s2">&quot;non trouvé&quot;</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;abstract&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;abstract&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;abstract&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="s2">&quot;non trouvé&quot;</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;authors&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;authors&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;authors&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;institutions&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;institutions&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;institutions&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;references&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;references&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;references&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">url</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;publication_date&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">json_object</span><span class="p">[</span><span class="n">intermediateObject</span><span class="p">[</span><span class="s2">&quot;publication_date&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;publication_date&quot;</span> <span class="ow">in</span> <span class="n">intermediateObject</span> <span class="k">else</span> <span class="s2">&quot;non trouvé&quot;</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">text</span>
+    <span class="n">finalObject</span><span class="p">[</span><span class="s2">&quot;validated&quot;</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">return</span> <span class="n">finalObject</span></div>
+
+
+<div class="viewcode-block" id="get_app_root_path"><a class="viewcode-back" href="../textExtractor.html#textExtractor.get_app_root_path">[docs]</a><span class="k">def</span> <span class="nf">get_app_root_path</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get app root path</span>
+
+<span class="sd">    this method allows to return the path of the application, to guarrantee a correct path naming no matter the os</span>
+
+<span class="sd">    :return: the correct path according to the device</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Load app.py as a module to access its variables and functions</span>
+    <span class="n">app_module</span> <span class="o">=</span> <span class="n">SourceFileLoader</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;app.py&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">load_module</span><span class="p">()</span>
+
+    <span class="c1"># Retrieve the root path from the loaded app module</span>
+    <span class="n">app_root_path</span> <span class="o">=</span> <span class="n">app_module</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">root_path</span>
+    <span class="k">return</span> <span class="n">app_root_path</span></div>
+
+
+
+<div class="viewcode-block" id="pdfToJson"><a class="viewcode-back" href="../textExtractor.html#textExtractor.pdfToJson">[docs]</a><span class="k">def</span> <span class="nf">pdfToJson</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    pdf to json</span>
+
+<span class="sd">    this method gathers all previous methods to have the entire process of converting a pdf file into a json strucutre containing details and sections of the pdf file</span>
+
+<span class="sd">    :param fileName: the name of the pdf file to be converted &quot;example.pdf&quot;</span>
+<span class="sd">    :type fileName: string</span>
+<span class="sd">    :return: dictionary containing the entire article included in the pdf file, structured to different sections like title, abstract, authors ... etc&quot;</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">app_root_path</span> <span class="o">=</span> <span class="n">get_app_root_path</span><span class="p">()</span>
+    <span class="n">upload_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app_root_path</span><span class="p">,</span> <span class="s1">&#39;uploads&#39;</span><span class="p">)</span>
+    <span class="n">urlToPdf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">upload_folder</span><span class="p">,</span> <span class="n">fileName</span><span class="p">)</span>
+    <span class="c1"># json_results_folder = os.path.join(app.root_path, &#39;json_results&#39;)  # Define the JSON results folder path</span>
+    <span class="c1"># urlToJson = os.path.join(json_results_folder, fileName + &quot;.json&quot;)</span>
+
+    <span class="n">pureText</span> <span class="o">=</span> <span class="n">extractTextFromPDF</span><span class="p">(</span><span class="n">urlToPdf</span><span class="p">)</span>
+    <span class="n">gptText</span> <span class="o">=</span> <span class="n">gptTextAnalyser</span><span class="p">(</span><span class="n">pureText</span><span class="p">)</span>
+    <span class="n">gptJson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">gptText</span><span class="p">)</span>
+    <span class="n">verified_dict</span> <span class="o">=</span> <span class="n">fixJsonObject</span><span class="p">(</span><span class="n">gptJson</span><span class="p">,</span> <span class="n">pureText</span><span class="p">,</span> <span class="n">fileName</span><span class="p">)</span>
+
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    with open(urlToJson, &quot;w&quot;) as json_file:</span>
+<span class="sd">        json_file.write(json.dumps(verified_dict, indent=2))</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">verified_dict</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Equipe 3, Groupe 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

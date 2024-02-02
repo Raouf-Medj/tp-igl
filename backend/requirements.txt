@@ -4,3 +4,7 @@
     flask-cors
     flask-jwt-extended
     psycopg2
+    openai
+    pymupdf
+    elasticsearch==7.13.4
+    python-dotenv

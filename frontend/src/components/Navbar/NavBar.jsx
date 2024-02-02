@@ -8,18 +8,32 @@ import ModNav from './modNav';
 import AdminNav from './adminNav';
 import NotFound from '../../pages/Error/404';
 
-const NavBar = ({ removeToken }) => {
+/**
+ * Functional component representing the navigation bar.
+ *
+ * @param {Object} props - Props containing removeToken and setLoading functions
+ * @returns {JSX.Element} Navigation bar component
+ */
+
+const NavBar = ({ removeToken, setLoading, setMessage, setIsPopupOpenInfo, setErr, setIsPopupOpenSuccess, setIsPopupOpenError }) => {
 
     const navigate = useNavigate();
 
     const { userrole } = useToken();
+
+    /**
+     * Handles the logout process by sending a request to the server.
+     *
+     * @param {Object} e - Event object
+     * @returns {void}
+     */
 
     const logoutHandler = async (e) => {
         e.preventDefault();
     
         // Send a request to your server for authentication
         await axios.post('http://localhost:5000/api/logout')
-        .then(response => {
+        .then(() => {
             removeToken();
             navigate("/");
         })
@@ -29,11 +43,16 @@ const NavBar = ({ removeToken }) => {
         });
     }
 
-    const renderLinks = () => {
+    /**
+     * Renders different navigation components based on the user's role.
+     *
+     * @returns {JSX.Element} Rendered navigation component based on user role
+     */
 
-        switch (userrole) {
+    const renderLinks = () => {
+          switch (userrole) {
             case 'ADMIN':
-              return <AdminNav/>;
+              return <AdminNav setLoading={setLoading} setMessage={setMessage} setIsPopupOpenInfo={setIsPopupOpenInfo} setErr={setErr} setIsPopupOpenError={setIsPopupOpenError} setIsPopupOpenSuccess={setIsPopupOpenSuccess}/>;
             case 'MOD':
               return <ModNav/>;
             case 'CLIENT':
@@ -44,18 +63,20 @@ const NavBar = ({ removeToken }) => {
     } 
 
     return (
-        <div className='bg-[#FCFFF7] py-[1.25%] px-[3%] flex justify-between shadow-md hover:shadow-xl transition duration-300 ease-in-out transform'>
-            <div className='w-[45%] flex items-center'>
-                <Link to="/" className='w-[20%] h-auto mr-[10%]'>
+        <div className='bg-[#FCFFF7] py-[5%] sm:py-[1.25%] px-[3%] flex justify-between shadow-md hover:shadow-xl transition duration-300 ease-in-out transform'>
+            <div className='md:w-[70%] flex items-center'>
+                <Link to="/" className='w-[40%] sm:w-[25%] h-auto sm:mr-[10%]'>
                     <img
                         src="/images/img_logo.png"
                         alt="logo_img"
                     />
                 </Link>
-                {renderLinks()}
-                
+                <div className='w-full'>
+                    {renderLinks()}
+                </div>
             </div>
-            <button type="submit" onClick={logoutHandler} className={`p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}><HiOutlineLogout className='text-xl mr-2'/> Se déconnecter</button>
+            <button type="submit" onClick={logoutHandler} className={`p-1 sm:p-2 border border-[#FB5353] text-[#FB5353] hover:text-white font-semibold rounded-md hover:bg-[#fb5353e5] flex items-center transition duration-300 ease-in-out transform`}><HiOutlineLogout className='text-xl md:mr-2'/><h1 className='hidden md:block'>Se déconnecter</h1></button>
+
         </div>
     );
 };
