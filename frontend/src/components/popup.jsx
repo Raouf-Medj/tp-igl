@@ -36,7 +36,7 @@ const Popup = ({ isOpen, onClose, type, message }) => {
 
   return (
     <div className={`fixed right-0 left-0 bottom-10 z-50 flex items-center justify-center transform transition duration-300 ease-in-out ${isOpen ? "translate-y-[-20px]" : "translate-y-full"}`}>
-      <div className={`bg-white w-1/3 p-5 outline outline-1 ${outline} rounded-lg bg-opacity-95 ${bgColor} ${textColor}`}>
+      <div className={`w-1/3 p-5 outline outline-1 ${outline} rounded-lg bg-opacity-95 ${bgColor} ${textColor}`}>
         <div className="flex items-center">
           <div className={`mr-2 ${icon} text-lg flex justify-center items-center`}>
             {type === 'succès' && <FaCircleCheck/>}

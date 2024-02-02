@@ -22,6 +22,7 @@ function App() {
   const [err, setErr] = useState("");
   const [isPopupOpenError, setIsPopupOpenError] = useState(false);
   const [isPopupOpenSuccess, setIsPopupOpenSuccess] = useState(false);
+  const [updateArticles, setUpdateArticles] = useState("");
 
   return (
     !token && token!=="" && token!==undefined ? 
@@ -39,8 +40,8 @@ function App() {
             <Route path="/" exact element={<ClientHome err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError}/>} />
             <Route path="/favorites" exact element={<Favoris/>} />
             <Route path="/article/:id" exact element={<Affichage/>} />
-            <Route path="/mod" exact element={<ModHome err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError}/>} />
-            <Route path="/mod/article/:id" exact element={<ModModification/>} />
+            <Route path="/mod" exact element={<ModHome updateArticles={updateArticles} err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError}/>} />
+            <Route path="/mod/article/:id" exact element={<ModModification setUpdateArticles={setUpdateArticles} />} />
             <Route path="/admin" exact element={<AdminHome loading={loading} setLoading={setLoading} message={message} setMessage={setMessage} isPopupOpenInfo={isPopupOpenInfo} setIsPopupOpenInfo={setIsPopupOpenInfo} isPopupOpenSuccess={isPopupOpenSuccess} setIsPopupOpenSuccess={setIsPopupOpenSuccess} err={err} setErr={setErr} isPopupOpenError={isPopupOpenError} setIsPopupOpenError={setIsPopupOpenError} />} />
             <Route path="*" element={<NotFound/>} />
           </Routes>

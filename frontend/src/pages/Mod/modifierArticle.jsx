@@ -4,7 +4,7 @@ import EditableField from '../../components/editableField';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
-const ModModification = () => {
+const ModModification = ({ setUpdateArticles }) => {
 
   const { id } = useParams();
 
@@ -71,6 +71,7 @@ const ModModification = () => {
       validated: true
     })
     .then(() => {
+      setUpdateArticles(articleTitle);
       window.location.replace("/mod");
     })
     .catch(error => {
@@ -113,6 +114,8 @@ const ModModification = () => {
     await axios.delete(`http://localhost:5000/api/uploads/${url}`)
     .then(() => {
       navigate("/mod");
+      const change = id + "delete"
+      setUpdateArticles(change);
     })
     .catch(error => {
         if (error.response && error.response.data) {

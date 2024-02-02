@@ -48,7 +48,7 @@ const ClientHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError }) => {
         }
 
         fetchArticles();
-    }, [query, keywords, authors, institutions, dateDeb, dateFin]);
+    }, [query, keywords, authors, institutions, dateDeb, dateFin, setErr, setIsPopupOpenError]);
 
     const searchHandler = () => {
         const fetchArticles = async () => {

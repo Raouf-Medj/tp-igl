@@ -10,7 +10,7 @@ import { TiUserOutline } from "react-icons/ti";
  * @param {string} props.id - Moderator ID.
  * @returns {JSX.Element} EditMod component
  */
-const EditMod = ({ handleClosePopup, id, setMessage, setIsPopupOpenSuccess }) => {
+const EditMod = ({ handleClosePopup, id, setMessage, setIsPopupOpenSuccess, setUpdateMods }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
@@ -63,7 +63,7 @@ const EditMod = ({ handleClosePopup, id, setMessage, setIsPopupOpenSuccess }) =>
                 password: password
             })
             .then((response) => {
-                window.location.reload();
+                setUpdateMods(username)
                 handleClosePopup();
                 setMessage("Modérateur modifié avec succès");
                 setIsPopupOpenSuccess(true);
