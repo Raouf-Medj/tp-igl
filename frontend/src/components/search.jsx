@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { RiSearchFill } from "react-icons/ri";
 
 /**
@@ -13,6 +14,11 @@ import { RiSearchFill } from "react-icons/ri";
  */
 const SearchBar = ({ query, setQuery, placeholder, searchHandler, isForMod }) => {
 
+    useEffect(() => {
+        searchHandler();
+        // eslint-disable-next-line
+    }, [query]);
+
     return (
         <div className="bg-white py-1 sm:px-4 px-2 rounded-md border border-[#E5E5E5] flex items-center w-full focus-within:border-[#21A0A0] hover:drop-shadow-xl transition duration-300 ease-in-out transform">
             <RiSearchFill className='text-[#21A0A0] text-xl sm:block hidden' />
@@ -25,7 +31,7 @@ const SearchBar = ({ query, setQuery, placeholder, searchHandler, isForMod }) =>
                 value={query}
                 onChange={(e) => {
                     setQuery(e.target.value);
-                    searchHandler();
+                    // searchHandler();  
                 }}
                 onKeyDown={(event) => {if (event.key === 'Enter') {searchHandler()}}}
             />

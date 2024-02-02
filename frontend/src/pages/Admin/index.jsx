@@ -15,6 +15,7 @@ const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOp
     const [moderators, setModerators] = useState([]);
     const [loading2, setLoading2] = useState(false);
     const [loading3, setLoading3] = useState(false);
+    const [updateMods, setUpdateMods] = useState("");
 
     useEffect(() => {
         const fetchMods = async () => {
@@ -39,7 +40,7 @@ const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOp
         }
 
         fetchMods();
-    }, []);
+    }, [setErr, setIsPopupOpenError, updateMods]);
 
     const [showAddPopup, setShowAddPopup] = useState(false);
     const [selectedModerator, setSelectedModerator] = useState(null);
@@ -156,7 +157,7 @@ const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOp
                             {selectedModerator && (
                                 <div className="fixed top-0 left-0 z-50 w-full h-full backdrop-blur-md bg-gray-800 bg-opacity-50 flex items-center justify-center">
                                     <div className="bg-[#FCFFF7] w-[90%] sm:w-[60%] lg:w-[40%] p-3 lg:px-10 rounded-xl border border-gray-400">
-                                        <EditMod id={selectedModerator} mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} setMessage={setMessage} setIsPopupOpenSuccess={setIsPopupOpenSuccess} />
+                                        <EditMod id={selectedModerator} mods={moderators} setMods={setModerators} allMods={allMods} setAllMods={setAllMods} handleClosePopup={handleClosePopup} setMessage={setMessage} setIsPopupOpenSuccess={setIsPopupOpenSuccess} setUpdateMods={setUpdateMods} />
                                     </div>
                                 </div>
                             )}

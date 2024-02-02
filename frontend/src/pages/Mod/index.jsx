@@ -6,7 +6,7 @@ import { AiOutlineCaretUp, AiOutlineCaretDown } from "react-icons/ai";
 import axios from 'axios';
 import Popup from '../../components/popup';
 
-const ModHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError }) => {
+const ModHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError, updateArticles }) => {
 
   const [articles, setArticles] = useState([]);
   const [articlesToShow, setArticlesToShow] = useState(articles.filter((article) => !article.validated));
@@ -48,7 +48,7 @@ const ModHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError }) => {
     }
 
     fetchArticles();
-  }, []);
+  }, [setErr, setIsPopupOpenError, updateArticles]);
 
   const searchHandler = () => {
     const filteredArticles = articlesToShow.filter(article => article.title.toLowerCase().includes(query.toLowerCase()));
