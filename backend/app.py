@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 es = Elasticsearch(hosts=["http://elasticsearch:9200"], scheme="http", retry_on_timeout=True)
 
 #read the .env variables
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+load_dotenv()
 
 # Flask instance
 app = Flask(__name__)
