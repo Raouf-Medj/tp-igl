@@ -18,7 +18,7 @@ const LoginForm = ({ setToken }) => {
         e.preventDefault();
     
           // Send a request to your server for authentication
-          await axios.post('http://localhost:5000/api/login', {
+          await axios.post(process.env.REACT_APP_FLASK_APP + '/api/login', {
             username: username,
             password: password
           })

@@ -32,7 +32,7 @@ const AjouterMod = ({ handleClosePopup, mods, setMods, allMods, setAllMods, setM
             setErr("Mots de passe non correspondants");
             setLoading(false);
         } else {
-            await axios.post('http://localhost:5000/api/mods', {
+            await axios.post(process.env.REACT_APP_FLASK_APP + '/api/mods', {
                 username: username,
                 password: password
             })

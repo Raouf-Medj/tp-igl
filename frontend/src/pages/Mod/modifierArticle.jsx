@@ -25,7 +25,7 @@ const ModModification = ({ setUpdateArticles }) => {
   useEffect(() => {
     const fetchArticle = async () => {
       setLoading(true);
-      await axios.get(`http://localhost:5000/api/articles/${id}`)
+      await axios.get(process.env.REACT_APP_FLASK_APP + `/api/articles/${id}`)
       .then(response => {
         const article = response.data;
         setArticleTitle(article.title);
@@ -57,7 +57,7 @@ const ModModification = ({ setUpdateArticles }) => {
   const handleValidation = async () => {
     
     setLoading(true);
-    await axios.put("http://localhost:5000/api/articles", {
+    await axios.put(process.env.REACT_APP_FLASK_APP + "/api/articles", {
       id: id,
       title: articleTitle,
       abstract: summary,
@@ -98,7 +98,7 @@ const ModModification = ({ setUpdateArticles }) => {
 
   const handleSupprimer = async () => {
     setLoading(true);
-    await axios.delete(`http://localhost:5000/api/articles/${id}`)
+    await axios.delete(process.env.REACT_APP_FLASK_APP + `/api/articles/${id}`)
     .then(() => {})
     .catch(error => {
         if (error.response && error.response.data) {
@@ -111,7 +111,7 @@ const ModModification = ({ setUpdateArticles }) => {
         setLoading(false);
     })
 
-    await axios.delete(`http://localhost:5000/api/uploads/${url}`)
+    await axios.delete(process.env.REACT_APP_FLASK_APP + `/api/uploads/${url}`)
     .then(() => {
       navigate("/mod");
       const change = id + "delete"

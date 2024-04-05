@@ -19,7 +19,7 @@ const ModHome = ({ err, setErr, isPopupOpenError, setIsPopupOpenError, updateArt
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
-      await axios.post('http://localhost:5000/api/articles/search', {
+      await axios.post(process.env.REACT_APP_FLASK_APP + '/api/articles/search', {
           query: "", 
           authors: [],
           institutions: [],
