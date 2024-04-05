@@ -13,7 +13,8 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import RequestError
 from dotenv import load_dotenv
 
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch("https://7712a8df8c6543d690186d5e9c20e506.us-east4.gcp.elastic-cloud.com:443",
+  api_key="ET3Tp2q3TRmzFqWxMTTN7A")
 
 # Specify the index name
 index_name = 'articles'
