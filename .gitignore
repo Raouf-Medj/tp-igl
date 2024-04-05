@@ -26,7 +26,7 @@
 /frontendyarn-error.log*
 
 /backend/__pycache__/
-/backend/uploads
+# /backend/uploads
 /backend/.env
 
 /elasticsearch
