@@ -40,12 +40,12 @@ const AdminNav = ({ setLoading, setMessage, setIsPopupOpenInfo, setIsPopupOpenSu
 
         try {
             // Send file to server
-            await axios.post('http://localhost:5000/api/uploads', formData);
+            await axios.post(process.env.REACT_APP_FLASK_APP + '/api/uploads', formData);
 
             console.log('File uploaded successfully!');
 
             // Create an article with the PDF file name
-            await axios.post('http://localhost:5000/api/articles', { pdf_name: fichier.name });
+            await axios.post(process.env.REACT_APP_FLASK_APP + '/api/articles', { pdf_name: fichier.name });
 
             setMessage("Fichier uploadé avec succès");
             setIsPopupOpenSuccess(true);

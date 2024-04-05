@@ -16,7 +16,7 @@ const Affichage = () => {
 
     const fetchArticle = async () => {
       setLoading(true);
-      await axios.get(`http://localhost:5000/api/articles/${id}`)
+      await axios.get(process.env.REACT_APP_FLASK_APP + `/api/articles/${id}`)
       .then(response => {
         setArticle(response.data);
       })

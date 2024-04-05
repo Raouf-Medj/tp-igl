@@ -32,7 +32,7 @@ const NavBar = ({ removeToken, setLoading, setMessage, setIsPopupOpenInfo, setEr
         e.preventDefault();
     
         // Send a request to your server for authentication
-        await axios.post('http://localhost:5000/api/logout')
+        await axios.post(process.env.REACT_APP_FLASK_APP + '/api/logout')
         .then(() => {
             removeToken();
             navigate("/");

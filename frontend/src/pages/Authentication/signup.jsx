@@ -25,7 +25,7 @@ const SignupForm = ({ setToken }) => {
         }
         else {
             // Send a request to your server for authentication
-            await axios.post('http://localhost:5000/api/register', {
+            await axios.post(process.env.REACT_APP_FLASK_APP + '/api/register', {
                 username: username,
                 password: password,
                 role: "CLIENT"

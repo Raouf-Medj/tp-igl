@@ -102,7 +102,7 @@ const CenteredArticleDetails = ({ articleData, id }) => {
   
       const fetchFavoris = async () => {
         setLoading(true);
-        await axios.get(`http://localhost:5000/api/favoris/${userid}`)
+        await axios.get(process.env.REACT_APP_FLASK_APP + `/api/favoris/${userid}`)
         .then(response => {
           setIsAddedToFavorites(response.data.articles.some(article => article.id === id));
         })
@@ -123,7 +123,7 @@ const CenteredArticleDetails = ({ articleData, id }) => {
   
     const handleAddToFavorites = async () => {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/favoris", {
+      await axios.post(process.env.REACT_APP_FLASK_APP + "/api/favoris", {
         article_id: id,
         user_id: userid
       })
@@ -144,7 +144,7 @@ const CenteredArticleDetails = ({ articleData, id }) => {
   
     const handleRemoveFromFavorites = async () => {
       setLoading(true);
-      await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
+      await axios.delete(process.env.REACT_APP_FLASK_APP + `/api/favoris/${userid}/${id}`)
       .then(() => {
         setIsAddedToFavorites(false);
       })

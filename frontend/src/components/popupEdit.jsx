@@ -25,7 +25,7 @@ const EditMod = ({ handleClosePopup, id, setMessage, setIsPopupOpenSuccess, setU
     useEffect(() => {
         const fetchMod = async () => {
             setLoading2(true);
-            await axios.get(`http://localhost:5000/api/mods/${id}`)
+            await axios.get(process.env.REACT_APP_FLASK_APP + `/api/mods/${id}`)
             .then(response => {
                 setUsername(response.data.username);
             })
@@ -57,7 +57,7 @@ const EditMod = ({ handleClosePopup, id, setMessage, setIsPopupOpenSuccess, setU
             setLoading(false);
         }
         else {
-            await axios.put('http://localhost:5000/api/mods', {
+            await axios.put(process.env.REACT_APP_FLASK_APP + '/api/mods', {
                 id: id,
                 username: username,
                 password: password

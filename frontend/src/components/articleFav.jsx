@@ -40,7 +40,7 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
    */
   const handleViewPdf = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/uploads/${url}`, {
+      const response = await axios.get(process.env.REACT_APP_FLASK_APP + `/api/uploads/${url}`, {
         responseType: 'arraybuffer',
       });
 
@@ -65,7 +65,7 @@ const ArticleFav = ({ title, url, abstract, id, articles, setArticles, searchRes
    */
   const handleFav = async () => {
     setLoading(true);
-    await axios.delete(`http://localhost:5000/api/favoris/${userid}/${id}`)
+    await axios.delete(process.env.REACT_APP_FLASK_APP + `/api/favoris/${userid}/${id}`)
     .then(() => {
       const updatedArticles = articles.filter((article) => article.id !== id);
       setArticles(updatedArticles);

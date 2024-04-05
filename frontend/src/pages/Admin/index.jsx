@@ -20,7 +20,7 @@ const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOp
     useEffect(() => {
         const fetchMods = async () => {
             setLoading2(true);
-            await axios.get('http://localhost:5000/api/mods')
+            await axios.get(process.env.REACT_APP_FLASK_APP + '/api/mods')
             .then(response => {
                 setAllMods(response.data.mods);
                 setModerators(response.data.mods);
@@ -64,7 +64,7 @@ const AdminHome = ({ loading, message, setMessage, isPopupOpenInfo, setIsPopupOp
 
     const handleDelete = async (id) => {
         setLoading3(true);
-        await axios.delete("http://localhost:5000/api/mods/"+id)
+        await axios.delete(process.env.REACT_APP_FLASK_APP + "/api/mods/"+id)
         .then(response => {
             setModerators(prevModerators => prevModerators.filter(moderator => moderator.id !== response.data.id));
             setMessage("Modérateur supprimé avec succès");

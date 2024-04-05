@@ -19,7 +19,7 @@ const Favoris = () => {
 
         const fetchFavoris = async () => {
           setLoading(true);
-          await axios.get(`http://localhost:5000/api/favoris/${userid}`)
+          await axios.get(process.env.REACT_APP_FLASK_APP + `/api/favoris/${userid}`)
           .then(response => {
             setArticles(response.data.articles);
             setSearchResult(response.data.articles);

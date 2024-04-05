@@ -23,7 +23,7 @@ const Article = ({ id, title, url, abstract, isRectifier }) => {
      */
     const handleViewPdf = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/uploads/${url}`, {
+            const response = await axios.get(process.env.REACT_APP_FLASK_APP + `/api/uploads/${url}`, {
                 responseType: 'arraybuffer',
             });
 
