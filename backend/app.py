@@ -13,8 +13,12 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import RequestError
 from dotenv import load_dotenv
 
+#read the .env variables
+load_dotenv()
+
 # es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-es = Elasticsearch(hosts=["http://elasticsearch:9200"], scheme="http", retry_on_timeout=True)
+es = Elasticsearch(os.environ.get("ELASTIC_ENDPOINT"),
+  api_key=os.environ.get("ELASTIC_API_KEY"))
 
 # Specify the index name
 index_name = 'articles'
@@ -30,8 +34,6 @@ if not index_exists:
     except RequestError as e:
         print(f"Failed to create index '{index_name}': {e}")
 
-#read the .env variables
-load_dotenv()
 
 # Flask instance
 app = Flask(__name__)
