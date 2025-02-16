@@ -103,17 +103,28 @@ def manageArticles():
         try:
             jsonRequestObject = request.get_json()
             
-            if "pdf_name" in jsonRequestObject:
-                #we suppose that the pdf exists in the docs folder in frontend/public/
-                extractedJson = pdfToJson(jsonRequestObject["pdf_name"])
-                response = app.es.index(index=index_name, body=extractedJson)
-                
-                return jsonify({"id":response['_id'],"title":extractedJson["title"]})
-            else:
-                return jsonify({'erreur': "nom de fichier incoherent"})
-
-        except:
-            return jsonify({'erreur': "echec d'ajout d'un article"}), 500  # Internal Server Error
+            if not jsonRequestObject or "pdf_name" not in jsonRequestObject:
+                return jsonify({'error': "Invalid request: missing 'pdf_name'"}), 400  # Bad Request
+    
+            pdf_name = jsonRequestObject["pdf_name"]
+            extractedJson = pdfToJson(pdf_name)
+    
+            response = app.es.index(index=index_name, body=extractedJson)
+            
+            return jsonify({"id": response['_id'], "title": extractedJson["title"]})
+    
+        except KeyError as e:
+            logging.error(f"Missing key in request JSON: {e}")
+            return jsonify({'error': f"Missing key: {str(e)}"}), 400  # Bad Request
+    
+        except FileNotFoundError as e:
+            logging.error(f"File not found: {e}")
+            return jsonify({'error': "PDF file not found"}), 404  # Not Found
+    
+        except Exception as e:
+            logging.error(f"Unexpected error: {e}", exc_info=True)
+            return jsonify({'error': "Failed to add article"}), 500  # Internal Server Error
+            
     elif request.method == 'PUT':
         try:
             jsonRequestObject = request.get_json()
